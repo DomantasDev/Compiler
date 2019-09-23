@@ -7,4 +7,8 @@
     <RootNamespace>ConsoleApp</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Lexer\Lexer.csproj" />
+  </ItemGroup>
+
 </Project>
