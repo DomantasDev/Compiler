@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.757
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "Compiler.Console\ConsoleApp.csproj", "{2FAEAB33-0DDF-44CD-86BD-AF05F8270241}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "Compiler.Console\ConsoleApp.csproj", "{2FAEAB33-0DDF-44CD-86BD-AF05F8270241}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lexer", "Lexer\Lexer.csproj", "{83BFD1E9-9C1F-4B30-9C5C-48AC85C184B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexer_Implementation", "Lexer\Lexer_Implementation.csproj", "{83BFD1E9-9C1F-4B30-9C5C-48AC85C184B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

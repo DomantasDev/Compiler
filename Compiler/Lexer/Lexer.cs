@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Lexer
+namespace Lexer_Implementation
 {
     public class Lexer
     {
@@ -23,18 +23,31 @@ namespace Lexer
             _code = code;
         }
 
-        public Token Get()
+
+
+        public IEnumerable<Token> Get()
         {
-            NextChar();
-            if (IsIdentChar(_currChar))
+            while (true)
             {
-                _currentValue += _currChar;
-                return FinishIdent();
+                NextChar();
+                if (IsIdentChar(_currChar))
+                {
+                    _currentValue += _currChar;
+                    yield return FinishIdent();
+                }
+                else if (_currChar == 0)
+                {
+                    break;
+                }
+                else
+                {
+                    throw new ArgumentException("shiet");
+                }
             }
-            else
+            yield return new Token
             {
-                throw new ArgumentException("shiet");
-            }
+                Type = LexemType.EOF
+            };
         }
 
         private Token FinishIdent()
@@ -57,9 +70,18 @@ namespace Lexer
             return new Token{Type = token.Type};
         }
 
-        private bool IsIdentChar(char c) =>
-            c > 'a' & c < 'z' || c > 'A' & c < 'Z' || c == '_';
+        private bool IsIdentChar(char c)
+        {
+            var res = c >= 'a' & c <= 'z' || c >= 'A' & c <= 'Z' || c == '_';
+            return res;
+        }
 
-        private void NextChar() => _currChar = _code[_offset++];
+        private void NextChar()
+        {
+            if (_code.Length <= _offset)
+                _currChar = (char) 0;
+            else
+                _currChar = _code[_offset++];
+        }
     }
 }
