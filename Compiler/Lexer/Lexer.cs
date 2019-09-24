@@ -17,7 +17,7 @@ namespace Lexer_Implementation
         {
             new Token{Type = LexemType.KW_int, Value = "int"},  
             new Token{Type = LexemType.KW_bool, Value = "bool"},
-            new Token{Type = LexemType.KW_string, Value = "string"}
+            new Token{Type = LexemType.KW_string, Value = "string"},
         };
 
         private readonly List<char> _escapableChars = new List<char>{'n', '\\', 't'};
