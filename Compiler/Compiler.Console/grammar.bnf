@@ -1,0 +1,135 @@
+# TODO for, not(!)?, static?. isimt skaicius is ident
+# this in Main
+# MAYBE: make assignment an expression
+
+<START> ::= <PROGRAM> <CLASSES>
+
+<PROGRAM> ::= "class" "Program" "{" <MAIN> <CLASS_MEMBERS> "}" | "class" "Program" "{" <MAIN> "}"
+<MAIN> ::= "Main()" <BODY>
+
+#CLASS
+<CLASSES> ::= <CLASS_DECL> | <CLASSES> <CLASS_DECL>
+<CLASS_DECL> ::= "class" <IDENT> <CLASS_BODY> | "class" <IDENT> <EXTENDS> <CLASS_BODY>  
+<EXTENDS> ::= "extends" <IDENT>
+<CLASS_BODY> ::= "{" <CLASS_MEMBERS> "}" | "{" "}"
+<CLASS_MEMBERS> ::= <CLASS_MEMBER> | <CLASS_MEMBERS> <CLASS_MEMBER>
+<CLASS_MEMBER> ::= <METHOD_DECL> | <CTOR_DECL> | <VARIABLE_DECL_STMT> ";"
+
+#CONSTRUCTOR
+<CTOR_DECL> ::= <CTOR> <BODY>
+<CTOR> ::= <CTOR_SIGNATURE> | <CTOR_SIGNATURE>  <BASE_CTOR_CALL>
+<CTOR_SIGNATURE> ::= <VISIBILITY> "constructor" <PARAM_LIST>
+<BASE_CTOR_CALL> ::= ":" <BASE> <ARG_LIST>
+#METHOD DECLARATION
+<METHOD_DECL> ::= <VISIBILITY> <METHOD_SIGNATURE> <BODY> | <VISIBILITY> <VIRTUAL_OVERRIDES> <METHOD_SIGNATURE> <BODY>
+<METHOD_SIGNATURE> ::= <RETURN_TYPE> <IDENT> <PARAM_LIST>
+<BODY> ::= "{" <SENTENCES> "}" | "{" "}"
+
+<VISIBILITY> ::= "private" | "protected" | "public"
+<VIRTUAL_OVERRIDES> ::= "virtual" | "overrides"
+
+<RETURN_TYPE> ::= <TYPE> | "void" #kodel void atskirai?
+<TYPE> ::= <SYSTEM_TYPE> | <IDENT>
+<SYSTEM_TYPE> ::= "int" | "string" | "float" | "bool"
+
+#PARAMETERS
+<PARAM_LIST> ::= "(" <PARAMS> ")" | "(" ")"
+<PARAMS> ::= <PARAM> | <PARAMS> "," <PARAM>
+<PARAM> ::= <TYPE> <IDENT>
+
+#STATEMENT / SENTENCE
+<STMTS> ::= <STMT> | <STMTS> <STMT>
+<STMT> ::= <BREAK_STMT> | <RETURN_STMT> | <CONTINUE_STMT> | <ASSIGN_STMT> | <LOCAL_VARIABLE_DECL_STMT> | <VARIABLE_DECL_STMT> | <EXPR_STMT> | <WHILE_STMT> | <IF_STMT> | <WRITE_STMT> | <READ_STMT>
+
+<EXPR_STMT> ::= <EXPR>
+<RETURN_STMT> ::= "return" | "return" <EXPR>
+<BREAK_STMT> ::= "break"
+<CONTINUE_STMT> ::= "continue"
+<ASSIGN_STMT> ::= <IDENT> ":=" <EXPR>
+<LOCAL_VARIABLE_DECL_STMT> ::= <TYPE> <IDENT> | <TYPE> <ASSIGN_STMT>
+<VARIABLE_DECL_STMT> ::= <VISIBILITY> <LOCAL_VARIABLE_DECL_STMT>
+<WHILE_STMT> ::= "while" "(" <EXPR> ")" <BODY>
+<IF_STMT> ::= <IF> | <IF> <ELSE>
+<IF> ::= "if" "(" <EXPR> ")" <BODY>
+<ELSE> ::= "else" <BODY> | "else" <IF_STMT> 
+
+<WRITE_STMT> ::= "write" <EXPR>
+<READ_STMT> ::= "read" <VAR>
+
+<SENTENCE> ::= <STMT> ";"
+<SENTENCES> ::= <SENTENCE> | <SENTENCES> <SENTENCE>
+
+#EXPRESSION
+<EXPR> ::= <OR>
+<OR> ::= <AND> | <OR> <OR_OP> <AND>
+<AND> ::= <EQUALS> | <AND> <AND_OP> <EQUALS>
+<EQUALS> ::= <COMPARE> | <EQUALS> <EQUALS_OP> <COMPARE>
+<COMPARE> ::= <ADD> | <COMPARE> <COMPARE_OP> <ADD> 
+<ADD> ::= <MULT> | <ADD> <ADD_OP> <MULT>
+<MULT> ::= <DOT> | <MULT> <MULT_OP> <DOT> 
+<DOT> ::=  <PRIMARY> | <DOT> <DOT_OP> <PRIMARY> # leidzia a.4
+<PRIMARY> ::= <VAR> | <NUMBER> | <BOOL> | <STRING> | <PAREN> | <NEG> | <NOT> | <METHOD_CALL> | <OBJ_CREATION> | <CAST> | <NULL> | <THIS> | <BASE>
+
+<PAREN> ::= "(" <EXPR> ")"
+<NEG> ::= "-" <EXPR>
+<NOT> ::= "!" <EXPR>
+<CAST> ::= "(" <TYPE> ")" <EXPR>
+<OBJ_CREATION> ::= "new" <IDENT> <ARG_LIST>
+<METHOD_CALL> ::= <METHOD_NAME> <ARG_LIST>
+
+<DOT_OP> ::= "."
+<OR_OP> ::= "|"
+<AND_OP> ::= "&"
+<EQUALS_OP> ::= "=" | "<>"
+<COMPARE_OP> ::= ">" | "<" | ">=" | "<="
+<ADD_OP> ::= "+" | "-"
+<MULT_OP> ::= "*" | "/"
+
+#ARGUMENTS
+<ARG_LIST> ::= "(" <ARGS> ")" | "(" ")"
+<ARGS> ::= <EXPR> | <ARGS> "," <EXPR>
+
+#IDENT
+<METHOD_NAME> ::= <IDENT>
+<VAR> ::= <IDENT>
+<IDENT> ::=  <IDENT_START> | <IDENT_START> <IDENT_CHARS>
+<IDENT_START> ::= <LETTER> | "_"
+
+<IDENT_CHARS> ::= <IDENT_CHAR> | <IDENT_CHARS> <IDENT_CHAR>
+<IDENT_CHAR> ::= <LETTER> | <DIGIT> | "_"
+
+#STRING
+<STRING> ::= "\"" <STRING_CHARS> "\"" | "\"" "\""
+<STRING_CHARS> ::= <STRING_CHAR> | <STRING_CHARS> <STRING_CHAR>
+<STRING_CHAR> ::= <ESCAPED_CHAR> | <CHAR>
+<ESCAPED_CHAR> ::= "\n" | "\t" | "\""
+
+#PRIMITIVES
+<INT> ::= <DIGITS>
+<FLOAT> ::= <DIGITS> "." <DIGITS> | <DIGITS> "." | "." <DIGITS>
+<NUMBER> ::= <INT> | <FLOAT>
+
+<BOOL> ::= "true" | "false"
+
+<CHARS> ::= <CHAR> | <CHARS> <CHAR>
+<CHAR> ::= <LETTER> | <SYMBOL> | <DIGIT>
+
+<LETTER> ::= <LOW_LETTER> | <UP_LETTER> 
+<LOW_LETTER> ::= "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "r" | "s" | "t" | "u" | "v" | "x" | "w" | "q" | "z"
+<UP_LETTER> ::=  "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "R" | "S" | "T" | "U" | "V" | "X" | "W" | "Q" | "Z"
+
+<SYMBOL> ::= "-" | "+" | "?" | "!" | "_" | "*" | "/" | "@" | "#" | "$" | "%" | "^" | "&" | "." | "," | "(" | ")" | "{" | "}" | "[" | "]"
+
+<DIGITS> ::= <DIGIT> | <DIGITS> <DIGIT>
+<DIGIT> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+<NULL> ::= "null"
+<THIS> ::= "this"
+<BASE> ::= "base"
+
+#COMMENTS
+<COMMENT> ::= "//" <CHARS> | "//"
+<MULTI_LINE_COMMENT> ::= "/*" <CHARS> "*/" | "/*" "*/"
+
+#
+<WHITE_SPACE> ::= " " | "\n"

@@ -1,0 +1,94 @@
+class Program 
+{
+    Main()
+    {
+        Animal animal = null;
+
+        string name;
+        read name;
+
+        if(name = "Dog")
+        {
+            animal := new Dog(name);
+        } 
+        else if (name = "Cat")
+        {
+            animal := new Cat(name);
+        } 
+        else
+        {
+            animal := new Animal();
+        }
+
+        animal.Speak("Hello world!");
+        // random code after this
+        int x := -1;
+        float y := .5:
+
+        if(!( (int)(-x / (int)y) >= x+x*x ) & y > 0.)
+        {
+            x := 0;
+            while()
+            {
+                x := x+1;
+                if(x = 3 | x = 6)
+                {
+                    continue;
+                }
+                if( x = 9)
+                {
+                    break;
+                }
+                write x;
+            }
+        }
+    }
+}
+
+class Animal
+{
+    public constructor(){}
+
+    public virtual void Speak(string x)
+    {
+        write "Animal: \n\t" + x;
+    }
+}
+
+class Dog extends Animal
+{    
+    private int _name;
+
+    public constructor(string name):base()
+    {
+        this._name := name;
+    }
+
+    public override void Speak(string x)
+    {
+        write "Dog: \n\t" + x;
+    }
+}
+
+class Cat extends Animal
+{    
+    private int _name;
+    private int _age;
+
+    public constructor(string name, int age):base()
+    {
+        _name := name;
+        _age := age;
+    }
+
+    public override void Speak(string x)
+    {
+        base.Speak(x);
+        write "Cat: \n\t" + x;
+    }
+
+    public virtual int GetAge()
+    {
+        return _age;
+    }
+}
