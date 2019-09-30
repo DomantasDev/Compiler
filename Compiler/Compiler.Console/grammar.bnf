@@ -1,11 +1,8 @@
-# TODO for, not(!)?, static?. isimt skaicius is ident
+# TODO for, static?
 # this in Main
 # MAYBE: make assignment an expression
 
-<START> ::= <PROGRAM> <CLASSES>
-
-<PROGRAM> ::= "class" "Program" "{" <MAIN> <CLASS_MEMBERS> "}" | "class" "Program" "{" <MAIN> "}"
-<MAIN> ::= "Main()" <BODY>
+<START> ::= <CLASSES>
 
 #CLASS
 <CLASSES> ::= <CLASS_DECL> | <CLASSES> <CLASS_DECL>
@@ -23,12 +20,12 @@
 #METHOD DECLARATION
 <METHOD_DECL> ::= <VISIBILITY> <METHOD_SIGNATURE> <BODY> | <VISIBILITY> <VIRTUAL_OVERRIDES> <METHOD_SIGNATURE> <BODY>
 <METHOD_SIGNATURE> ::= <RETURN_TYPE> <IDENT> <PARAM_LIST>
-<BODY> ::= "{" <SENTENCES> "}" | "{" "}"
+<BODY> ::= "{" <STMTS> "}" | "{" "}"
 
 <VISIBILITY> ::= "private" | "protected" | "public"
 <VIRTUAL_OVERRIDES> ::= "virtual" | "overrides"
 
-<RETURN_TYPE> ::= <TYPE> | "void" #kodel void atskirai?
+<RETURN_TYPE> ::= <TYPE> | "void"
 <TYPE> ::= <SYSTEM_TYPE> | <IDENT>
 <SYSTEM_TYPE> ::= "int" | "string" | "float" | "bool"
 
@@ -37,27 +34,26 @@
 <PARAMS> ::= <PARAM> | <PARAMS> "," <PARAM>
 <PARAM> ::= <TYPE> <IDENT>
 
-#STATEMENT / SENTENCE
+#STATEMENT
 <STMTS> ::= <STMT> | <STMTS> <STMT>
-<STMT> ::= <BREAK_STMT> | <RETURN_STMT> | <CONTINUE_STMT> | <ASSIGN_STMT> | <LOCAL_VARIABLE_DECL_STMT> | <VARIABLE_DECL_STMT> | <EXPR_STMT> | <WHILE_STMT> | <IF_STMT> | <WRITE_STMT> | <READ_STMT>
+<STMT> ::= <BREAK_STMT> ";" | <RETURN_STMT> ";" | <CONTINUE_STMT> ";" | <ASSIGN_STMT> ";" | <LOCAL_VARIABLE_DECL_STMT> ";" | <VARIABLE_DECL_STMT> ";" | <EXPR_STMT> ";" | <WRITE_STMT> ";" | <READ_STMT> ";" | <WHILE_STMT> | <IF_STMT> |
 
 <EXPR_STMT> ::= <EXPR>
 <RETURN_STMT> ::= "return" | "return" <EXPR>
 <BREAK_STMT> ::= "break"
 <CONTINUE_STMT> ::= "continue"
-<ASSIGN_STMT> ::= <IDENT> ":=" <EXPR>
-<LOCAL_VARIABLE_DECL_STMT> ::= <TYPE> <IDENT> | <TYPE> <ASSIGN_STMT>
-<VARIABLE_DECL_STMT> ::= <VISIBILITY> <LOCAL_VARIABLE_DECL_STMT>
+<ASSIGN_STMT> ::= <IDENT> ":=" <EXPR> # nereusint
+<LOCAL_VARIABLE_DECL_STMT> ::= <TYPE> <IDENT> | <TYPE> <IDENT> ":=" <EXPR>
+<VARIABLE_DECL_STMT> ::= <VISIBILITY> <TYPE> <IDENT> | <VISIBILITY> <TYPE> <IDENT> ":=" <EXPR>
 <WHILE_STMT> ::= "while" "(" <EXPR> ")" <BODY>
 <IF_STMT> ::= <IF> | <IF> <ELSE>
 <IF> ::= "if" "(" <EXPR> ")" <BODY>
 <ELSE> ::= "else" <BODY> | "else" <IF_STMT> 
 
-<WRITE_STMT> ::= "write" <EXPR>
-<READ_STMT> ::= "read" <VAR>
+<WRITE_STMT> ::= "write" <ARGS>
 
-<SENTENCE> ::= <STMT> ";"
-<SENTENCES> ::= <SENTENCE> | <SENTENCES> <SENTENCE>
+<READ_STMT> ::= "read" <VAR_LIST>
+<VAR_LIST> ::= <VAR> | <VAR_LIST> "," <VAR>
 
 #EXPRESSION
 <EXPR> ::= <OR>
@@ -67,7 +63,7 @@
 <COMPARE> ::= <ADD> | <COMPARE> <COMPARE_OP> <ADD> 
 <ADD> ::= <MULT> | <ADD> <ADD_OP> <MULT>
 <MULT> ::= <DOT> | <MULT> <MULT_OP> <DOT> 
-<DOT> ::=  <PRIMARY> | <DOT> <DOT_OP> <PRIMARY> # leidzia a.4
+<DOT> ::=  <PRIMARY> | <DOT> <DOT_OP> <IDENT> # member access
 <PRIMARY> ::= <VAR> | <NUMBER> | <BOOL> | <STRING> | <PAREN> | <NEG> | <NOT> | <METHOD_CALL> | <OBJ_CREATION> | <CAST> | <NULL> | <THIS> | <BASE>
 
 <PAREN> ::= "(" <EXPR> ")"
@@ -106,7 +102,11 @@
 
 #PRIMITIVES
 <INT> ::= <DIGITS>
-<FLOAT> ::= <DIGITS> "." <DIGITS> | <DIGITS> "." | "." <DIGITS>
+
+<FLOAT> ::= <SIMPLE_FLOAT> | <SIMPLE_FLOAT> <EXPONENT>
+<SIMPLE_FLOAT> ::= <DIGITS> "." <DIGITS> | <DIGITS> "." | "." <DIGITS>
+<EXPONENT> ::= "e"<DIGITS> | "e-"<DIGITS>
+
 <NUMBER> ::= <INT> | <FLOAT>
 
 <BOOL> ::= "true" | "false"

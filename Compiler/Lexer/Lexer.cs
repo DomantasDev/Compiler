@@ -61,7 +61,7 @@ namespace Lexer_Implementation
                 }
                 else
                 {
-                    throw new ArgumentException("shiet");
+                    throw new ArgumentException("Ooops");
                 }
                 _currentValue = String.Empty;
             }
