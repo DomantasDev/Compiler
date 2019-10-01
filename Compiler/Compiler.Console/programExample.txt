@@ -28,7 +28,7 @@ class Program
         if(!( (int)(-x / (int)y) >= x+x*x ) & y > 0.)
         {
             x := 0;
-            while()
+            while(true)
             {
                 x := x+1;
                 if(x = 3 | x = 6)
@@ -98,7 +98,7 @@ class Cat extends Animal
 if(!( (int)(-x / (int)y) >= x+x*x ) & y > 0.)
 {
     x := 0;
-    while()
+    while(true)
     {
         
     }
@@ -135,4 +135,106 @@ if(!( (int)(-x / (int)y) >= x+x*x ) & y > 0.)
 "if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" <ADD> ")" <AND_OP> <EQUALS> ")" <BODY>
 "if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" <ADD> <ADD_OP> <MULT> ")" <AND_OP> <EQUALS> ")" <BODY>
 "if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" <IDENT> <ADD_OP> <MULT> ")" <AND_OP> <EQUALS> ")" <BODY>
-"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" <IDENT> <ADD_OP> <MULT> ")" <AND_OP> <EQUALS> ")" <BODY>
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" <ADD_OP> <MULT> ")" <AND_OP> <EQUALS> ")" <BODY>
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" <MULT> ")" <AND_OP> <EQUALS> ")" <BODY>
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" <MULT> <MULT_OP> <DOT> ")" <AND_OP> <EQUALS> ")" <BODY>
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" <IDENT> <MULT_OP> <DOT> ")" <AND_OP> <EQUALS> ")" <BODY>
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" <MULT_OP> <DOT> ")" <AND_OP> <EQUALS> ")" <BODY>
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" <DOT> ")" <AND_OP> <EQUALS> ")" <BODY>
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" <IDENT> ")" <AND_OP> <EQUALS> ")" <BODY>
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" <AND_OP> <EQUALS> ")" <BODY>
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" "&" <EQUALS> ")" <BODY>
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" "&" <COMPARE> ")" <BODY>
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" "&" <COMPARE> <COMPARE_OP> <ADD> ")" <BODY>
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" "&" <IDENT> <COMPARE_OP> <ADD> ")" <BODY>
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" "&" "y" <COMPARE_OP> <ADD> ")" <BODY>
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" "&" "y" ">" <ADD> ")" <BODY>
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" "&" "y" ">" <SIMPLE_FLOAT> ")" <BODY>
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" "&" "y" ">" <DIGITS> "." ")" <BODY>
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" "&" "y" ">" "0" "." ")" <BODY>
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" "&" "y" ">" "0" "." ")" "{" <STMTS> "}"
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" "&" "y" ">" "0" "." ")" "{" <STMTS> <STMT> "}"
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" "&" "y" ">" "0" "." ")" "{" <ASSIGN_STMT> ";" <STMT> "}"
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" "&" "y" ">" "0" "." ")" "{" <IDENT> ":=" <EXPR> ";" <STMT> "}"
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" "&" "y" ">" "0" "." ")" "{" "x" ":=" <EXPR> ";" <STMT> "}"
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" "&" "y" ">" "0" "." ")" "{" "x" ":=" "0" ";" <STMT> "}"
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" "&" "y" ">" "0" "." ")" "{" "x" ":=" "0" ";" <WHILE_STMT> "}"
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" "&" "y" ">" "0" "." ")" "{" "x" ":=" "0" ";" "while" "(" <EXPR> ")" <BODY> "}"
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" "&" "y" ">" "0" "." ")" "{" "x" ":=" "0" ";" "while" "(" "true" ")" <BODY> "}"
+"if" "(" "!" "(" "(" "int" ")" "(" "-" "x" "/" "(" "int" ")" "y" ")" ">=" "x" "+" "x" "*" "x" ")" "&" "y" ">" "0" "." ")" "{" "x" ":=" "0" ";" "while" "(" "true" ")" "{" "}" "}"
+
+if(!( (int)(-x / (int)y) >= x+x*x ) & y > 0.)
+{
+    x := 0;
+    while(true)
+    {
+        
+    }
+}
+
+<IF>
+if ( <EXPR> ) <BODY>
+if ( <AND> ) <BODY>
+if ( <AND> <AND_OP> <EQUALS> ) <BODY>
+if ( <NOT> <AND_OP> <EQUALS> ) <BODY>
+if ( ! <EXPR> <AND_OP> <EQUALS> ) <BODY>
+if ( ! <PAREN> <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( <EXPR> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( <COMPARE> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( <COMPARE> <COMPARE_OP> <ADD> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( <CAST> <COMPARE_OP> <ADD> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( <TYPE> ) <EXPR> <COMPARE_OP> <ADD> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) <EXPR> <COMPARE_OP> <ADD> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) <PAREN> <COMPARE_OP> <ADD> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( <EXPR> ) <COMPARE_OP> <ADD> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( <MULT> ) <COMPARE_OP> <ADD> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( <MULT> <MULT_OP> <DOT> ) <COMPARE_OP> <ADD> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( <NEG> <MULT_OP> <DOT> ) <COMPARE_OP> <ADD> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - <EXPR> <MULT_OP> <DOT> ) <COMPARE_OP> <ADD> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - <IDENT> <MULT_OP> <DOT> ) <COMPARE_OP> <ADD> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x <MULT_OP> <DOT> ) <COMPARE_OP> <ADD> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x / <DOT> ) <COMPARE_OP> <ADD> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x / <CAST> ) <COMPARE_OP> <ADD> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x / ( <TYPE> ) <EXPR> ) <COMPARE_OP> <ADD> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) <EXPR> ) <COMPARE_OP> <ADD> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) <IDENT> ) <COMPARE_OP> <ADD> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) <COMPARE_OP> <ADD> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= <ADD> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= <ADD> <ADD_OP> <MULT> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= <IDENT> <ADD_OP> <MULT> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x <ADD_OP> <MULT> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + <MULT> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + <MULT> <MULT_OP> <DOT> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + <IDENT> <MULT_OP> <DOT> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x <MULT_OP> <DOT> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * <DOT> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * <IDENT> ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) <AND_OP> <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) & <EQUALS> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) & <COMPARE> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) & <COMPARE> <COMPARE_OP> <ADD> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) & <IDENT> <COMPARE_OP> <ADD> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) & y <COMPARE_OP> <ADD> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) & y > <ADD> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) & y > <SIMPLE_FLOAT> ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) & y > <DIGITS> . ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) & y > 0 . ) <BODY>
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) & y > 0 . ) { <STMTS> }
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) & y > 0 . ) { <STMTS> <STMT> }
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) & y > 0 . ) { <ASSIGN_STMT> ; <STMT> }
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) & y > 0 . ) { <IDENT> := <EXPR> ; <STMT> }
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) & y > 0 . ) { x := <EXPR> ; <STMT> }
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) & y > 0 . ) { x := 0 ; <STMT> }
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) & y > 0 . ) { x := 0 ; <WHILE_STMT> }
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) & y > 0 . ) { x := 0 ; while ( <EXPR> ) <BODY> }
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) & y > 0 . ) { x := 0 ; while ( true ) <BODY> }
+if ( ! ( ( int ) ( - x / ( int ) y ) >= x + x * x ) & y > 0 . ) { x := 0 ; while ( true ) { } }
+
+if(!( (int)(-x / (int)y) >= x+x*x ) & y > 0.) 
+{ 
+    x := 0; 
+    while ( true ) 
+    {
+
+    } 
+}
