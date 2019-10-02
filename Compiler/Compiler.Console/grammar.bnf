@@ -23,7 +23,7 @@
 <BODY> ::= "{" <STMTS> "}" | "{" "}"
 
 <VISIBILITY> ::= "private" | "protected" | "public"
-<VIRTUAL_OVERRIDES> ::= "virtual" | "overrides"
+<VIRTUAL_OVERRIDES> ::= "virtual" | "override"
 
 <RETURN_TYPE> ::= <TYPE> | "void"
 <TYPE> ::= <SYSTEM_TYPE> | <IDENT>
@@ -73,13 +73,13 @@
 <OBJ_CREATION> ::= "new" <IDENT> <ARG_LIST>
 <METHOD_CALL> ::= <METHOD_NAME> <ARG_LIST>
 
-<DOT_OP> ::= "."
 <OR_OP> ::= "|"
 <AND_OP> ::= "&"
 <EQUALS_OP> ::= "=" | "<>"
 <COMPARE_OP> ::= ">" | "<" | ">=" | "<="
 <ADD_OP> ::= "+" | "-"
 <MULT_OP> ::= "*" | "/"
+<DOT_OP> ::= "."
 
 #ARGUMENTS
 <ARG_LIST> ::= "(" <ARGS> ")" | "(" ")"
@@ -128,8 +128,8 @@
 <BASE> ::= "base"
 
 #COMMENTS
-<COMMENT> ::= "//" <CHARS> | "//"
-<MULTI_LINE_COMMENT> ::= "/*" <CHARS> "*/" | "/*" "*/"
+<COMMENT> ::= "##" <CHARS> | "##"
+<MULTI_LINE_COMMENT> ::= "#*" <CHARS> "*#" | "#*" "*#"
 
 #
 <WHITE_SPACE> ::= " " | "\n"

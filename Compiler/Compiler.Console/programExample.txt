@@ -1,6 +1,6 @@
 class Program 
 {
-    Main()
+    public void main()
     {
         Animal animal = null;
 
