@@ -25,6 +25,7 @@
         KW_this,
         KW_base,
         KW_constructor,
+        KW_new,
         KW_extends,
         KW_write,
         KW_read,

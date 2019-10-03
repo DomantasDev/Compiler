@@ -1,8 +1,12 @@
 class Program 
 {
+#*	main
+	method of
+	program
+*#
     public void main()
     {
-        Animal animal = null;
+        Animal animal := null;
 
         string name;
         read name;
@@ -21,9 +25,9 @@ class Program
         }
 
         animal.Speak("Hello world!");
-        // random code after this
+        ## random code after this
         int x := -1;
-        float y := .5:
+        float y := .5;
 
         if(!( (int)(-x / (int)y) >= x+x*x ) & y > 0.)
         {
@@ -92,7 +96,7 @@ class Cat extends Animal
         return _age;
     }
 }
-
+#################################################################################
 
 
 if(!( (int)(-x / (int)y) >= x+x*x ) & y > 0.)

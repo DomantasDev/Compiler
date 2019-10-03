@@ -6,7 +6,7 @@ class Program
 *#
     public void main()
     {
-        Animal animal = null;
+        Animal animal := null;
 
         string name;
         read name;

@@ -12,9 +12,20 @@ namespace ConsoleApp
             var code = File.ReadAllText("../../../code.txt");
 
             var lexer = new Lexer(code);
-            foreach (var token in lexer.Get())
+
+            Console.WriteLine($"{"Line".PadLeft(5)}|{"Type".PadRight(15)}| Value");
+            Console.WriteLine($"{new string('-', 5)}+{new string('-', 15)}+{new string('-', 20)}");
+
+            try
             {
-                Print(token);
+                foreach (var token in lexer.Get())
+                {
+                    Print(token);
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
             }
 
             Console.ReadLine();
@@ -22,13 +33,13 @@ namespace ConsoleApp
 
         static void Print(Token token)
         {
-            Console.Write($"Type:{token.Type.ToString().PadLeft(15)}");
+            Console.Write($"{token.Line.ToString().PadRight(5)}|{token.Type.ToString().PadRight(15)}|");
             if (token.Value != null)
             {
                 if(token.Type == LexemType.Lit_string)
-                    Console.Write($"\tvalue:\t{(token.Value)}");
+                    Console.Write($"{(token.Value)}");
                 else
-                    Console.Write($"\tvalue:\t{token.Value}");
+                    Console.Write($"{token.Value}");
             }
                 
             Console.WriteLine();

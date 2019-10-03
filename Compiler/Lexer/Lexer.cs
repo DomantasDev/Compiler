@@ -41,6 +41,7 @@ namespace Lexer_Implementation
             new Token{Type = LexemType.KW_read, Value = "read"},
             new Token{Type = LexemType.KW_extends, Value = "extends"},
             new Token{Type = LexemType.KW_null, Value = "null"},
+            new Token{Type = LexemType.KW_new, Value = "new"},
             //new Token{Type = LexemType., Value = ""},
         };
 
@@ -75,11 +76,11 @@ namespace Lexer_Implementation
             while (true)
             {   
                 NextChar();
-                if (IsWhiteSpace(_currChar))
+                if (IsWhiteSpace())
                 {
                     continue;
                 }
-                if (IsIdentChar(_currChar))
+                if (IsIdentChar())
                 {
                     yield return FinishIdent();
                 }
@@ -87,7 +88,7 @@ namespace Lexer_Implementation
                 {
                     yield return FinishString();
                 }
-                else if (IsDigit(_currChar))
+                else if (IsDigit())
                 {
                     // 123 1.2 1. .1
                     yield return FinishNumber();
@@ -98,81 +99,15 @@ namespace Lexer_Implementation
                 }
                 else if (_currChar == '>')
                 {
-                    _currentValue += _currChar;
-                    NextChar();
-                    if (_currChar == '=')
-                    {
-                        _currentValue += _currChar;
-                        yield return new Token
-                        {
-                            Line = _line,
-                            Type = LexemType.Op_greater_e
-                        };
-                    }
-                    else
-                    {
-                        _offset--;
-                        yield return new Token
-                        {
-                            Line = _line,
-                            Type = LexemType.Op_greater
-                        };
-                    }
+                    yield return FinishGreater();
                 }
                 else if (_currChar == '<')
                 {
-                    _currentValue += _currChar;
-                    NextChar();
-                    if (_currChar == '=')
-                    {
-                        _currentValue += _currChar;
-                        yield return new Token
-                        {
-                            Line = _line,
-                            Type = LexemType.Op_less_e
-                        };
-                    }
-                    else if (_currChar == '>')
-                    {
-                        _currentValue += _currChar;
-                        yield return new Token
-                        {
-                            Line = _line,
-                            Type = LexemType.Op_not_equal
-                        };
-                    }
-                    else
-                    {
-                        _offset--;
-                        yield return new Token
-                        {
-                            Line = _line,
-                            Type = LexemType.Op_less
-                        };
-                    }
+                    yield return FinishLess();
                 }
                 else if (_currChar == ':')
                 {
-                    _currentValue += _currChar;
-                    NextChar();
-                    if (_currChar == '=')
-                    {
-                        _currentValue += _currChar;
-                        yield return new Token
-                        {
-                            Line = _line,
-                            Type = LexemType.Op_assign
-                        };
-                    }
-                    else
-                    {
-                        _offset--;
-                        yield return new Token
-                        {
-                            Line = _line,
-                            Type = LexemType.Op_col
-                        };
-                    }
+                    yield return FinishColon();
                 }
                 else if (MaybeReserved(out var token))
                 {
@@ -189,13 +124,91 @@ namespace Lexer_Implementation
                 }
                 else
                 {
-                    throw new ArgumentException("Ooops");
+                    throw new ArgumentException($"unexpected '{_currChar}' in line: {_line}");
                 }
                 _currentValue = String.Empty;
             }
             yield return new Token
             {
+                Line = _line,
                 Type = LexemType.EOF
+            };
+        }
+
+        private Token FinishColon()
+        {
+            _currentValue += _currChar;
+            NextChar();
+            if (_currChar == '=')
+            {
+                _currentValue += _currChar;
+                return new Token
+                {
+                    Line = _line,
+                    Type = LexemType.Op_assign
+                };
+            }
+
+            _offset--;
+            return new Token
+            {
+                Line = _line,
+                Type = LexemType.Op_col
+            };
+        }
+
+        private Token FinishLess()
+        {
+            _currentValue += _currChar;
+            NextChar();
+
+            if (_currChar == '=')
+            {
+                _currentValue += _currChar;
+                return new Token
+                {
+                    Line = _line,
+                    Type = LexemType.Op_less_e
+                };
+            }
+
+            if (_currChar == '>')
+            {
+                _currentValue += _currChar;
+                return new Token
+                {
+                    Line = _line,
+                    Type = LexemType.Op_not_equal
+                };
+            }
+
+            _offset--;
+            return new Token
+            {
+                Line = _line,
+                Type = LexemType.Op_less
+            };
+        }
+
+        private Token FinishGreater()
+        {
+            _currentValue += _currChar;
+            NextChar();
+            if (_currChar == '=')
+            {
+                _currentValue += _currChar;
+                return new Token
+                {
+                    Line = _line,
+                    Type = LexemType.Op_greater_e
+                };
+            }
+
+            _offset--;
+            return new Token
+            {
+                Line = _line,
+                Type = LexemType.Op_greater
             };
         }
 
@@ -222,7 +235,7 @@ namespace Lexer_Implementation
                 } while (true);
             }
             else 
-                throw new ArgumentException("expected '#' or '*'");
+                throw new ArgumentException($"expected '#' or '*' in line: {_line}");
         }
 
         private bool MaybeReserved(out Token token)
@@ -245,7 +258,7 @@ namespace Lexer_Implementation
         {
             _currentValue += _currChar;
             NextChar();
-            if (IsDigit(_currChar))
+            if (IsDigit())
             {
                 return FinishFloat();
             }
@@ -253,6 +266,7 @@ namespace Lexer_Implementation
             _offset--;
             return new Token
             {
+                Line = _line,
                 Type = LexemType.Op_dot
             };
         }
@@ -261,7 +275,7 @@ namespace Lexer_Implementation
         {
             while (true)
             {
-                if (IsDigit(_currChar))
+                if (IsDigit())
                 {
                     _currentValue += _currChar;
                 }
@@ -326,7 +340,7 @@ namespace Lexer_Implementation
 
             if (!IsDigit())
             {
-                throw new ArgumentException("expected a digit");
+                throw new ArgumentException($"expected a digit in line: {_line}");
             }
 
             do
@@ -352,14 +366,14 @@ namespace Lexer_Implementation
             {
                 NextChar();
                 if (_currChar == 0 || _currChar == '\n')
-                    throw new ArgumentException("\" expected");
+                    throw new ArgumentException($"\" expected in line: {_line}");
                 if(_currChar == '\"')
                     break;
                 if (_currChar == '\\')
                 {
                     NextChar();
                     if(!IsEscapedChar())
-                        throw new ArgumentException($"unrecognized escape sequence: \\{_currChar}");
+                        throw new ArgumentException($"unrecognized escape sequence: \\{_currChar} in line: {_line}");
                     _currentValue += @"\";
                 }
 
@@ -399,7 +413,11 @@ namespace Lexer_Implementation
             if (token == null)
                 return null;
 
-            var newToken = new Token { Type = token.Type };
+            var newToken = new Token
+            {
+                Line = _line,
+                Type = token.Type
+            };
 
             if (newToken.Type == LexemType.Lit_bool)
                 newToken.Value = token.Value;
