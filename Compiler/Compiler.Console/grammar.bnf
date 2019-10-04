@@ -4,6 +4,9 @@
 
 <START> ::= <CLASSES>
 
+#USING
+<USING> ::= "using" <IDENT> ";"
+<PATH> ::= ?
 #CLASS
 <CLASSES> ::= <CLASS_DECL> | <CLASSES> <CLASS_DECL>
 <CLASS_DECL> ::= "class" <IDENT> <CLASS_BODY> | "class" <IDENT> <EXTENDS> <CLASS_BODY>  
