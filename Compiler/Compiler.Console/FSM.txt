@@ -1,0 +1,20 @@
+digraph {
+    rankdir=LR;
+    node [shape = point ]; s
+    node [shape = doublecircle ]; Out
+
+    node [shape = circle];
+    s -> Start;
+    Start -> Start [label = "white space"];
+
+    Start -> Ident [ label = "a-z,A-Z,_" ];
+    Ident -> Ident [label="a-z,A-Z,_,0-9"];
+    Ident -> LookUp;
+    LookUp -> Out;
+
+    Start -> Int [label = "0-9"];
+    Int -> Int [label = "0-9"];
+    Int -> Out;
+    Int -> Float [label = "\".\""];
+    Float -> Float [label = "0-9"];
+}
