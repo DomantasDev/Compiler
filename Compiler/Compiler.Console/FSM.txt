@@ -16,5 +16,24 @@ digraph {
     Int -> Int [label = "0-9"];
     Int -> Out;
     Int -> Float [label = "\".\""];
+
     Float -> Float [label = "0-9"];
+    Float -> Out;
+    Float -> AnyExponent [label = "e"];
+    AnyExponent -> "-Exponent" [label = "-"];
+    "-Exponent" -> "-Exponent2" [label = "0-9"];
+    "-Exponent2" -> "-Exponent2" [label = "0-9"];
+    "-Exponent2" -> Out;
+    AnyExponent -> "+Exponent" [label = "0-9"];
+    "+Exponent" -> "+Exponent" [label = "0-9"];
+    "+Exponent" -> Out;
+
+    Start -> "." [label = "\".\""];
+    "." -> Out;
+    "." -> Float [label = "0-9"];
+
+    Start -> String [label = "\""];
+    String -> Out [label = "\""];
+    String -> String [label = "Visible not white space char"];
+    String -> EscapedChar [label = "\\"];
 }

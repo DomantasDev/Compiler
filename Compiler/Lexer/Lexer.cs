@@ -5,6 +5,10 @@ using System.Text.RegularExpressions;
 
 namespace Lexer_Implementation
 {
+    //po skaiciaus negali iskart but ident
+    //paleidimas is comandline su file name kaip 
+    //netikrint to pacio char du kart
+    //using ...?
     public class Lexer
     {
         private readonly string _code;
@@ -82,7 +86,7 @@ namespace Lexer_Implementation
                 }
                 if (IsIdentChar())
                 {
-                    yield return FinishIdent();
+                    yield return FinishIdent(); 
                 }
                 else if (_currChar == '\"')
                 {
@@ -90,7 +94,6 @@ namespace Lexer_Implementation
                 }
                 else if (IsDigit())
                 {
-                    // 123 1.2 1. .1
                     yield return FinishNumber();
                 }
                 else if (_currChar == '.')

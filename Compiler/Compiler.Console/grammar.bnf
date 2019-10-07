@@ -1,12 +1,14 @@
 # TODO for, static?
+# using ...?
 # this in Main
 # MAYBE: make assignment an expression
 
-<START> ::= <CLASSES>
+<START> ::= <USINGS> <CLASSES> | <CLASSES>
 
 #USING
-<USING> ::= "using" <IDENT> ";"
-<PATH> ::= ?
+<USINGS> ::= <USING> | <USINGS> <USING>
+<USING> ::= "using" <STRING> ";"
+
 #CLASS
 <CLASSES> ::= <CLASS_DECL> | <CLASSES> <CLASS_DECL>
 <CLASS_DECL> ::= "class" <IDENT> <CLASS_BODY> | "class" <IDENT> <EXTENDS> <CLASS_BODY>  
