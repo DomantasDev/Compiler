@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
-namespace Lexer_Implementation
+namespace Lexer_Implementation.StaticLexer
 {
     //po skaiciaus negali iskart but ident
     //paleidimas is comandline su file name kaip 

@@ -1,4 +1,4 @@
-﻿namespace Lexer_Implementation
+﻿namespace Lexer_Implementation.StaticLexer
 {
     public class Token
     {

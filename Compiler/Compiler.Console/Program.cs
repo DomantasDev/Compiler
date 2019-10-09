@@ -2,6 +2,8 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using Lexer_Implementation;
+using Lexer_Implementation.DynamicLexer;
+using Lexer_Implementation.StaticLexer;
 
 namespace ConsoleApp
 {
@@ -9,6 +11,9 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
+            var dynamicLexer = new DynamicLexer("../../../DynamicLexer/lexemes.bnf");
+
+            ///////////////
             var code = File.ReadAllText("../../../code.txt");
 
             var lexer = new Lexer(code);
