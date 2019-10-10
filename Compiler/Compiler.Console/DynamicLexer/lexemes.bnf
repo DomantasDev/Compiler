@@ -1,3 +1,4 @@
 <BOOL> ::= "true" | "false"
+<THIS> ::= "this"
 <NULL> ::= "null"
 <BASE> ::= "base"

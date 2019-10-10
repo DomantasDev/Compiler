@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Lexer_Implementation.DynamicLexer.FSM
@@ -9,6 +10,12 @@ namespace Lexer_Implementation.DynamicLexer.FSM
         public StateMachine Build(List<BNFRule> rules, List<BNFRule> helpers)
         {
             var start = new State();
+            start.Transitions.Add(new Transition
+            {
+                From = start,
+                To = start,
+                Conditions = new List<char> {'\n','\r', '\t', ' ' }
+            });
             State currentState;
             foreach (var bnfRule in rules)
             {
@@ -25,20 +32,33 @@ namespace Lexer_Implementation.DynamicLexer.FSM
                             for (var j = 0; j < chars.Length; j++)
                             {
                                 var c = chars[j];
-                                var newState = new State();
-                                if (i == alternative.Count - 1 && j == chars.Length - 1)
+                                Transition tr;
+                                if ((tr = currentState.Transitions.SingleOrDefault(t => t.Conditions.Contains(c))) != null)// jei is einamos busenos jau yra perejimas su duotu simboliu
                                 {
-                                    newState.IsFinal = true;
-                                    newState.LexemeType = lexemeType;
+                                    currentState = tr.To;
+                                    if (i == alternative.Count - 1 && j == chars.Length - 1 && !currentState.IsFinal) // jei paskutinis einamos alternatyvos simbolis
+                                    {
+                                        currentState.IsFinal = true;
+                                        currentState.LexemeType = lexemeType;
+                                    }
                                 }
-                                var newTransition = new Transition
+                                else
                                 {
-                                    To = newState,
-                                    From = currentState,
-                                    Conditions = new List<char> {c}
-                                };
-                                currentState.Transitions.Add(newTransition);
-                                currentState = newState;
+                                    var newState = new State();
+                                    if (i == alternative.Count - 1 && j == chars.Length - 1) // jei paskutinis einamos alternatyvos simbolis
+                                    {
+                                        newState.IsFinal = true;
+                                        newState.LexemeType = lexemeType;
+                                    }
+                                    var newTransition = new Transition
+                                    {
+                                        To = newState,
+                                        From = currentState,
+                                        Conditions = new List<char> {c}
+                                    };
+                                    currentState.Transitions.Add(newTransition);
+                                    currentState = newState;
+                                }
                             }
                         }
                     }

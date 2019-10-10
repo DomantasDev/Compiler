@@ -36,7 +36,7 @@ namespace Lexer_Implementation.DynamicLexer
 
                     yield return new Lexeme
                     {
-                        Value = lastState.value,
+                        Value = lastState.value.Trim(),
                         Type = lastState.state.LexemeType
                     };
                     _stateMachine.Reset();
