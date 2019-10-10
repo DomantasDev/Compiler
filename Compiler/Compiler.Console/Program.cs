@@ -13,25 +13,31 @@ namespace ConsoleApp
         {
             var dynamicLexer = new DynamicLexer("../../../DynamicLexer/lexemes.bnf");
 
-            ///////////////
-            var code = File.ReadAllText("../../../code.txt");
-
-            var lexer = new Lexer(code);
-
             Console.WriteLine($"{"Line".PadLeft(5)}|{"Type".PadRight(15)}| Value");
             Console.WriteLine($"{new string('-', 5)}+{new string('-', 15)}+{new string('-', 20)}");
+            foreach (var lexeme in dynamicLexer.GetLexemes(File.ReadAllText("../../../DynamicLexer/code.txt")))
+            {
+                Print(lexeme);
+            }
 
-            try
-            {
-                foreach (var token in lexer.Get())
-                {
-                    Print(token);
-                }
-            }
-            catch (ArgumentException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            //var code = File.ReadAllText("../../../code.txt");
+
+            //var lexer = new Lexer(code);
+
+            //Console.WriteLine($"{"Line".PadLeft(5)}|{"Type".PadRight(15)}| Value");
+            //Console.WriteLine($"{new string('-', 5)}+{new string('-', 15)}+{new string('-', 20)}");
+
+            //try
+            //{
+            //    foreach (var token in lexer.Get())
+            //    {
+            //        Print(token);
+            //    }
+            //}
+            //catch (ArgumentException ex)
+            //{
+            //    Console.WriteLine(ex.Message);
+            //}
 
             Console.ReadLine();
         }
@@ -48,6 +54,12 @@ namespace ConsoleApp
             }
                 
             Console.WriteLine();
+        }
+
+        static void Print(Lexeme lexeme)
+        {
+            Console.Write($"{lexeme.Line.ToString().PadRight(5)}|{lexeme.Type.ToString().PadRight(15)}|");
+            Console.WriteLine($"{lexeme.Value}");
         }
     }
 }

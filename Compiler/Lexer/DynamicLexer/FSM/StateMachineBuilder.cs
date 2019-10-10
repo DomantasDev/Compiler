@@ -9,13 +9,43 @@ namespace Lexer_Implementation.DynamicLexer.FSM
         public StateMachine Build(List<BNFRule> rules, List<BNFRule> helpers)
         {
             var start = new State();
+            State currentState;
             foreach (var bnfRule in rules)
             {
-                foreach (var bnfRuleAlternative in bnfRule.Alternatives)
+                var lexemeType = bnfRule.Name;
+                foreach (var alternative in bnfRule.Alternatives)
                 {
-                    bnfRuleAlternative.fo
+                    currentState = start;
+                    for (var i = 0; i < alternative.Count; i++)
+                    {
+                        var rule = alternative[i];
+                        if (rule.IsTerminal)
+                        {
+                            var chars = rule.TerminalValue.ToCharArray();
+                            for (var j = 0; j < chars.Length; j++)
+                            {
+                                var c = chars[j];
+                                var newState = new State();
+                                if (i == alternative.Count - 1 && j == chars.Length - 1)
+                                {
+                                    newState.IsFinal = true;
+                                    newState.LexemeType = lexemeType;
+                                }
+                                var newTransition = new Transition
+                                {
+                                    To = newState,
+                                    From = currentState,
+                                    Conditions = new List<char> {c}
+                                };
+                                currentState.Transitions.Add(newTransition);
+                                currentState = newState;
+                            }
+                        }
+                    }
                 }
             }
+
+            return new StateMachine(start);
         }
     }
 }
