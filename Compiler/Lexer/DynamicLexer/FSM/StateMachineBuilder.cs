@@ -16,13 +16,12 @@ namespace Lexer_Implementation.DynamicLexer.FSM
                 To = start,
                 Conditions = new List<char> {'\n','\r', '\t', ' ' }
             });
-            State currentState;
             foreach (var bnfRule in rules)
             {
                 var lexemeType = bnfRule.Name;
                 foreach (var alternative in bnfRule.Alternatives)
                 {
-                    currentState = start;
+                    var currentState = start;
                     for (var i = 0; i < alternative.Count; i++)
                     {
                         var rule = alternative[i];
@@ -66,6 +65,63 @@ namespace Lexer_Implementation.DynamicLexer.FSM
             }
 
             return new StateMachine(start);
+
+            List<State> AddRule(BNFRule bnfRule, List<State> currentStates)
+            {
+                foreach (var alternative in bnfRule.Alternatives)
+                {
+                    var currentState = start;
+                    for (var i = 0; i < alternative.Count; i++)
+                    {
+                        var rule = alternative[i];
+                        if (rule.IsTerminal)
+                        {
+                            var chars = rule.TerminalValue.ToCharArray();
+                            for (var j = 0; j < chars.Length; j++)
+                            {
+                                var c = chars[j];
+                                Transition tr;
+                                if ((tr = currentState.Transitions.SingleOrDefault(t => t.Conditions.Contains(c))) != null)// jei is einamos busenos jau yra perejimas su duotu simboliu
+                                {
+                                    currentState = tr.To;
+                                    if (i == alternative.Count - 1 && j == chars.Length - 1 && !currentState.IsFinal) // jei paskutinis einamos alternatyvos simbolis
+                                    {
+                                        currentState.IsFinal = true;
+                                        currentState.LexemeType = lexemeType;
+                                    }
+                                }
+                                else
+                                {
+                                    var newState = new State();
+                                    if (i == alternative.Count - 1 && j == chars.Length - 1) // jei paskutinis einamos alternatyvos simbolis
+                                    {
+                                        newState.IsFinal = true;
+                                        newState.LexemeType = lexemeType;
+                                    }
+                                    var newTransition = new Transition
+                                    {
+                                        To = newState,
+                                        From = currentState,
+                                        Conditions = new List<char> { c }
+                                    };
+                                    currentState.Transitions.Add(newTransition);
+                                    currentState = newState;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            List<State> AddTerminalRule(List<State> currentStates)
+            {
+                var newCurrentStates = new List<State>();
+                foreach (var currentState in currentStates)
+                {
+                    
+                }
+            }
         }
+
     }
 }
