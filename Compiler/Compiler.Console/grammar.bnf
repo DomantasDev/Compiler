@@ -21,22 +21,22 @@
 <CTOR_DECL> ::= <CTOR> <BODY>
 <CTOR> ::= <CTOR_SIGNATURE> | <CTOR_SIGNATURE>  <BASE_CTOR_CALL>
 <CTOR_SIGNATURE> ::= <VISIBILITY> <KW_CTOR> <PARAM_LIST>
-<BASE_CTOR_CALL> ::= ":" <BASE> <ARG_LIST>
+<BASE_CTOR_CALL> ::= <COLON> <BASE> <ARG_LIST>
 #METHOD DECLARATION
-<METHOD_DECL> ::= <VISIBILITY> <METHOD_SIGNATURE> <BODY> | <VISIBILITY> <VIRTUAL_OVERRIDES> <METHOD_SIGNATURE> <BODY>
+<METHOD_DECL> ::= <VISIBILITY> <METHOD_SIGNATURE> <BODY> | <VISIBILITY> <VIRTUAL_OVERRIDE> <METHOD_SIGNATURE> <BODY>
 <METHOD_SIGNATURE> ::= <RETURN_TYPE> <IDENT> <PARAM_LIST>
 <BODY> ::= <BRACE_O> <STMTS> <BRACE_C> | <BRACE_O> <BRACE_C>
 
-<VISIBILITY> ::= "private" | "protected" | "public"
-<VIRTUAL_OVERRIDES> ::= "virtual" | "override"
+<VISIBILITY> ::= <KW_PRIVATE> | <KW_PROTECTED>| <KW_PUBLIC>
+<VIRTUAL_OVERRIDE> ::= <KW_VIRTUAL> | <KW_OVERRIDE>
 
-<RETURN_TYPE> ::= <TYPE> | "void"
+<RETURN_TYPE> ::= <TYPE> | <KW_VOID>
 <TYPE> ::= <SYSTEM_TYPE> | <IDENT>
-<SYSTEM_TYPE> ::= "int" | "string" | "float" | "bool"
+<SYSTEM_TYPE> ::= <KW_INT> | <KW_STRING> | <KW_FLOAT> | <KW_BOOL>
 
 #PARAMETERS
 <PARAM_LIST> ::= <PAREN_O> <PARAMS> <PAREN_C> | <PAREN_O> <PAREN_C>
-<PARAMS> ::= <PARAM> | <PARAMS> "," <PARAM>
+<PARAMS> ::= <PARAM> | <PARAMS> <COMMA> <PARAM>
 <PARAM> ::= <TYPE> <IDENT>
 
 #STATEMENT
@@ -45,11 +45,11 @@
 
 <EXPR_STMT> ::= <EXPR>
 <RETURN_STMT> ::= <KW_RETURN> | <KW_RETURN> <EXPR>
-<BREAK_STMT> ::= "break"
-<CONTINUE_STMT> ::= "continue"
-<ASSIGN_STMT> ::= <IDENT> ":=" <EXPR> # nereusint
-<LOCAL_VARIABLE_DECL_STMT> ::= <TYPE> <IDENT> | <TYPE> <IDENT> ":=" <EXPR>
-<VARIABLE_DECL_STMT> ::= <VISIBILITY> <TYPE> <IDENT> | <VISIBILITY> <TYPE> <IDENT> ":=" <EXPR>
+<BREAK_STMT> ::= <KW_BREAK>
+<CONTINUE_STMT> ::= <KW_CONTINUE>
+<ASSIGN_STMT> ::= <IDENT> <OP_ASSIGN> <EXPR> # nereusint
+<LOCAL_VARIABLE_DECL_STMT> ::= <TYPE> <IDENT> | <TYPE> <IDENT> <OP_ASSIGN> <EXPR>
+<VARIABLE_DECL_STMT> ::= <VISIBILITY> <TYPE> <IDENT> | <VISIBILITY> <TYPE> <IDENT> <OP_ASSIGN> <EXPR>
 <WHILE_STMT> ::= <KW_WHILE> <PAREN_O> <EXPR> <PAREN_C> <BODY>
 <IF_STMT> ::= <IF> | <IF> <ELSE>
 <IF> ::= <KW_IF> <PAREN_O> <EXPR> <PAREN_C> <BODY>
@@ -58,7 +58,7 @@
 <WRITE_STMT> ::= <KW_WRITE> <ARGS>
 
 <READ_STMT> ::= <KW_READ> <VAR_LIST>
-<VAR_LIST> ::= <VAR> | <VAR_LIST> "," <VAR>
+<VAR_LIST> ::= <VAR> | <VAR_LIST> <COMMA> <VAR>
 
 #EXPRESSION
 <EXPR> ::= <OR>
@@ -73,7 +73,7 @@
 
 <PAREN> ::= <PAREN_O> <EXPR> <PAREN_C>
 <NEG> ::= "-" <EXPR>
-<NOT> ::= "!" <EXPR>
+<NOT> ::= <OP_NOT> <EXPR>
 <CAST> ::= <PAREN_O> <TYPE> <PAREN_C> <EXPR>
 <OBJ_CREATION> ::= <KW_NEW> <IDENT> <ARG_LIST>
 <METHOD_CALL> ::= <METHOD_NAME> <ARG_LIST>
@@ -88,7 +88,7 @@
 
 #ARGUMENTS
 <ARG_LIST> ::= <PAREN_O> <ARGS> <PAREN_C> | <PAREN_O> <PAREN_C>
-<ARGS> ::= <EXPR> | <ARGS> "," <EXPR>
+<ARGS> ::= <EXPR> | <ARGS> <COMMA> <EXPR>
 
 #IDENT
 <METHOD_NAME> ::= <IDENT>
@@ -151,12 +151,30 @@
 <KW_USING> ::= "using"
 <KW_EXTENDS> ::= "extends"
 <KW_CLASS> ::= "class"
+<KW_INT> ::= "int"
+<KW_STRING> ::= "string"
+<KW_FLOAT> ::= "float"
+<KW_BOOL> ::= "bool"
+<KW_VOID> ::= "void"
+<KW_PRIVATE> ::= "private"
+<KW_PROTECTED> ::= "protected"
+<KW_PUBLIC> ::= "public"
+<KW_VIRTUAL> ::= "virtual"
+<KW_OVERRIDE> ::= "override"
+<KW_BREAK> ::= "break"
+<KW_CONTINUE> ::= "continue"
+
+<OP_ASSIGN> ::= ":="
+<OP_NOT> ::= "!"
+
 <SEMICOLON> ::= ";"
+<COLON> ::= ":"
+<COMMA> ::= ","
 
 
 #COMMENTS
 <COMMENT> ::= "##" <CHARS> | "##"
-<MULTI_LINE_COMMENT> ::= "#*" <CHARS> "*#" | "#*" "*#"
+<MULTI_LINE_COMMENT> ::= "#*" <STRING_CHARS> "*#" | "#*" "*#"
 
 #
 <WHITE_SPACE> ::= " " | "\n"

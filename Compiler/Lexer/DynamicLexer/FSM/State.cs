@@ -11,5 +11,7 @@ namespace Lexer_Implementation.DynamicLexer.FSM
         public List<Transition> Transitions { get; set; } = new List<Transition>();
 
         internal bool RecursionFinished { get; set; } = true;
+
+        internal string RecursionName { get; set; }
     }
 }

@@ -52,7 +52,7 @@ namespace Lexer_Implementation.DynamicLexer
                     Alternatives = new List<List<BNFRule>>()
                 };
 
-                var alternatives = x[1].Split('|');
+                var alternatives = x[1].Split(" | ");
                 foreach (var alternative in alternatives)
                 {
                     var newRules = new List<BNFRule>();

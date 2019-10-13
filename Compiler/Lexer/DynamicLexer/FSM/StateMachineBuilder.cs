@@ -31,25 +31,40 @@ namespace Lexer_Implementation.DynamicLexer.FSM
             if(IsRecursion(bnfRule, out var otherRule))
             {
                 
-                List<State> someStates;
+                //List<State> someStates;
                 List<State> unfinishedStates = startingStates;
-
+                var finishedStates = new List<State>();
                 do
                 {
                     tracker = new Tracker();
-                    someStates = AddRule(otherRule, unfinishedStates, shouldBeFinal, lexemeType, tracker, true);
+                    var someStates = AddRule(otherRule, unfinishedStates, shouldBeFinal, lexemeType, tracker, true);
+
                     newCurrentStates.AddRange(someStates.Where(s => s.RecursionFinished));
-                    unfinishedStates = someStates.Where(s => !s.RecursionFinished).ToList();
+
+                    finishedStates.AddRange(someStates
+                        .Where(s => !s.RecursionFinished)
+                        .Where(s => s.RecursionName == bnfRule.Name));
+
+                    unfinishedStates = someStates
+                        .Where(s => !s.RecursionFinished)
+                        .Where(s => s.RecursionName != bnfRule.Name)
+                        .ToList();
 
                 } while (unfinishedStates.Any());
 
                 var firstChars = GetFirstChars(otherRule);
-                newCurrentStates.ForEach(s => s.Transitions.Add(new Transition
+                foreach(var state in newCurrentStates)
                 {
-                    From = s,
-                    To = s,
-                    Conditions = firstChars
-                }));
+                    state.Transitions.Add(new Transition
+                    {
+                        From = state,
+                        To = state,
+                        Conditions = firstChars
+                    });
+                    state.RecursionName = bnfRule.Name;
+                }
+
+                newCurrentStates.AddRange(finishedStates);
             }
             else
             {
