@@ -56,7 +56,7 @@ namespace Lexer_Implementation.DynamicLexer
                 foreach (var alternative in alternatives)
                 {
                     var newRules = new List<BNFRule>();
-                    var altRules = alternative.Trim().Split(' ');
+                    var altRules = alternative.Trim().Split(' '); // neleidzia turet tarpo simbolio. (\"[^\"]*\")|(<[^\"]*>)
 
                     foreach (var r in altRules)
                     {

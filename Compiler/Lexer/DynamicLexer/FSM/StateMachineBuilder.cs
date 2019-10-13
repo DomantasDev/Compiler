@@ -91,18 +91,6 @@ namespace Lexer_Implementation.DynamicLexer.FSM
             return newCurrentStates;
         }
 
-        //private List<State> AddRecursion(BNFRule rule, List<State> currentStates, bool shouldBeFinal, string lexemeType)
-        //{
-        //    if (rule.IsTerminal)
-        //    {
-        //        return AddTerminalRuleForRecursion(rule, currentStates, shouldBeFinal, lexemeType, true);
-        //    }
-        //    else
-        //    {
-
-        //    }
-        //}
-
         private List<char> GetFirstChars(BNFRule rule)
         {
             if (rule.IsTerminal)
@@ -186,55 +174,6 @@ namespace Lexer_Implementation.DynamicLexer.FSM
 
             return newCurrentStates;
         }
-
-        //private static List<State> AddTerminalRuleForRecursion(BNFRule bnfRule, List<State> currentStates, bool shouldBeFinal, string lexemeType, bool hasFirstChar)
-        //{
-        //    var newCurrentStates = new List<State>();
-
-        //    foreach (var cs in currentStates)
-        //    {
-        //        var currentState = cs;
-        //        var chars = bnfRule.TerminalValue.ToCharArray();
-        //        bool createdNewStateOnFirstStep = false;
-        //        while(!createdNewStateOnFirstStep && hasFirstChar)
-        //            for (var j = 0; j < chars.Length; j++)
-        //            {
-        //                var c = chars[j];
-        //                Transition tr;
-        //                if ((tr = currentState.Transitions.SingleOrDefault(t => t.Conditions.Contains(c))) != null)// jei is einamos busenos jau yra perejimas su duotu simboliu
-        //                {
-        //                    currentState = tr.To;
-        //                    if (shouldBeFinal && j == chars.Length - 1 && !currentState.IsFinal) // jei paskutinis einamos alternatyvos simbolis
-        //                    {
-        //                        currentState.IsFinal = true;
-        //                        currentState.LexemeType = lexemeType;
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    if (j == 0)
-        //                        createdNewStateOnFirstStep = true;
-        //                    var newState = new State();
-        //                    if (shouldBeFinal && j == chars.Length - 1) // jei paskutinis einamos alternatyvos simbolis
-        //                    {
-        //                        newState.IsFinal = true;
-        //                        newState.LexemeType = lexemeType;
-        //                    }
-        //                    var newTransition = new Transition
-        //                    {
-        //                        To = newState,
-        //                        From = currentState,
-        //                        Conditions = new List<char> { c }
-        //                    };
-        //                    currentState.Transitions.Add(newTransition);
-        //                    currentState = newState;
-        //                }
-        //            }
-        //        newCurrentStates.Add(currentState);
-        //    }
-
-        //    return newCurrentStates;
-        //}
     }
 
     class Tracker
