@@ -19,17 +19,29 @@ namespace Lexer_Implementation.DynamicLexer
         {
             var bnf = File.ReadAllText(_pathToBnf).Split('\n');
 
-            var bnfRules = bnf.TakeWhile(r => r.Trim() != "#helpers").ToArray();
-            var bnfHelpers = bnf.Skip(bnfRules.Length + 1).ToArray();
+            //var bnfRules = bnf.TakeWhile(r => r.Trim() != "#helpers").ToArray();
+            //var bnfHelpers = bnf.Skip(bnfRules.Length + 1).ToArray();
 
-            return (rules: GetRules(bnfRules), helperRules: GetRules(bnfHelpers));
+            //return (rules: GetRules(bnfRules), helperRules: GetRules(bnfHelpers));
+            return GetRules(bnf);
         }
 
-        private List<BNFRule> GetRules(string[] BNFRules)
+        private (List<BNFRule> rules, List<BNFRule> helperRules) GetRules(string[] BNFRules)
         {
             var rules = new List<BNFRule>();
-            foreach (var rule in BNFRules)
+            var helpers = new List<BNFRule>();
+            foreach (var ru in BNFRules)
             {
+                var rule = ru;
+                List<BNFRule> currentRules;
+                if (rule.StartsWith('*'))
+                {
+                    currentRules = helpers;
+                    rule = rule.Substring(1);
+                }
+                else
+                    currentRules = rules;
+
                 var x = rule.Split("::=");
                 var name = x[0].Trim();
 
@@ -70,10 +82,10 @@ namespace Lexer_Implementation.DynamicLexer
                     }
                     newRootRule.Alternatives.Add(newRules);
                 }
-                rules.Add(newRootRule);
+                currentRules.Add(newRootRule);
             }
 
-            return rules;
+            return (rules, helpers);
         }
     }
 }

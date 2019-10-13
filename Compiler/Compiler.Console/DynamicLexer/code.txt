@@ -1,5 +1,2 @@
-true 
-this 
-false 
-null 
-base
+_pls work _ this null base
+thisa nullas baze

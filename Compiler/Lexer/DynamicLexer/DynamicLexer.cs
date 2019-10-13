@@ -14,7 +14,7 @@ namespace Lexer_Implementation.DynamicLexer
             var reader = new BNFReader(pathToBNF);
             var (rules, helpers) = reader.GetRules();
 
-            LinkRules(rules, helpers);
+            LinkRules(rules.Union(helpers).ToList());
 
             _stateMachine = new StateMachineBuilder().Build(rules, helpers);
         }
@@ -44,9 +44,9 @@ namespace Lexer_Implementation.DynamicLexer
             }
         }
 
-        private void LinkRules(List<BNFRule> rules, List<BNFRule> helpers)
+        private void LinkRules(List<BNFRule> allRules)
         {
-            foreach (var rootRule in rules)
+            foreach (var rootRule in allRules)
             {
                 foreach (var rootRuleAlternative in rootRule.Alternatives)
                 {
@@ -54,16 +54,17 @@ namespace Lexer_Implementation.DynamicLexer
                     {
                         if (!rootRuleAlternative[i].IsTerminal)
                         {
-                            rootRuleAlternative[i] = GetRule(rootRuleAlternative[i].Name, rules.Union(helpers));
+                            rootRuleAlternative[i] = GetRule(rootRuleAlternative[i].Name);
                         }
                     }
                 }
             }
+
+            BNFRule GetRule(string ruleName)
+            {
+                return allRules.Single(r => r.Name == ruleName);
+            }
         }
 
-        private BNFRule GetRule(string ruleName, IEnumerable<BNFRule> rules)
-        {
-            return rules.Single(r => r.Name == ruleName);
-        }
     }
 }

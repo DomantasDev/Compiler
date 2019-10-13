@@ -7,25 +7,25 @@
 
 #USING
 <USINGS> ::= <USING> | <USINGS> <USING>
-<USING> ::= "using" <STRING> ";"
+<USING> ::= <KW_USING> <STRING> <SEMICOLON>
 
 #CLASS
 <CLASSES> ::= <CLASS_DECL> | <CLASSES> <CLASS_DECL>
-<CLASS_DECL> ::= "class" <IDENT> <CLASS_BODY> | "class" <IDENT> <EXTENDS> <CLASS_BODY>  
-<EXTENDS> ::= "extends" <IDENT>
-<CLASS_BODY> ::= "{" <CLASS_MEMBERS> "}" | "{" "}"
+<CLASS_DECL> ::= <KW_CLASS> <IDENT> <CLASS_BODY> | <KW_CLASS> <IDENT> <EXTENDS> <CLASS_BODY>  
+<EXTENDS> ::= <KW_EXTENDS> <IDENT>
+<CLASS_BODY> ::= <BRACE_O> <CLASS_MEMBERS> <BRACE_C> | <BRACE_O> <BRACE_C>
 <CLASS_MEMBERS> ::= <CLASS_MEMBER> | <CLASS_MEMBERS> <CLASS_MEMBER>
-<CLASS_MEMBER> ::= <METHOD_DECL> | <CTOR_DECL> | <VARIABLE_DECL_STMT> ";"
+<CLASS_MEMBER> ::= <METHOD_DECL> | <CTOR_DECL> | <VARIABLE_DECL_STMT> <SEMICOLON>
 
 #CONSTRUCTOR
 <CTOR_DECL> ::= <CTOR> <BODY>
 <CTOR> ::= <CTOR_SIGNATURE> | <CTOR_SIGNATURE>  <BASE_CTOR_CALL>
-<CTOR_SIGNATURE> ::= <VISIBILITY> "constructor" <PARAM_LIST>
+<CTOR_SIGNATURE> ::= <VISIBILITY> <KW_CTOR> <PARAM_LIST>
 <BASE_CTOR_CALL> ::= ":" <BASE> <ARG_LIST>
 #METHOD DECLARATION
 <METHOD_DECL> ::= <VISIBILITY> <METHOD_SIGNATURE> <BODY> | <VISIBILITY> <VIRTUAL_OVERRIDES> <METHOD_SIGNATURE> <BODY>
 <METHOD_SIGNATURE> ::= <RETURN_TYPE> <IDENT> <PARAM_LIST>
-<BODY> ::= "{" <STMTS> "}" | "{" "}"
+<BODY> ::= <BRACE_O> <STMTS> <BRACE_C> | <BRACE_O> <BRACE_C>
 
 <VISIBILITY> ::= "private" | "protected" | "public"
 <VIRTUAL_OVERRIDES> ::= "virtual" | "override"
@@ -35,29 +35,29 @@
 <SYSTEM_TYPE> ::= "int" | "string" | "float" | "bool"
 
 #PARAMETERS
-<PARAM_LIST> ::= "(" <PARAMS> ")" | "(" ")"
+<PARAM_LIST> ::= <PAREN_O> <PARAMS> <PAREN_C> | <PAREN_O> <PAREN_C>
 <PARAMS> ::= <PARAM> | <PARAMS> "," <PARAM>
 <PARAM> ::= <TYPE> <IDENT>
 
 #STATEMENT
 <STMTS> ::= <STMT> | <STMTS> <STMT>
-<STMT> ::= <BREAK_STMT> ";" | <RETURN_STMT> ";" | <CONTINUE_STMT> ";" | <ASSIGN_STMT> ";" | <LOCAL_VARIABLE_DECL_STMT> ";" | <VARIABLE_DECL_STMT> ";" | <EXPR_STMT> ";" | <WRITE_STMT> ";" | <READ_STMT> ";" | <WHILE_STMT> | <IF_STMT> |
+<STMT> ::= <BREAK_STMT> <SEMICOLON> | <RETURN_STMT> <SEMICOLON> | <CONTINUE_STMT> <SEMICOLON> | <ASSIGN_STMT> <SEMICOLON> | <LOCAL_VARIABLE_DECL_STMT> <SEMICOLON> | <VARIABLE_DECL_STMT> <SEMICOLON> | <EXPR_STMT> <SEMICOLON> | <WRITE_STMT> <SEMICOLON> | <READ_STMT> <SEMICOLON> | <WHILE_STMT> | <IF_STMT> |
 
 <EXPR_STMT> ::= <EXPR>
-<RETURN_STMT> ::= "return" | "return" <EXPR>
+<RETURN_STMT> ::= <KW_RETURN> | <KW_RETURN> <EXPR>
 <BREAK_STMT> ::= "break"
 <CONTINUE_STMT> ::= "continue"
 <ASSIGN_STMT> ::= <IDENT> ":=" <EXPR> # nereusint
 <LOCAL_VARIABLE_DECL_STMT> ::= <TYPE> <IDENT> | <TYPE> <IDENT> ":=" <EXPR>
 <VARIABLE_DECL_STMT> ::= <VISIBILITY> <TYPE> <IDENT> | <VISIBILITY> <TYPE> <IDENT> ":=" <EXPR>
-<WHILE_STMT> ::= "while" "(" <EXPR> ")" <BODY>
+<WHILE_STMT> ::= <KW_WHILE> <PAREN_O> <EXPR> <PAREN_C> <BODY>
 <IF_STMT> ::= <IF> | <IF> <ELSE>
-<IF> ::= "if" "(" <EXPR> ")" <BODY>
-<ELSE> ::= "else" <BODY> | "else" <IF_STMT> 
+<IF> ::= <KW_IF> <PAREN_O> <EXPR> <PAREN_C> <BODY>
+<ELSE> ::= <KW_ELSE> <BODY> | <KW_ELSE> <IF_STMT> 
 
-<WRITE_STMT> ::= "write" <ARGS>
+<WRITE_STMT> ::= <KW_WRITE> <ARGS>
 
-<READ_STMT> ::= "read" <VAR_LIST>
+<READ_STMT> ::= <KW_READ> <VAR_LIST>
 <VAR_LIST> ::= <VAR> | <VAR_LIST> "," <VAR>
 
 #EXPRESSION
@@ -71,11 +71,11 @@
 <DOT> ::=  <PRIMARY> | <DOT> <DOT_OP> <IDENT> # member access
 <PRIMARY> ::= <VAR> | <NUMBER> | <BOOL> | <STRING> | <PAREN> | <NEG> | <NOT> | <METHOD_CALL> | <OBJ_CREATION> | <CAST> | <NULL> | <THIS> | <BASE>
 
-<PAREN> ::= "(" <EXPR> ")"
+<PAREN> ::= <PAREN_O> <EXPR> <PAREN_C>
 <NEG> ::= "-" <EXPR>
 <NOT> ::= "!" <EXPR>
-<CAST> ::= "(" <TYPE> ")" <EXPR>
-<OBJ_CREATION> ::= "new" <IDENT> <ARG_LIST>
+<CAST> ::= <PAREN_O> <TYPE> <PAREN_C> <EXPR>
+<OBJ_CREATION> ::= <KW_NEW> <IDENT> <ARG_LIST>
 <METHOD_CALL> ::= <METHOD_NAME> <ARG_LIST>
 
 <OR_OP> ::= "|"
@@ -87,12 +87,13 @@
 <DOT_OP> ::= "."
 
 #ARGUMENTS
-<ARG_LIST> ::= "(" <ARGS> ")" | "(" ")"
+<ARG_LIST> ::= <PAREN_O> <ARGS> <PAREN_C> | <PAREN_O> <PAREN_C>
 <ARGS> ::= <EXPR> | <ARGS> "," <EXPR>
 
 #IDENT
 <METHOD_NAME> ::= <IDENT>
 <VAR> ::= <IDENT>
+
 <IDENT> ::=  <IDENT_START> | <IDENT_START> <IDENT_CHARS>
 <IDENT_START> ::= <LETTER> | "_"
 
@@ -106,13 +107,14 @@
 <ESCAPED_CHAR> ::= "\n" | "\t" | "\""
 
 #PRIMITIVES
+<NUMBER> ::= <INT> | <FLOAT>
+
 <INT> ::= <DIGITS>
 
 <FLOAT> ::= <SIMPLE_FLOAT> | <SIMPLE_FLOAT> <EXPONENT>
 <SIMPLE_FLOAT> ::= <DIGITS> "." <DIGITS> | <DIGITS> "." | "." <DIGITS>
 <EXPONENT> ::= "e"<DIGITS> | "e-"<DIGITS>
 
-<NUMBER> ::= <INT> | <FLOAT>
 
 <BOOL> ::= "true" | "false"
 
@@ -128,9 +130,29 @@
 <DIGITS> ::= <DIGIT> | <DIGITS> <DIGIT>
 <DIGIT> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 
+#KEYWORDS
 <NULL> ::= "null"
 <THIS> ::= "this"
 <BASE> ::= "base"
+
+<PAREN_O> ::= "("
+<PAREN_C> ::= ")"
+<BRACE_O> ::= "{"
+<BRACE_C> ::= "}"
+
+<KW_IF> ::= "if"
+<KW_ELSE> ::= "else"
+<KW_WHILE> ::= "while"
+<KW_RETURN> ::= "return"
+<KW_WRITE> ::= "write"
+<KW_READ> ::= "read"
+<KW_NEW> ::= "new"
+<KW_CTOR> ::= "constructor"
+<KW_USING> ::= "using"
+<KW_EXTENDS> ::= "extends"
+<KW_CLASS> ::= "class"
+<SEMICOLON> ::= ";"
+
 
 #COMMENTS
 <COMMENT> ::= "##" <CHARS> | "##"

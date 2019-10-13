@@ -1,0 +1,7 @@
+addRule:
+    if not terminal:
+        foreach alternative:
+            foreach rule in alternative:
+                addRule(rule)
+    if terminal:
+        addTerminal
