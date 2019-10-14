@@ -87,5 +87,18 @@ namespace Lexer_Implementation.DynamicLexer
 
             return (rules, helpers);
         }
+
+        private readonly List<(string oldValue, string newValue)>  _escapeChars = new List<(string oldValue, string newValue)>
+        {
+            ("\\n", "\n"),
+            ("\\t","\t"),
+            ("\\r","\r"),
+            ("\\\"","\""),
+        };
+        private string ReplaceWithEscapeChars(string s)
+        {
+            _escapeChars.ForEach(e => { s = s.Replace(e.oldValue, e.newValue); });
+            return s;
+        }
     }
 }

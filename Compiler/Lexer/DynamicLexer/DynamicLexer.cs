@@ -13,10 +13,18 @@ namespace Lexer_Implementation.DynamicLexer
         {
             var reader = new BNFReader(pathToBNF);
             var (rules, helpers) = reader.GetRules();
-
+            helpers.Add(new BNFRule
+            {
+                Name = "SPACE",
+                Alternatives = new List<List<BNFRule>> { new List<BNFRule> { new BNFRule
+                {
+                    IsTerminal = true,
+                    TerminalValue = " "
+                } } } 
+            });
             LinkRules(rules.Union(helpers).ToList());
 
-            _stateMachine = new StateMachineBuilder().Build(rules, helpers);
+            _stateMachine = new StateMachineBuilder().Build(rules);
         }
 
         public IEnumerable<Lexeme> GetLexemes(string code)

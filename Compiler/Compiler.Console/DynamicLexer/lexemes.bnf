@@ -10,8 +10,8 @@
 *<IDENT_CHAR> ::= <LETTER> | <DIGIT> | "_"
 *<STRING_CHARS> ::= <STRING_CHAR> | <STRING_CHARS> <STRING_CHAR>
 *<STRING_CHAR> ::= <ESCAPED_CHAR> | <CHAR>
-*<ESCAPED_CHAR> ::= """
-<SIMPLE_FLOAT> ::= <DIGITS> "." <DIGITS> | <DIGITS> "." | "." <DIGITS>
+*<ESCAPED_CHAR> ::=  "\n" | "\t" | "\"" | "\r"
+*<SIMPLE_FLOAT> ::= <DIGITS> "." <DIGITS> | <DIGITS> "." | "." <DIGITS>
 *<EXPONENT> ::= "e" <DIGITS> | "e-" <DIGITS>
 <BOOL> ::= "true" | "false"
 *<CHARS> ::= <CHAR> | <CHARS> <CHAR>
@@ -19,7 +19,7 @@
 *<LETTER> ::= <LOW_LETTER> | <UP_LETTER> 
 *<LOW_LETTER> ::= "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "y" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "r" | "s" | "t" | "u" | "v" | "x" | "w" | "q" | "z"
 *<UP_LETTER> ::=  "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "Y" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "R" | "S" | "T" | "U" | "V" | "X" | "W" | "Q" | "Z"
-*<SYMBOL> ::= "-" | "+" | "?" | "!" | "_" | "*" | "/" | "@" | "#" | "$" | "%" | "^" | "&" | "." | "," | "(" | ")" | "{" | "}" | "[" | "]" 
+*<SYMBOL> ::= "-" | "+" | "?" | "!" | "_" | "*" | "/" | "@" | "#" | "$" | "%" | "^" | "&" | "." | "," | "(" | ")" | "{" | "}" | "[" | "]" | <SPACE>
 *<DIGITS> ::= <DIGIT> | <DIGITS> <DIGIT>
 *<DIGIT> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 <NULL> ::= "null"
@@ -62,4 +62,4 @@
 <IDENT> ::=  <IDENT_START> | <IDENT_START> <IDENT_CHARS>
 <INT> ::= <DIGITS>
 <FLOAT> ::= <SIMPLE_FLOAT> | <SIMPLE_FLOAT> <EXPONENT>
-<STRING> ::= """ <STRING_CHARS> """ | """ """
+<STRING> ::= "\"" <STRING_CHARS> "\"" | "\"" "\""

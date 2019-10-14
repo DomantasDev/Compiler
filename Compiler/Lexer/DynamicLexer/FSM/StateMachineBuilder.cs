@@ -7,7 +7,7 @@ namespace Lexer_Implementation.DynamicLexer.FSM
 {
     public class StateMachineBuilder
     {
-        public StateMachine Build(List<BNFRule> rules, List<BNFRule> helpers)
+        public StateMachine Build(List<BNFRule> rules)
         {
             var start = new State();
             start.Transitions.Add(new Transition
@@ -30,8 +30,6 @@ namespace Lexer_Implementation.DynamicLexer.FSM
 
             if(IsRecursion(bnfRule, out var otherRule))
             {
-                
-                //List<State> someStates;
                 List<State> unfinishedStates = startingStates;
                 var finishedStates = new List<State>();
                 do
