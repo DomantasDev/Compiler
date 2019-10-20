@@ -15,9 +15,16 @@ namespace ConsoleApp
 
             Console.WriteLine($"{"Line".PadLeft(5)}|{"Type".PadRight(15)}| Value");
             Console.WriteLine($"{new string('-', 5)}+{new string('-', 15)}+{new string('-', 20)}");
-            foreach (var lexeme in dynamicLexer.GetLexemes(File.ReadAllText("../../../DynamicLexer/code.txt")))
+            try
             {
-                Print(lexeme);
+                foreach (var lexeme in dynamicLexer.GetLexemes(File.ReadAllText("../../../DynamicLexer/code.txt")))
+                {
+                    Print(lexeme);
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
 
             //var code = File.ReadAllText("../../../code.txt");

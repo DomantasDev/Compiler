@@ -29,11 +29,17 @@ namespace Lexer_Implementation.DynamicLexer
 
         public IEnumerable<Lexeme> GetLexemes(string code)
         {
+            int line = 1;
             int globalOffset = 0;
             int iterationOffset = 0;
             for (; globalOffset + iterationOffset < code.Length; iterationOffset++)
             {
-                if (!_stateMachine.Advance(code[globalOffset + iterationOffset]) || globalOffset + iterationOffset == code.Length - 1)
+                var nextChar = code[globalOffset + iterationOffset];
+
+                if (nextChar == '\n')
+                    line++;
+
+                if (!_stateMachine.Advance(nextChar) || globalOffset + iterationOffset == code.Length - 1)
                 {
                     if(_stateMachine.LastFinalState == null)
                         throw new ArgumentException($"Unrecognized sequence: {_stateMachine.Path}");
@@ -45,7 +51,8 @@ namespace Lexer_Implementation.DynamicLexer
                     yield return new Lexeme
                     {
                         Value = lastState.value.Trim(),
-                        Type = lastState.state.LexemeType
+                        Type = lastState.state.LexemeType,
+                        Line = line
                     };
                     _stateMachine.Reset();
                 }

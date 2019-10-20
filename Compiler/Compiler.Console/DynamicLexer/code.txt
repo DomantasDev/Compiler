@@ -1,5 +1,9 @@
 class Program 
 {
+#*	main
+	method of
+	program
+*#
     public void main()
     {
         Animal animal := null;
@@ -13,7 +17,7 @@ class Program
         } 
         else if (name = "Cat")
         {
-            animal := new Cat(name);
+            animal := new Cat(name, 3);
         } 
         else
         {

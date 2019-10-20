@@ -23,13 +23,11 @@ namespace Lexer_Implementation.DynamicLexer.FSM
         //false jei nera tokio perejimo
         public bool Advance(char c)
         {
-            var transition = _currentState.Transitions.SingleOrDefault(t => t.Conditions.Contains(c));
-            if (transition == null)
-                return false;
-
-            _currentState = transition.To;
-
             Path += c;
+
+            _currentState = _currentState.Transitions[c];
+            if (_currentState == null)
+                return false;
 
             if (_currentState.IsFinal)
                 LastFinalState = (state: _currentState, value: Path);

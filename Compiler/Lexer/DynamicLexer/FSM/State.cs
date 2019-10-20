@@ -8,10 +8,8 @@ namespace Lexer_Implementation.DynamicLexer.FSM
     {
         public bool IsFinal { get; set; }
         public string LexemeType { get; set; }
-        public List<Transition> Transitions { get; set; } = new List<Transition>();
+        public State[] Transitions { get; set; } = new State[256];
 
-        internal bool RecursionFinished { get; set; } = true;
-
-        internal string RecursionName { get; set; }
+        internal RecursionState RecursionState{ get; set; }
     }
 }

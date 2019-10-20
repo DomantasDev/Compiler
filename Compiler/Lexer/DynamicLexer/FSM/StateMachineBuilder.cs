@@ -10,12 +10,10 @@ namespace Lexer_Implementation.DynamicLexer.FSM
         public StateMachine Build(List<BNFRule> rules)
         {
             var start = new State();
-            start.Transitions.Add(new Transition
-            {
-                From = start,
-                To = start,
-                Conditions = new List<char> {'\n','\r', '\t', ' ' }
-            });
+            start.Transitions['\n'] = start;
+            start.Transitions['\r'] = start;
+            start.Transitions['\t'] = start;
+            start.Transitions[' '] = start;
             foreach (var bnfRule in rules)
             {
                 AddRule(bnfRule, new List<State> { start }, true, bnfRule.Name);
@@ -24,7 +22,7 @@ namespace Lexer_Implementation.DynamicLexer.FSM
             return new StateMachine(start);
         }
 
-        private List<State> AddRule(BNFRule bnfRule, List<State> startingStates, bool shouldBeFinal, string lexemeType, Tracker tracker = null, bool isFirstStateOfRecursion = false)
+        private List<State> AddRule(BNFRule bnfRule, List<State> startingStates, bool shouldBeFinal, string lexemeType, RecursionState tracker = null, bool isFirstStateOfRecursion = false)
         {
             var newCurrentStates = new List<State>();
 
@@ -34,18 +32,19 @@ namespace Lexer_Implementation.DynamicLexer.FSM
                 var finishedStates = new List<State>();
                 do
                 {
-                    tracker = new Tracker();
+                    tracker = new RecursionState();
                     var someStates = AddRule(otherRule, unfinishedStates, shouldBeFinal, lexemeType, tracker, true);
 
-                    newCurrentStates.AddRange(someStates.Where(s => s.RecursionFinished));
+                    newCurrentStates.AddRange(someStates.Where(s => s.RecursionState != null && s.RecursionState.CreatedNewStateOnFirstStep));
 
-                    finishedStates.AddRange(someStates
-                        .Where(s => !s.RecursionFinished)
-                        .Where(s => s.RecursionName == bnfRule.Name));
+                    var x = someStates
+                        .Where(s => !s.RecursionState.CreatedNewStateOnFirstStep)
+                        .Where(s => s.RecursionState.RecursionName == bnfRule.Name).ToList();
+                    finishedStates.AddRange(x);
 
                     unfinishedStates = someStates
-                        .Where(s => !s.RecursionFinished)
-                        .Where(s => s.RecursionName != bnfRule.Name)
+                        .Where(s => !s.RecursionState.CreatedNewStateOnFirstStep)
+                        .Where(s => s.RecursionState.RecursionName != bnfRule.Name)
                         .ToList();
 
                 } while (unfinishedStates.Any());
@@ -53,13 +52,8 @@ namespace Lexer_Implementation.DynamicLexer.FSM
                 var firstChars = GetFirstChars(otherRule);
                 foreach(var state in newCurrentStates)
                 {
-                    state.Transitions.Add(new Transition
-                    {
-                        From = state,
-                        To = state,
-                        Conditions = firstChars
-                    });
-                    state.RecursionName = bnfRule.Name;
+                    firstChars.ForEach(c => state.Transitions[c] = state.RecursionState.FirstState);
+                    state.RecursionState.RecursionName = bnfRule.Name;
                 }
 
                 newCurrentStates.AddRange(finishedStates);
@@ -103,7 +97,7 @@ namespace Lexer_Implementation.DynamicLexer.FSM
         private bool IsRecursion(BNFRule rule, out BNFRule theOtherRule)
         {
             
-            if ( rule.Alternatives.Count == 2 ) // jei yra 2 alternatyvos ir viena ju turi dvi taisykles, is kuriu viena yra pati taisykle 'rule'
+            if (rule.Alternatives != null && rule.Alternatives.Count == 2 ) // jei yra 2 alternatyvos ir viena ju turi dvi taisykles, is kuriu viena yra pati taisykle 'rule'
             { 
                 var otherRule = rule.Alternatives.FirstOrDefault(r => r.Count == 1)?.FirstOrDefault();
                 theOtherRule = otherRule;
@@ -118,7 +112,7 @@ namespace Lexer_Implementation.DynamicLexer.FSM
             theOtherRule = null;
             return false;
         }
-        private static List<State> AddTerminalRule(BNFRule bnfRule, List<State> currentStates, bool shouldBeFinal, string lexemeType, Tracker tracker = null, bool isFirstStateOfRecursion = false)
+        private static List<State> AddTerminalRule(BNFRule bnfRule, List<State> currentStates, bool shouldBeFinal, string lexemeType, RecursionState tracker = null, bool isFirstStateOfRecursion = false)
         {
             var newCurrentStates = new List<State>();
 
@@ -130,10 +124,9 @@ namespace Lexer_Implementation.DynamicLexer.FSM
                 for (var j = 0; j < chars.Length; j++)
                 {
                     var c = chars[j];
-                    Transition tr;
-                    if ((tr = currentState.Transitions.SingleOrDefault(t => t.Conditions.Contains(c))) != null)// jei is einamos busenos jau yra perejimas su duotu simboliu
+                    if (currentState.Transitions[c] != null)// jei is einamos busenos jau yra perejimas su duotu simboliu
                     {
-                        currentState = tr.To;
+                        currentState = currentState.Transitions[c];
                         if (shouldBeFinal && j == chars.Length - 1 && !currentState.IsFinal) // jei paskutinis einamos alternatyvos simbolis
                         {
                             currentState.IsFinal = true;
@@ -142,30 +135,33 @@ namespace Lexer_Implementation.DynamicLexer.FSM
                     }
                     else
                     {
+                        var newState = new State();
+                       
                         if (newTracker != null && j == 0 && isFirstStateOfRecursion)
                         {
                             newTracker.CreatedNewStateOnFirstStep = true;
+                            newTracker.FirstState = newState;
                         }
 
-                        var newState = new State();
                         if (shouldBeFinal && j == chars.Length - 1) // jei paskutinis einamos alternatyvos simbolis
                         {
                             newState.IsFinal = true;
                             newState.LexemeType = lexemeType;
                         }
-                        var newTransition = new Transition
-                        {
-                            To = newState,
-                            From = currentState,
-                            Conditions = new List<char> { c }
-                        };
-                        currentState.Transitions.Add(newTransition);
+
+                        currentState.Transitions[c] = newState;
                         currentState = newState;
                     }
                 }
                 if(newTracker != null)
                 {
-                    currentState.RecursionFinished = newTracker.CreatedNewStateOnFirstStep;
+                    if(currentState.RecursionState == null)
+                        currentState.RecursionState = newTracker;
+                    else
+                    {
+                        currentState.RecursionState.CreatedNewStateOnFirstStep = newTracker.CreatedNewStateOnFirstStep;
+                        currentState.RecursionState.FirstState = newTracker.FirstState;
+                    }
                 }
                 newCurrentStates.Add(currentState);
             }

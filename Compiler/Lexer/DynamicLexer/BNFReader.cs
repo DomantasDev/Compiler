@@ -67,7 +67,7 @@ namespace Lexer_Implementation.DynamicLexer
                             newRule = new BNFRule
                             {
                                 IsTerminal = true,
-                                TerminalValue = altRule.Substring(1, altRule.Length - 2)
+                                TerminalValue = ReplaceWithEscapeChars(altRule.Substring(1, altRule.Length - 2))
                             };
                         }
                         else
@@ -75,7 +75,7 @@ namespace Lexer_Implementation.DynamicLexer
                             newRule = new BNFRule
                             {
                                 IsTerminal = false,
-                                Name = altRule.Substring(1, altRule.Length - 2)
+                                Name = ReplaceWithEscapeChars(altRule.Substring(1, altRule.Length - 2))
                             };
                         }
                         newRules.Add(newRule);
@@ -88,17 +88,27 @@ namespace Lexer_Implementation.DynamicLexer
             return (rules, helpers);
         }
 
-        private readonly List<(string oldValue, string newValue)>  _escapeChars = new List<(string oldValue, string newValue)>
+        private readonly Dictionary<char, char>  _escapeChars = new Dictionary<char, char>
         {
-            ("\\n", "\n"),
-            ("\\t","\t"),
-            ("\\r","\r"),
-            ("\\\"","\""),
+            {'\\', '\\'}, //   \\ -> \
+            {'n', '\n'},  //   \n -> new line
+            {'t', '\t'},  //    \t -> tab
+            {'r','\r'},  //    \r -> car. ret.
+            {'\"', '\"'},  //   \" -> "
         };
         private string ReplaceWithEscapeChars(string s)
         {
-            _escapeChars.ForEach(e => { s = s.Replace(e.oldValue, e.newValue); });
-            return s;
+            var res = string.Empty;
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] == '\\')
+                {
+                    res += _escapeChars[s[++i]];
+                }
+                else
+                    res += s[i];
+            }
+            return res;
         }
     }
 }
