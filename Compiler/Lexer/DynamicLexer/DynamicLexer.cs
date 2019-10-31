@@ -41,8 +41,12 @@ namespace Lexer_Implementation.DynamicLexer
 
                 if (!_stateMachine.Advance(nextChar) || globalOffset + iterationOffset == code.Length - 1)
                 {
-                    if(_stateMachine.LastFinalState == null)
+                    if (_stateMachine.LastFinalState == null)
+                    {
+                        if(string.IsNullOrWhiteSpace(_stateMachine.Path))
+                            yield break;
                         throw new ArgumentException($"Unrecognized sequence: {_stateMachine.Path}");
+                    }
                     var lastState = _stateMachine.LastFinalState.Value;
 
                     globalOffset += lastState.value.Length;

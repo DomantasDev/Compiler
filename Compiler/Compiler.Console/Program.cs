@@ -13,8 +13,8 @@ namespace ConsoleApp
         {
             var dynamicLexer = new DynamicLexer("../../../DynamicLexer/lexemes.bnf");
 
-            Console.WriteLine($"{"Line".PadLeft(5)}|{"Type".PadRight(15)}| Value");
-            Console.WriteLine($"{new string('-', 5)}+{new string('-', 15)}+{new string('-', 20)}");
+            Console.WriteLine($"{"Line".PadLeft(5)}|{"Type".PadRight(20)}| Value");
+            Console.WriteLine($"{new string('-', 5)}+{new string('-', 20)}+{new string('-', 20)}");
             try
             {
                 foreach (var lexeme in dynamicLexer.GetLexemes(File.ReadAllText("../../../DynamicLexer/code.txt")))
@@ -51,7 +51,7 @@ namespace ConsoleApp
 
         static void Print(Token token)
         {
-            Console.Write($"{token.Line.ToString().PadRight(5)}|{token.Type.ToString().PadRight(15)}|");
+            Console.Write($"{token.Line.ToString().PadRight(5)}|{token.Type.ToString().PadRight(20)}|");
             if (token.Value != null)
             {
                 if(token.Type == LexemType.Lit_string)
@@ -65,7 +65,7 @@ namespace ConsoleApp
 
         static void Print(Lexeme lexeme)
         {
-            Console.Write($"{lexeme.Line.ToString().PadRight(5)}|{lexeme.Type.ToString().PadRight(15)}|");
+            Console.Write($"{lexeme.Line.ToString().PadRight(5)}|{lexeme.Type.ToString().PadRight(20)}|");
             Console.WriteLine($"{lexeme.Value}");
         }
     }
