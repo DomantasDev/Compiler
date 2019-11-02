@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexer_Implementation.DotFileGenerator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,7 @@ namespace Lexer_Implementation.DynamicLexer.FSM
                 AddRule(bnfRule, new List<State> { start }, true, bnfRule.Name);
             }
 
-            return new StateMachine(start);
+            return new StateMachine(start, new DotGenerator(new DotGeneratorHelper(), new StateNameResolver(new StateCounter())));
         }
 
         private List<State> AddRule(BNFRule bnfRule, List<State> startingStates, bool shouldBeFinal, string lexemeType, RecursionState tracker = null, bool isFirstStateOfRecursion = false)
@@ -52,7 +53,12 @@ namespace Lexer_Implementation.DynamicLexer.FSM
                 var firstChars = GetFirstChars(otherRule);
                 foreach(var state in newCurrentStates)
                 {
-                    firstChars.ForEach(c => state.Transitions[c] = state.RecursionState.FirstState);
+                    foreach (var otherState in newCurrentStates)
+                    {
+                        if (state.Transitions[otherState.RecursionState.FirstReccursionChar] == null)
+                            state.Transitions[otherState.RecursionState.FirstReccursionChar] = otherState.RecursionState.FirstState;
+                    }
+                    //firstChars.ForEach(c => state.Transitions[c] = state.RecursionState.FirstState);
                     state.RecursionState.RecursionName = bnfRule.Name;
                 }
 
@@ -62,7 +68,7 @@ namespace Lexer_Implementation.DynamicLexer.FSM
             {
                 foreach (var alternative in bnfRule.Alternatives)
                 {
-                    var newTacker = tracker?.Clone();
+                    var newTacker = tracker;//?.Clone();
                     var currentStates = startingStates;
                     for (var i = 0; i < alternative.Count; i++)
                     {
@@ -118,7 +124,7 @@ namespace Lexer_Implementation.DynamicLexer.FSM
 
             foreach (var cs in currentStates)
             {
-                var newTracker = tracker?.Clone();
+                var newTracker = tracker;//?.Clone();
                 var currentState = cs;
                 var chars = bnfRule.TerminalValue.ToCharArray();
                 for (var j = 0; j < chars.Length; j++)
@@ -141,6 +147,7 @@ namespace Lexer_Implementation.DynamicLexer.FSM
                         {
                             newTracker.CreatedNewStateOnFirstStep = true;
                             newTracker.FirstState = newState;
+                            newTracker.FirstReccursionChar = c;
                         }
 
                         if (shouldBeFinal && j == chars.Length - 1) // jei paskutinis einamos alternatyvos simbolis
@@ -156,7 +163,7 @@ namespace Lexer_Implementation.DynamicLexer.FSM
                 if(newTracker != null)
                 {
                     if(currentState.RecursionState == null)
-                        currentState.RecursionState = newTracker;
+                        currentState.RecursionState = newTracker.Clone();
                     else
                     {
                         currentState.RecursionState.CreatedNewStateOnFirstStep = newTracker.CreatedNewStateOnFirstStep;

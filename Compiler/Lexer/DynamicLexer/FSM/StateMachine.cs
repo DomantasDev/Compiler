@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexer_Implementation.DotFileGenerator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -18,6 +19,11 @@ namespace Lexer_Implementation.DynamicLexer.FSM
         {
             _startState = startState;
             Reset();
+        }
+
+        public StateMachine(State startState, DotGenerator dotGenerator) : this(startState)
+        {
+            dotGenerator.GenerateDot(_startState, "DynamicLexerFSM.dot");
         }
 
         //false jei nera tokio perejimo

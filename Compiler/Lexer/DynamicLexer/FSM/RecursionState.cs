@@ -7,8 +7,10 @@ namespace Lexer_Implementation.DynamicLexer.FSM
     internal class RecursionState
     {
         internal State FirstState { get; set; }
+        internal char FirstReccursionChar { get; set; }
         internal bool CreatedNewStateOnFirstStep { get; set; }
         internal string RecursionName { get; set; }
+
 
         internal RecursionState Clone()
         {
@@ -16,7 +18,8 @@ namespace Lexer_Implementation.DynamicLexer.FSM
             {
                 CreatedNewStateOnFirstStep = CreatedNewStateOnFirstStep,
                 FirstState = FirstState,
-                RecursionName = RecursionName
+                RecursionName = RecursionName,
+                FirstReccursionChar = FirstReccursionChar
             };
         }
     }
