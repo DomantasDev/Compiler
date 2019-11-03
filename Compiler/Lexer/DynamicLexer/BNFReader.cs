@@ -33,11 +33,24 @@ namespace Lexer_Implementation.DynamicLexer
             foreach (var ru in BNFRules)
             {
                 var rule = ru;
+
+                var newRootRule = new BNFRule
+                {
+                    IsTerminal = false,
+                    Alternatives = new List<List<BNFRule>>()
+                };
+
                 List<BNFRule> currentRules;
                 if (rule.StartsWith('*'))
                 {
                     currentRules = helpers;
                     rule = rule.Substring(1);
+                }
+                else if(rule.StartsWith('+'))
+                {
+                    currentRules = helpers;
+                    rule = rule.Substring(1);
+                    newRootRule.IsAtom = true;
                 }
                 else
                     currentRules = rules;
@@ -45,12 +58,7 @@ namespace Lexer_Implementation.DynamicLexer
                 var x = rule.Split("::=");
                 var name = x[0].Trim();
 
-                var newRootRule = new BNFRule
-                {
-                    IsTerminal = false,
-                    Name = name.Substring(1, name.Length - 2),
-                    Alternatives = new List<List<BNFRule>>()
-                };
+                newRootRule.Name = name.Substring(1, name.Length - 2);
 
                 var alternatives = x[1].Split(" | ");
                 foreach (var alternative in alternatives)

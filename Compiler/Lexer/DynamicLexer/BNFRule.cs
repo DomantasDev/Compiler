@@ -11,5 +11,7 @@ namespace Lexer_Implementation.DynamicLexer
         public bool IsTerminal { get; set; }
 
         public string TerminalValue { get; set; }
+
+        internal bool IsAtom { get; set; }
     }
 }

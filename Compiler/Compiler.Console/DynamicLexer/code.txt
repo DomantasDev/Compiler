@@ -24,7 +24,7 @@ class Program
             animal := new Animal();
         }
 
-        animal.Speak("Hello world!");
+        animal.Speak("Hello world!\\");
         ## random code after this
         int x := -1;
         float y := .5;

@@ -23,9 +23,13 @@ namespace Lexer_Implementation.DynamicLexer.FSM
             return new StateMachine(start, new DotGenerator(new DotGeneratorHelper(), new StateNameResolver(new StateCounter())));
         }
 
-        private List<State> AddRule(BNFRule bnfRule, List<State> startingStates, bool shouldBeFinal, string lexemeType, RecursionState tracker = null, bool isFirstStateOfRecursion = false)
+        private List<State> AddRule(BNFRule bnfRule, List<State> startingStates, bool shouldBeFinal, string lexemeType, 
+            RecursionState tracker = null,
+            bool isFirstStateOfRecursion = false, 
+            State atomState = null,
+            bool isRoot = false)
         {
-            var newCurrentStates = new List<State>();
+            var newCurrentStates = new HashSet<State>();
 
             if(IsRecursion(bnfRule, out var otherRule))
             {
@@ -34,7 +38,7 @@ namespace Lexer_Implementation.DynamicLexer.FSM
                 do
                 {
                     tracker = new RecursionState();
-                    var someStates = AddRule(otherRule, unfinishedStates, shouldBeFinal, lexemeType, tracker, true);
+                    var someStates = AddRule(otherRule, unfinishedStates, shouldBeFinal, lexemeType, tracker, true, atomState, true);
 
                     newCurrentStates.AddRange(someStates.Where(s => s.RecursionState != null && s.RecursionState.CreatedNewStateOnFirstStep));
 
@@ -50,15 +54,14 @@ namespace Lexer_Implementation.DynamicLexer.FSM
 
                 } while (unfinishedStates.Any());
 
-                var firstChars = GetFirstChars(otherRule);
                 foreach(var state in newCurrentStates)
                 {
                     foreach (var otherState in newCurrentStates)
                     {
-                        if (state.Transitions[otherState.RecursionState.FirstReccursionChar] == null)
-                            state.Transitions[otherState.RecursionState.FirstReccursionChar] = otherState.RecursionState.FirstState;
+                        foreach(var firstChar in otherState.RecursionState.FirstReccursionChars)
+                            if (state.Transitions[firstChar] == null)
+                                state.Transitions[firstChar] = otherState.RecursionState.FirstState;
                     }
-                    //firstChars.ForEach(c => state.Transitions[c] = state.RecursionState.FirstState);
                     state.RecursionState.RecursionName = bnfRule.Name;
                 }
 
@@ -66,27 +69,31 @@ namespace Lexer_Implementation.DynamicLexer.FSM
             }
             else
             {
+                if (bnfRule.IsAtom && atomState == null)
+                    atomState = new State();
                 foreach (var alternative in bnfRule.Alternatives)
                 {
-                    var newTacker = tracker;//?.Clone();
+                    var newTacker = isRoot && !bnfRule.IsAtom ? new RecursionState() : tracker;//?.Clone(); jei root, darai kopija
+                    if (bnfRule.IsAtom && tracker != null && isFirstStateOfRecursion)
+                        newTacker.CreatedNewStateOnFirstStep = false;
                     var currentStates = startingStates;
                     for (var i = 0; i < alternative.Count; i++)
                     {
                         var rule = alternative[i];
                         if (rule.IsTerminal)
                         {
-                            currentStates = AddTerminalRule(rule, currentStates, shouldBeFinal && i == alternative.Count - 1, lexemeType, newTacker, isFirstStateOfRecursion && i == 0);
+                            currentStates = AddTerminalRule(rule, currentStates, shouldBeFinal && i == alternative.Count - 1, lexemeType, newTacker, isFirstStateOfRecursion && i == 0, atomState);
                         }
                         else
                         {
-                            currentStates = AddRule(rule, currentStates, shouldBeFinal && i == alternative.Count - 1, lexemeType, newTacker, isFirstStateOfRecursion && i == 0);
+                            currentStates = AddRule(rule, currentStates, shouldBeFinal && i == alternative.Count - 1, lexemeType, newTacker, isFirstStateOfRecursion && i == 0, atomState);
                         }
                     }
                     newCurrentStates.AddRange(currentStates);
                 }
             }
 
-            return newCurrentStates;
+            return newCurrentStates.ToList();
         }
 
         private List<char> GetFirstChars(BNFRule rule)
@@ -100,27 +107,12 @@ namespace Lexer_Implementation.DynamicLexer.FSM
                     .ToList();
         }
 
-        private bool IsRecursion(BNFRule rule, out BNFRule theOtherRule)
+        private static List<State> AddTerminalRule(BNFRule bnfRule, List<State> currentStates, bool shouldBeFinal, string lexemeType, 
+            RecursionState tracker = null, 
+            bool isFirstStateOfRecursion = false,
+            State atomState = null)
         {
-            
-            if (rule.Alternatives != null && rule.Alternatives.Count == 2 ) // jei yra 2 alternatyvos ir viena ju turi dvi taisykles, is kuriu viena yra pati taisykle 'rule'
-            { 
-                var otherRule = rule.Alternatives.FirstOrDefault(r => r.Count == 1)?.FirstOrDefault();
-                theOtherRule = otherRule;
-                if (otherRule == null)
-                    return false;
-
-                if(otherRule.IsTerminal)
-                    return rule.Alternatives.Any(rs => rs.Count == 2 && rs.Any(r => r.Equals(rule)) && rs.Any(r => r.TerminalValue == otherRule.TerminalValue));
-
-                return rule.Alternatives.Any(rs => rs.Count == 2 && rs.Any(r => r.Equals(rule)) && rs.Any(r => r.Equals(otherRule)));               
-            }
-            theOtherRule = null;
-            return false;
-        }
-        private static List<State> AddTerminalRule(BNFRule bnfRule, List<State> currentStates, bool shouldBeFinal, string lexemeType, RecursionState tracker = null, bool isFirstStateOfRecursion = false)
-        {
-            var newCurrentStates = new List<State>();
+            var newCurrentStates = new HashSet<State>();
 
             foreach (var cs in currentStates)
             {
@@ -138,16 +130,22 @@ namespace Lexer_Implementation.DynamicLexer.FSM
                             currentState.IsFinal = true;
                             currentState.LexemeType = lexemeType;
                         }
+
+                        if (tracker != null && atomState != null && j == 0 && isFirstStateOfRecursion)// && atomState.RecursionState != null)
+                        {
+                            //atomState.RecursionState.FirstReccursionChars.Add(c);
+                            tracker.CreatedNewStateOnFirstStep = false;
+                        }
                     }
                     else
                     {
-                        var newState = new State();
+                        var newState = atomState ?? new State();
                        
                         if (newTracker != null && j == 0 && isFirstStateOfRecursion)
                         {
                             newTracker.CreatedNewStateOnFirstStep = true;
                             newTracker.FirstState = newState;
-                            newTracker.FirstReccursionChar = c;
+                            newTracker.FirstReccursionChars.Add(c);
                         }
 
                         if (shouldBeFinal && j == chars.Length - 1) // jei paskutinis einamos alternatyvos simbolis
@@ -173,7 +171,25 @@ namespace Lexer_Implementation.DynamicLexer.FSM
                 newCurrentStates.Add(currentState);
             }
 
-            return newCurrentStates;
+            return newCurrentStates.ToList();
+        }
+        private bool IsRecursion(BNFRule rule, out BNFRule theOtherRule)
+        {
+
+            if (rule.Alternatives != null && rule.Alternatives.Count == 2) // jei yra 2 alternatyvos ir viena ju turi dvi taisykles, is kuriu viena yra pati taisykle 'rule'
+            {
+                var otherRule = rule.Alternatives.FirstOrDefault(r => r.Count == 1)?.FirstOrDefault();
+                theOtherRule = otherRule;
+                if (otherRule == null)
+                    return false;
+
+                if (otherRule.IsTerminal)
+                    return rule.Alternatives.Any(rs => rs.Count == 2 && rs.Any(r => r.Equals(rule)) && rs.Any(r => r.TerminalValue == otherRule.TerminalValue));
+
+                return rule.Alternatives.Any(rs => rs.Count == 2 && rs.Any(r => r.Equals(rule)) && rs.Any(r => r.Equals(otherRule)));
+            }
+            theOtherRule = null;
+            return false;
         }
     }
 
@@ -184,6 +200,15 @@ namespace Lexer_Implementation.DynamicLexer.FSM
         public Tracker Clone()
         {
             return new Tracker { CreatedNewStateOnFirstStep = this.CreatedNewStateOnFirstStep };
+        }
+    }
+
+    static class Extensions
+    {
+        internal static void AddRange<t>(this HashSet<t> hashSet, IEnumerable<t> entitiesToAdd)
+        {
+            foreach (var x in entitiesToAdd)
+                hashSet.Add(x);
         }
     }
 }
