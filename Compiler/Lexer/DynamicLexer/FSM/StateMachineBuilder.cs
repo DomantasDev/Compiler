@@ -20,7 +20,8 @@ namespace Lexer_Implementation.DynamicLexer.FSM
                 AddRule(bnfRule, new List<State> { start }, true, bnfRule.Name);
             }
 
-            return new StateMachine(start, new DotGenerator(new DotGeneratorHelper(), new StateNameResolver(new StateCounter())));
+            //return new StateMachine(start, new DotGenerator(new DotGeneratorHelper(), new StateNameResolver(new StateCounter())));
+            return new StateMachine(start);
         }
 
         private List<State> AddRule(BNFRule bnfRule, List<State> startingStates, bool shouldBeFinal, string lexemeType, 

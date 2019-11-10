@@ -1,0 +1,4 @@
+<EXPR> ::= <ADD>
+<ADD> ::= <MULT> {*<ADD_OP> <MULT>}
+<MULT> ::= *<PRIMARY> {*<MULT_OP> *<PRIMARY>} 
+<PRIMARY> ::= <INT> | <FLOAT>

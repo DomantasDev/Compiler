@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Lexer_Implementation;
 using Lexer_Implementation.DynamicLexer;
 using Lexer_Implementation.StaticLexer;
+using Parser_Implementation;
+using Parser_Implementation.BnfReader;
+using Parser_Implementation.Lexemes;
 
 namespace ConsoleApp
 {
@@ -11,56 +16,28 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-            var dynamicLexer = new DynamicLexer("../../../DynamicLexer/lexemes.bnf");
+            var parser = new Parser();
+            var result = parser.CheckSyntax();
 
+            Console.Write(result);
+            Console.ReadLine();
+        }
+
+        private static void Print(IEnumerable<Lexeme> lexemes)
+        {
             Console.WriteLine($"{"Line".PadLeft(5)}|{"Type".PadRight(20)}| Value");
             Console.WriteLine($"{new string('-', 5)}+{new string('-', 20)}+{new string('-', 20)}");
             try
             {
-                foreach (var lexeme in dynamicLexer.GetLexemes(File.ReadAllText("../../../DynamicLexer/code.txt")))
+                foreach (var lexeme in lexemes)
                 {
                     Print(lexeme);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-
-            //var code = File.ReadAllText("../../../code.txt");
-
-            //var lexer = new Lexer(code);
-
-            //Console.WriteLine($"{"Line".PadLeft(5)}|{"Type".PadRight(15)}| Value");
-            //Console.WriteLine($"{new string('-', 5)}+{new string('-', 15)}+{new string('-', 20)}");
-
-            //try
-            //{
-            //    foreach (var token in lexer.Get())
-            //    {
-            //        Print(token);
-            //    }
-            //}
-            //catch (ArgumentException ex)
-            //{
-            //    Console.WriteLine(ex.Message);
-            //}
-
-            Console.ReadLine();
-        }
-
-        static void Print(Token token)
-        {
-            Console.Write($"{token.Line.ToString().PadRight(5)}|{token.Type.ToString().PadRight(20)}|");
-            if (token.Value != null)
-            {
-                if(token.Type == LexemType.Lit_string)
-                    Console.Write($"{(token.Value)}");
-                else
-                    Console.Write($"{token.Value}");
-            }
-                
-            Console.WriteLine();
         }
 
         static void Print(Lexeme lexeme)

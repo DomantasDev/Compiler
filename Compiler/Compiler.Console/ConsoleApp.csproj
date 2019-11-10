@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lexer\Lexer_Implementation.csproj" />
+    <ProjectReference Include="..\Parser_Implementation\Parser_Implementation.csproj" />
   </ItemGroup>
 
   <ItemGroup>

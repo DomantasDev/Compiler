@@ -43,8 +43,16 @@ namespace Lexer_Implementation.DynamicLexer
                 {
                     if (_stateMachine.LastFinalState == null)
                     {
-                        if(string.IsNullOrWhiteSpace(_stateMachine.Path))
+                        if (string.IsNullOrWhiteSpace(_stateMachine.Path))
+                        {
+                            _stateMachine.Reset();
+                            yield return new Lexeme
+                            {
+                                Type = "EOF",
+                                Value = "EOF"
+                            };
                             yield break;
+                        }
                         throw new ArgumentException($"Unrecognized sequence: {_stateMachine.Path}");
                     }
                     var lastState = _stateMachine.LastFinalState.Value;
@@ -61,6 +69,11 @@ namespace Lexer_Implementation.DynamicLexer
                     _stateMachine.Reset();
                 }
             }
+            yield return new Lexeme
+            {
+                Type = "EOF",
+                Value = "EOF"
+            };
         }
 
         private void LinkRules(List<BNFRule> allRules)
