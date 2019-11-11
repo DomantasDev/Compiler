@@ -11,7 +11,7 @@ namespace Parser_Implementation.BnfRules
         private readonly LexemeSource _lexemeSource;
         public string RuleName { get; }
 
-        public BnfRuleLexeme(LexemeSource lexemeSource,string ruleName)
+        public BnfRuleLexeme(LexemeSource lexemeSource, string ruleName)
         {
             _lexemeSource = lexemeSource;
             RuleName = ruleName;

@@ -12,6 +12,7 @@ using Parser_Implementation.Lexemes;
 
 namespace ConsoleApp
 {
+    // sutvarkyt member access expr, if, ctor, (null meta true
     class Program
     {
         static void Main(string[] args)

@@ -5,7 +5,7 @@
 <ADD_OP> ::= "+" | "-"
 <MULT_OP> ::= "*" | "/"
 <DOT_OP> ::= "."
-*<IDENT_START> ::= <LETTER> | "_"
++<IDENT_START> ::= <LETTER> | "_"
 *<IDENT_CHARS> ::= <IDENT_CHAR> | <IDENT_CHARS> <IDENT_CHAR>
 +<IDENT_CHAR> ::= <LETTER> | <DIGIT> | "_"
 *<STRING_CHARS> ::= <STRING_CHAR> | <STRING_CHARS> <STRING_CHAR>
