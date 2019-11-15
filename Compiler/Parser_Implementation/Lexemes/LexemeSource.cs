@@ -7,12 +7,10 @@ namespace Parser_Implementation.Lexemes
     {
         private readonly List<Lexeme> _lexemes;
         private int _offset = 0;
-        private readonly Stack<int> _checkpoints;
 
         public LexemeSource(List<Lexeme> lexemes)
         {
             _lexemes = lexemes;
-            _checkpoints = new Stack<int>();
         }
 
         public bool Expect(string lexemeName)
@@ -27,14 +25,14 @@ namespace Parser_Implementation.Lexemes
             return false;
         }
 
-        public void SetCheckpoint()
+        public int SetCheckpoint()
         {
-            _checkpoints.Push(_offset);
+            return _offset;
         }
 
-        public void RevertCheckPoint()
+        public void RevertCheckPoint(int checkpoint)
         {
-            _offset = _checkpoints.Pop();
+            _offset = checkpoint;
         }
     }
 }

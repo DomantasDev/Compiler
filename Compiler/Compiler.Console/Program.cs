@@ -17,6 +17,10 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
+            //var lexemes = new DynamicLexer("../../../DynamicLexer/lexemes.bnf")
+            //    .GetLexemes(File.ReadAllText("../../../DynamicLexer/code.txt"));
+            //Print(lexemes);
+
             var parser = new Parser();
             var result = parser.CheckSyntax();
 

@@ -53,7 +53,7 @@ namespace Parser_Implementation.BnfReader
                     Value = "*<EOF>"
                 })
             };
-            var root = new BnfRuleAlternative(rootRules, "ROOT");
+            var root = new BnfRuleAlternative(rootRules, "ROOT", _lexemeSource);
 
             UpdateRules();
 
@@ -133,7 +133,7 @@ namespace Parser_Implementation.BnfReader
                 }
             }
 
-            return new BnfRuleAlternative(rules, "SingleAlternative");
+            return new BnfRuleAlternative(rules, "SingleAlternative", _lexemeSource);
         }
 
         private IBnfRule GetRepetition(List<Lexeme> lexemes)

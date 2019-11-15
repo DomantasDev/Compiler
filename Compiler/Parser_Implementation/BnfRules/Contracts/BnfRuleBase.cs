@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Parser_Implementation.Lexemes;
 
 namespace Parser_Implementation.BnfRules.Contracts
 {
@@ -6,12 +7,14 @@ namespace Parser_Implementation.BnfRules.Contracts
     {
         protected readonly List<IBnfRule> BnfRules;
 
-        protected BnfRuleBase(List<IBnfRule> bnfRules, string ruleName)
+        protected BnfRuleBase(List<IBnfRule> bnfRules, string ruleName, LexemeSource lexemeSource)
         {
             RuleName = ruleName;
+            LexemeSource = lexemeSource;
             BnfRules = bnfRules;
         }
         public abstract bool Expect();
         public string RuleName { get; }
+        protected LexemeSource LexemeSource { get; }
     }
 }

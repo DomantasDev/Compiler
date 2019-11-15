@@ -8,22 +8,18 @@ namespace Parser_Implementation.BnfRules
 {
     public class BnfRuleRepetition : BnfRuleBase
     {
-        private readonly LexemeSource _lexemeSource;
-        public BnfRuleRepetition(List<IBnfRule> bnfRules, string ruleName) : base(bnfRules, ruleName) {}
-
-        public BnfRuleRepetition(IBnfRule bnfRule, LexemeSource lexemeSource) : base(new List<IBnfRule>{bnfRule}, "Repetition")
+        public BnfRuleRepetition(IBnfRule bnfRule, LexemeSource lexemeSource) : base(new List<IBnfRule>{bnfRule}, "Repetition", lexemeSource)
         {
-            _lexemeSource = lexemeSource;
         }
 
         public override bool Expect()
         {
             while (true)
             {
-                _lexemeSource.SetCheckpoint();
+                var checkpoint = LexemeSource.SetCheckpoint();
                 if (!BnfRules.Expect())
                 {
-                    _lexemeSource.RevertCheckPoint();
+                    LexemeSource.RevertCheckPoint(checkpoint);
                     break;
                 }
             }
