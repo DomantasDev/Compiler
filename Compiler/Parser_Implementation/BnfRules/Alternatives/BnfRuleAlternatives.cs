@@ -8,23 +8,24 @@ namespace Parser_Implementation.BnfRules.Alternatives
 {
     public class BnfRuleAlternatives : BnfRuleBase
     {
-        public BnfRuleAlternatives(List<IBnfRule> bnfRules, string ruleName, LexemeSource lexemeSource) : base(bnfRules, ruleName, lexemeSource)
+        public BnfRuleAlternatives(List<IBnfRule> bnfRules, LexemeSource lexemeSource) : base(bnfRules, lexemeSource, null)
         {
         }
 
-        public override bool Expect()
+        public override ExpectResult Expect()
         {
             foreach (var bnfRule in BnfRules)
             {
                 var checkpoint = LexemeSource.SetCheckpoint();
 
-                if (bnfRule.Expect())
-                    return true;
+                var res = bnfRule.Expect();
+                if (res.Success)
+                    return res;
 
                 LexemeSource.RevertCheckPoint(checkpoint);
             }
 
-            return false;
+            return new ExpectResult(false);
         }
     }
 }

@@ -53,7 +53,7 @@ namespace Parser_Implementation.BnfReader
                     Value = "*<EOF>"
                 })
             };
-            var root = new BnfRuleAlternative(rootRules, "ROOT", _lexemeSource);
+            var root = new BnfRuleAlternative(rootRules, _lexemeSource, null, null);
 
             UpdateRules();
 
@@ -100,10 +100,18 @@ namespace Parser_Implementation.BnfReader
 
         private IBnfRule GetSingleAlternative(List<Lexeme> lexemes)
         {
+            var repetitionSymbolsEncountered = 0;
+
+            MetaData metaData;
+            (lexemes, metaData) = lexemes.ExtractMetaData();
             var rules = new List<IBnfRule>();
+
+            var repetitions = new List<Repetition>();
+            var newRepetition = new Repetition();
+
             for (var i = 0; i < lexemes.Count; i++)
             {
-                var temp = i;
+                var temp = i - repetitionSymbolsEncountered;
                 switch (lexemes[i].Type)
                 {
                     case "LEXEME_RULE":
@@ -113,33 +121,27 @@ namespace Parser_Implementation.BnfReader
                         rules.Add(GetRule(lexemes[i].Value, rule => rules[temp] = rule));
                         break;
                     case "OP_REP_START":
-                    {
-                        var repetitionLexemes = new List<Lexeme>(); 
-                        int j;
-
-                        for (j = i + 1;; j++)
-                        {
-                            if (lexemes[j].Type == "OP_REP_END")
-                                break;
-                            repetitionLexemes.Add(lexemes[j]);
-                        }
-
-                        i = j;
-                        rules.Add(GetRepetition(repetitionLexemes));
+                        newRepetition.StartIndex = i;
+                        repetitionSymbolsEncountered++;
                         break;
-                    }
+                    case "OP_REP_END":
+                        repetitionSymbolsEncountered++;
+                        newRepetition.EndIndex = i - 2;
+                        repetitions.Add(newRepetition);
+                        newRepetition = new Repetition();
+                        break;
                     default:
                         throw new Exception("dis iz no gud");
                 }
             }
 
-            return new BnfRuleAlternative(rules, "SingleAlternative", _lexemeSource);
+            return new BnfRuleAlternative(rules, _lexemeSource, repetitions, metaData);
         }
 
-        private IBnfRule GetRepetition(List<Lexeme> lexemes)
-        {
-            return new BnfRuleRepetition(GetRule(lexemes), _lexemeSource);
-        }
+        //private IBnfRule GetRepetition(List<Lexeme> lexemes)
+        //{
+        //    return new BnfRuleRepetition(GetRule(lexemes), _lexemeSource);
+        //}
 
         private IBnfRule GetLexeme(Lexeme lexeme)
         {
@@ -149,7 +151,7 @@ namespace Parser_Implementation.BnfReader
 
         private IBnfRule GetAlternatives(List<List<Lexeme>> alternatives)
         {
-            return new BnfRuleAlternatives(alternatives.Select(a => GetSingleAlternative(a)).ToList(), "Alternatives", _lexemeSource);
+            return new BnfRuleAlternatives(alternatives.Select(a => GetSingleAlternative(a)).ToList(), _lexemeSource);
         }
 
         private List<List<Lexeme>> SplitToAlternatives(List<Lexeme> lexemes)

@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AbstractSyntaxTree_Implementation\AbstractSyntaxTree_Implementation.csproj" />
     <ProjectReference Include="..\Lexer\Lexer_Implementation.csproj" />
   </ItemGroup>
 

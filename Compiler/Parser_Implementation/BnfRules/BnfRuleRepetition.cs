@@ -6,25 +6,25 @@ using Parser_Implementation.Lexemes;
 
 namespace Parser_Implementation.BnfRules
 {
-    public class BnfRuleRepetition : BnfRuleBase
-    {
-        public BnfRuleRepetition(IBnfRule bnfRule, LexemeSource lexemeSource) : base(new List<IBnfRule>{bnfRule}, "Repetition", lexemeSource)
-        {
-        }
+    //public class BnfRuleRepetition : BnfRuleBase
+    //{
+    //    public BnfRuleRepetition(IBnfRule bnfRule, LexemeSource lexemeSource) : base(new List<IBnfRule>{bnfRule}, "Repetition", lexemeSource, )
+    //    {
+    //    }
 
-        public override bool Expect()
-        {
-            while (true)
-            {
-                var checkpoint = LexemeSource.SetCheckpoint();
-                if (!BnfRules.Expect())
-                {
-                    LexemeSource.RevertCheckPoint(checkpoint);
-                    break;
-                }
-            }
+    //    public override ExpectResult Expect()
+    //    {
+    //        while (true)
+    //        {
+    //            var checkpoint = LexemeSource.SetCheckpoint();
+    //            if (!BnfRules.Expect())
+    //            {
+    //                LexemeSource.RevertCheckPoint(checkpoint);
+    //                break;
+    //            }
+    //        }
 
-            return true;
-        }
-    }
+    //        return true;
+    //    }
+    //}
 }

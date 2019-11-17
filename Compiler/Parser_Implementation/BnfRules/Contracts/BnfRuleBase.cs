@@ -1,20 +1,24 @@
 ﻿using System.Collections.Generic;
+using AbstractSyntaxTree_Implementation;
+using AbstractSyntaxTree_Implementation.Nodes;
+using Lexer_Implementation.DynamicLexer;
 using Parser_Implementation.Lexemes;
 
 namespace Parser_Implementation.BnfRules.Contracts
 {
-    public abstract class BnfRuleBase : IBnfRule
+    public abstract class BnfRuleBase : MetaRuleBase, IBnfRule
     {
         protected readonly List<IBnfRule> BnfRules;
+        protected readonly NodeFactory NodeFactory;
 
-        protected BnfRuleBase(List<IBnfRule> bnfRules, string ruleName, LexemeSource lexemeSource)
+        protected BnfRuleBase(List<IBnfRule> bnfRules, LexemeSource lexemeSource, MetaData metaData) : base(metaData)
         {
-            RuleName = ruleName;
             LexemeSource = lexemeSource;
+            NodeFactory = new NodeFactory();
             BnfRules = bnfRules;
         }
-        public abstract bool Expect();
-        public string RuleName { get; }
+        public abstract ExpectResult Expect();
+
         protected LexemeSource LexemeSource { get; }
     }
 }

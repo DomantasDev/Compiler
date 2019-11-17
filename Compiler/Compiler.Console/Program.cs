@@ -22,7 +22,7 @@ namespace ConsoleApp
             //Print(lexemes);
 
             var parser = new Parser();
-            var result = parser.CheckSyntax();
+            var result = parser.Parse(out var node);
 
             Console.Write(result);
             Console.ReadLine();

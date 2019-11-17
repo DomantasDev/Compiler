@@ -24,7 +24,7 @@ class Program
         int x := -1;
         float y := .5;
 
-        if(!( (int)(-x / (int)y) >= x+x*x ) & y > 0.)
+        if(x)
         {
             x := 0;
             while(true)

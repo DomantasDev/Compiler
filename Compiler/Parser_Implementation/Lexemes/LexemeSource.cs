@@ -13,16 +13,19 @@ namespace Parser_Implementation.Lexemes
             _lexemes = lexemes;
         }
 
-        public bool Expect(string lexemeName)
+        public LexemeExpectResult Expect(string lexemeName)
         {
             if (_lexemes.Count == _offset)
-                return false;
+                return new LexemeExpectResult();
 
-            if (_lexemes[_offset++].Type == lexemeName)
-                return true;
-
-            _offset--;
-            return false;
+            if (_lexemes[_offset].Type == lexemeName)
+            {
+                var res = new LexemeExpectResult(_lexemes[_offset]);
+                _offset++;
+                return res;
+            }
+            
+            return new LexemeExpectResult();
         }
 
         public int SetCheckpoint()

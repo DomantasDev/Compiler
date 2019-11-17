@@ -4,6 +4,11 @@
 <OP_REP_END> ::= "}"
 <RULE> ::= <RULE_NAME>
 <LEXEME_RULE> ::= "*" <RULE_NAME>
+<META_CLASS> ::= "[" <LETTERS> "]"
+<META_SEPARATOR> ::= "@"
+<META_GROUPING> ::= <DIGITS>
 *<RULE_NAME> ::= "<" <LETTERS> ">"
 *<LETTERS> ::= <LETTER> | <LETTERS> <LETTER>
 +<LETTER> ::= "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "y" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "r" | "s" | "t" | "u" | "v" | "x" | "w" | "q" | "z" |  "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "Y" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "R" | "S" | "T" | "U" | "V" | "X" | "W" | "Q" | "Z" | "_"
+*<DIGITS> ::= <DIGIT> | <DIGITS> <DIGIT>
++<DIGIT> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"

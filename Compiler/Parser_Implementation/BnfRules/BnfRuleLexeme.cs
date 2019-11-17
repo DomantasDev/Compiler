@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using AbstractSyntaxTree_Implementation.Nodes;
 using Parser_Implementation.BnfRules.Contracts;
 using Parser_Implementation.Lexemes;
 
@@ -17,9 +18,20 @@ namespace Parser_Implementation.BnfRules
             RuleName = ruleName;
         }
 
-        public bool Expect()
+        public ExpectResult Expect()
         {
-            return _lexemeSource.Expect(RuleName);
+            var res =_lexemeSource.Expect(RuleName);
+            if(!res.Success)
+                return  new ExpectResult();
+
+            return new ExpectResult
+            {
+                Node = new LexemeNode
+                {
+                    Value = res.Lexeme
+                },
+                Success = true
+            };
         }
     }
 }

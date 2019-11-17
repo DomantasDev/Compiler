@@ -1,7 +1,4 @@
-<START> ::= <USINGS> <CLASSES> | <CLASSES>
-
-<USINGS> ::= <USING> {<USING>}
-<USING> ::= *<KW_USING> *<STRING> *<SEMICOLON>
+<START> ::= <CLASSES>
 
 <CLASSES> ::= <CLASS_DECL> {<CLASS_DECL>}
 <CLASS_DECL> ::= *<KW_CLASS> *<IDENT> <CLASS_BODY> | *<KW_CLASS> *<IDENT> <EXTENDS> <CLASS_BODY>  
@@ -48,13 +45,13 @@
 <VAR_LIST> ::= <VAR> {*<COMMA> <VAR>}
 
 <EXPR> ::= <OR>
-<OR> ::= <AND> {*<OR_OP> <AND>}
-<AND> ::= <EQUALS> {*<AND_OP> <EQUALS>}
-<EQUALS> ::= <COMPARE> {*<EQUALS_OP> <COMPARE>}
-<COMPARE> ::= <ADD> {*<COMPARE_OP> <ADD>} 
-<ADD> ::= <MULT> {*<ADD_OP> <MULT>}
-<MULT> ::= <DOT> {*<MULT_OP> <DOT>} 
-<DOT> ::=  <PRIMARY> {*<DOT_OP> <MEMBER_ACCESS>}
+<OR> ::= <AND> *<OR_OP> <OR> | <AND>
+<AND> ::= <EQUALS> *<AND_OP> <AND> | <EQUALS>
+<EQUALS> ::= <COMPARE> *<EQUALS_OP> <EQUALS> | <COMPARE>
+<COMPARE> ::= <ADD> *<COMPARE_OP> <COMPARE> | <ADD>
+<ADD> ::= <MULT> *<ADD_OP> <ADD> | <MULT>
+<MULT> ::= <DOT> *<MULT_OP> <MULT> | <DOT>
+<DOT> ::=  <PRIMARY> *<DOT_OP> <DOT> | <PRIMARY>
 <PRIMARY> ::= <METHOD_CALL> | <VAR> | <NUMBER> | *<BOOL> | *<STRING> | <PAREN> | <NEG> | <NOT> | <OBJ_CREATION> | <CAST> | *<NULL> | *<THIS> | *<BASE>
 
 <MEMBER_ACCESS> ::= <METHOD_CALL> | *<IDENT>

@@ -7,7 +7,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "Compiler.Cons
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexer_Implementation", "Lexer\Lexer_Implementation.csproj", "{83BFD1E9-9C1F-4B30-9C5C-48AC85C184B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parser_Implementation", "Parser_Implementation\Parser_Implementation.csproj", "{1D12CCD7-9F33-4DEB-94C0-74E694C82349}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Parser_Implementation", "Parser_Implementation\Parser_Implementation.csproj", "{1D12CCD7-9F33-4DEB-94C0-74E694C82349}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0. Console", "0. Console", "{45198ADF-9D4A-4FA3-A823-52453954E525}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Lexer", "1. Lexer", "{183E4DC4-8F44-40A5-B814-5BD4FE8C5199}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Parser", "2. Parser", "{DB96EB48-682B-49AF-B527-4218F741E3A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbstractSyntaxTree_Implementation", "AbstractSyntaxTree_Implementation\AbstractSyntaxTree_Implementation.csproj", "{66FB9B00-2B21-4475-8454-D225073A0461}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,9 +35,19 @@ Global
 		{1D12CCD7-9F33-4DEB-94C0-74E694C82349}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D12CCD7-9F33-4DEB-94C0-74E694C82349}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D12CCD7-9F33-4DEB-94C0-74E694C82349}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66FB9B00-2B21-4475-8454-D225073A0461}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66FB9B00-2B21-4475-8454-D225073A0461}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66FB9B00-2B21-4475-8454-D225073A0461}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66FB9B00-2B21-4475-8454-D225073A0461}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2FAEAB33-0DDF-44CD-86BD-AF05F8270241} = {45198ADF-9D4A-4FA3-A823-52453954E525}
+		{83BFD1E9-9C1F-4B30-9C5C-48AC85C184B8} = {183E4DC4-8F44-40A5-B814-5BD4FE8C5199}
+		{1D12CCD7-9F33-4DEB-94C0-74E694C82349} = {DB96EB48-682B-49AF-B527-4218F741E3A5}
+		{66FB9B00-2B21-4475-8454-D225073A0461} = {DB96EB48-682B-49AF-B527-4218F741E3A5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {71945F62-2B50-4287-8F38-12EA52B0BCD9}
