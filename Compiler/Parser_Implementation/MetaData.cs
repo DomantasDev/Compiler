@@ -8,6 +8,7 @@ namespace Parser_Implementation
     {
         public string Class { get; set; }
         public List<ParamGroup> ParamGroups { get; set; }
+        public bool IsLeftRecursion { get; set; }
     }
 
     public class ParamGroup

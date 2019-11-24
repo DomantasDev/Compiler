@@ -22,10 +22,10 @@ namespace Parser_Implementation
         //    return true;
         //}
 
-        public static (List<Lexeme> data, MetaData metaData) ExtractMetaData(this List<Lexeme> lexemes)
+        public static (List<Token> data, MetaData metaData) ExtractMetaData(this List<Token> lexemes)
         {
             var x = lexemes.Aggregate(
-                (data: new List<Lexeme>(), metaData: new List<Lexeme>()),
+                (data: new List<Token>(), metaData: new List<Token>()),
                 (res, lexeme) =>
                 {
                     if (lexeme.Type.StartsWith("META"))
@@ -38,19 +38,31 @@ namespace Parser_Implementation
             MetaData metaData = null;
             if (x.metaData.Any())
             {
-                var classMetaData = x.metaData.First();
+                metaData = new MetaData();
 
-                metaData = new MetaData
+                var firstMetaData = x.metaData.First();
+
+                if (firstMetaData.Type == "META_RECURSION")
                 {
-                    Class = classMetaData.Type == "META_CLASS" ? classMetaData.Value.Substring(1, classMetaData.Value.Length - 2) : throw new Exception("ismok rasyt BNF"),
-                    ParamGroups = GetParamGroups(x.metaData.Skip(1).ToList())
-                };
+                    metaData.IsLeftRecursion = true;
+                    x.metaData = x.metaData.Skip(1).ToList();
+                    firstMetaData = x.metaData.First();
+                }
+
+                if (firstMetaData.Type == "META_CLASS")
+                {
+                    metaData.Class = firstMetaData.Value.Substring(1, firstMetaData.Value.Length - 2);
+                    x.metaData = x.metaData.Skip(1).ToList();
+                }
+
+                metaData.ParamGroups = GetParamGroups(x.metaData);
+
             }
 
             return (x.data, metaData);
         }
 
-        private static List<ParamGroup> GetParamGroups(List<Lexeme> lexemes)
+        private static List<ParamGroup> GetParamGroups(List<Token> lexemes)
         {
             if(lexemes.First().Type != "META_SEPARATOR")
                 throw new Exception("ismok rasyt BNF");

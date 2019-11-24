@@ -5,10 +5,10 @@ namespace Parser_Implementation.Lexemes
 {
     public class LexemeSource
     {
-        private readonly List<Lexeme> _lexemes;
+        private readonly List<Token> _lexemes;
         private int _offset = 0;
 
-        public LexemeSource(List<Lexeme> lexemes)
+        public LexemeSource(List<Token> lexemes)
         {
             _lexemes = lexemes;
         }

@@ -10,7 +10,7 @@ namespace Parser_Implementation.BnfRules.Alternatives
     public class BnfRuleAlternative : BnfRuleBase
     {
         private readonly List<Repetition> _repetitions;
-
+        private bool _repetitionSucceeded = false;
 
         public BnfRuleAlternative(List<IBnfRule> bnfRules, LexemeSource lexemeSource, List<Repetition> repetitions, MetaData metaData) : base(bnfRules, lexemeSource, metaData)
         {
@@ -19,13 +19,15 @@ namespace Parser_Implementation.BnfRules.Alternatives
 
         public override ExpectResult Expect()
         {
-            return MetaData == null ? ExpectNode() : CreateNode();
+            _repetitionSucceeded = false;
+            return MetaData?.Class == null ? ExpectNode() : CreateNode();
         }
 
         private ExpectResult CreateNode()
         {
             var results = new List<IndexedItem<ExpectResult>>(BnfRules.Count);
             var checkpoint = LexemeSource.SetCheckpoint();
+            
 
             for (var i = 0; i < BnfRules.Count; i++)
             {
@@ -50,6 +52,15 @@ namespace Parser_Implementation.BnfRules.Alternatives
                         Index = i,
                         Item = result
                     });
+            }
+
+            if (_repetitions.Any() && _repetitionSucceeded && MetaData.IsLeftRecursion) //jei yra repetition, ir repetition kazka rado, ir pazymeta kairioji rekursija
+            {
+                return new ExpectResult(true, LeftRecursion(results));
+            }
+            if (_repetitions.Any() && !_repetitionSucceeded && MetaData.IsLeftRecursion) //jei yra repetition, ir repetition nieko nerado, ir pazymeta kairioji rekursija
+            {
+                return results.First().Item;
             }
 
             var paramGroups = new List<List<Node>>(MetaData.ParamGroups.Count);
@@ -82,6 +93,29 @@ namespace Parser_Implementation.BnfRules.Alternatives
             }
 
             return new ExpectResult(true, newNode);
+        }
+
+        private Node LeftRecursion(List<IndexedItem<ExpectResult>> expectResults)
+        {
+            Node result = null;
+            var paramsNeeded = MetaData.ParamGroups.Count;
+            var nodes = expectResults.Select(x => x.Item.Node).ToList();
+            while (nodes.Count > 1)
+            {
+                var paramsForFactory = nodes
+                    .Take(paramsNeeded)
+                    .ToList();
+
+                nodes = nodes
+                    .Skip(paramsNeeded)
+                    .ToList();
+
+                result = NodeFactory.CreateNode(MetaData.Class, paramsForFactory);
+
+                nodes.Insert(0, result);
+            }
+
+            return result;
         }
 
         private List<IndexedItem<ExpectResult>> Repetition(Repetition repetition)
@@ -118,6 +152,8 @@ namespace Parser_Implementation.BnfRules.Alternatives
                     LexemeSource.RevertCheckPoint(checkpoint);
                     break;
                 }
+
+                _repetitionSucceeded = true;
                 result.AddRange(temp);
             }
 
@@ -150,7 +186,16 @@ namespace Parser_Implementation.BnfRules.Alternatives
                 results.Add(res);
             }
 
-            return results.First(r => r.Success && r.Node != null); //TODO change back to single
+            if (MetaData != null)
+            {
+                var firstParamGroup = MetaData.ParamGroups.FirstOrDefault()?.Params;
+
+                if(firstParamGroup.Any())
+                    return results[firstParamGroup.First()]; // return @x
+                return new ExpectResult(true); // return null if @
+            }
+
+            return results[0];
         }
 
         private List<IndexedItem<ExpectResult>> RepetitionWhenExpecting(Repetition repetition)

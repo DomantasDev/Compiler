@@ -4,8 +4,7 @@ using System.Text;
 
 namespace AbstractSyntaxTree_Implementation.Nodes
 {
-    public class ParamList : Node
+    public class Type : TokenNode
     {
-        public List<Parameter> Parameters { get; set; }
     }
 }

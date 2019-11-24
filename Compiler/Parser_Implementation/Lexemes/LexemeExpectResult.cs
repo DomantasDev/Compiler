@@ -7,7 +7,7 @@ namespace Parser_Implementation.Lexemes
 {
     public class LexemeExpectResult
     {
-        public LexemeExpectResult(Lexeme lexeme)
+        public LexemeExpectResult(Token lexeme)
         {
             Lexeme = lexeme;
             Success = true;
@@ -18,6 +18,6 @@ namespace Parser_Implementation.Lexemes
             
         }
         public bool Success { get; set; }
-        public Lexeme Lexeme { get; set; }
+        public Token Lexeme { get; set; }
     }
 }

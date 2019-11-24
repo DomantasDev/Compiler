@@ -6,5 +6,10 @@ namespace AbstractSyntaxTree_Implementation.Nodes
     public class ClassBody : Node
     {
         public List<ClassMember> Members { get; set; }
+
+        public override void Print(NodePrinter p)
+        {
+            p.Print("Members", Members);
+        }
     }
 }

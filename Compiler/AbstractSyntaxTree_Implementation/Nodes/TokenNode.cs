@@ -5,8 +5,8 @@ using Lexer_Implementation.DynamicLexer;
 
 namespace AbstractSyntaxTree_Implementation.Nodes
 {
-    public class LexemeNode : Node
+    public class TokenNode : Node, ITokenNode
     {
-        public Lexeme Value { get; set; }
+        public Token Token { get; set; }
     }
 }

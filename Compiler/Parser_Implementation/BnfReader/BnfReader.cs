@@ -17,7 +17,7 @@ namespace Parser_Implementation.BnfReader
     {
         private readonly DynamicLexer _lexer;
         private readonly LexemeSource _lexemeSource;
-        private readonly Dictionary<string, List<Lexeme>> _lexemeDic;
+        private readonly Dictionary<string, List<Token>> _lexemeDic;
         private readonly Dictionary<string, IBnfRule> _rulesInProgress;
         private readonly List<(string ruleName, Action<IBnfRule> updateAction)> _pendingUpdates;
 
@@ -25,7 +25,7 @@ namespace Parser_Implementation.BnfReader
         {
             _lexer = lexerForBnf;
             _lexemeSource = lexemeSource;
-            _lexemeDic = new Dictionary<string, List<Lexeme>>();
+            _lexemeDic = new Dictionary<string, List<Token>>();
             _rulesInProgress = new Dictionary<string, IBnfRule>();
             _pendingUpdates = new List<(string ruleName, Action<IBnfRule> updateAction)>();
         }
@@ -47,7 +47,7 @@ namespace Parser_Implementation.BnfReader
             var rootRules = new List<IBnfRule>
             {
                 GetRule(rootRuleName),
-                GetLexeme(new Lexeme
+                GetLexeme(new Token
                 {
                     Type = "LEXEME_RULE",
                     Value = "*<EOF>"
@@ -89,7 +89,7 @@ namespace Parser_Implementation.BnfReader
                 pendingUpdate.updateAction(rule);
             }
         }
-        private IBnfRule GetRule(List<Lexeme> lexemes)
+        private IBnfRule GetRule(List<Token> lexemes)
         {
             var alternatives = SplitToAlternatives(lexemes);
             if (alternatives.Count > 1)
@@ -98,7 +98,7 @@ namespace Parser_Implementation.BnfReader
             return GetSingleAlternative(alternatives.Single());
         }
 
-        private IBnfRule GetSingleAlternative(List<Lexeme> lexemes)
+        private IBnfRule GetSingleAlternative(List<Token> lexemes)
         {
             var repetitionSymbolsEncountered = 0;
 
@@ -143,22 +143,22 @@ namespace Parser_Implementation.BnfReader
         //    return new BnfRuleRepetition(GetRule(lexemes), _lexemeSource);
         //}
 
-        private IBnfRule GetLexeme(Lexeme lexeme)
+        private IBnfRule GetLexeme(Token lexeme)
         {
             var lexemeName = lexeme.Value.Substring(2, lexeme.Value.Length - 3);
             return new BnfRuleLexeme(_lexemeSource, lexemeName);
         }
 
-        private IBnfRule GetAlternatives(List<List<Lexeme>> alternatives)
+        private IBnfRule GetAlternatives(List<List<Token>> alternatives)
         {
             return new BnfRuleAlternatives(alternatives.Select(a => GetSingleAlternative(a)).ToList(), _lexemeSource);
         }
 
-        private List<List<Lexeme>> SplitToAlternatives(List<Lexeme> lexemes)
+        private List<List<Token>> SplitToAlternatives(List<Token> lexemes)
         {
             var insideRepetition = false;
-            var alternatives = new List<List<Lexeme>>();
-            var list = new List<Lexeme>();
+            var alternatives = new List<List<Token>>();
+            var list = new List<Token>();
             foreach (var lexeme in lexemes)
             {
                 if (lexeme.Type == "OP_REP_START")
@@ -169,7 +169,7 @@ namespace Parser_Implementation.BnfReader
                 if (lexeme.Type == "OP_ALT" && !insideRepetition)
                 {
                     alternatives.Add(list);
-                    list = new List<Lexeme>();
+                    list = new List<Token>();
                 }
                 else
                 {
@@ -181,7 +181,7 @@ namespace Parser_Implementation.BnfReader
             return alternatives;
         }
 
-        private void AddRuleToDictionary(List<Lexeme> lexemes)
+        private void AddRuleToDictionary(List<Token> lexemes)
         {
             if (lexemes[0].Type == "RULE")
                 _lexemeDic.Add(lexemes[0].Value, lexemes.Skip(2).ToList());

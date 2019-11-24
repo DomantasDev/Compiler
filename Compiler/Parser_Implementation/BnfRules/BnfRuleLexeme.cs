@@ -26,9 +26,9 @@ namespace Parser_Implementation.BnfRules
 
             return new ExpectResult
             {
-                Node = new LexemeNode
+                Node = new TokenNode
                 {
-                    Value = res.Lexeme
+                    Token = res.Lexeme
                 },
                 Success = true
             };

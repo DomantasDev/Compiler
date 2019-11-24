@@ -5,9 +5,13 @@ using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements
 {
-    public class If : Statement
+    public class Return : Statement
     {
-        public Expression Condition { get; set; }
-        //TODO finish this
+        public Expression Expression { get; set; }
+
+        public override void Print(NodePrinter p)
+        {
+            p.Print(nameof(Expression), Expression);
+        }
     }
 }

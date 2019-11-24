@@ -5,8 +5,8 @@ using Lexer_Implementation.DynamicLexer;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
 {
-    public class LiteralExp : Expression
+    public class LiteralExp : Expression, ITokenNode
     {
-        public Lexeme Value { get; set; }
+        public Token Token { get; set; }
     }
 }

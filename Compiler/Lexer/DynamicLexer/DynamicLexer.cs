@@ -27,7 +27,7 @@ namespace Lexer_Implementation.DynamicLexer
             _stateMachine = new StateMachineBuilder().Build(rules);
         }
 
-        public IEnumerable<Lexeme> GetLexemes(string code)
+        public IEnumerable<Token> GetLexemes(string code)
         {
             int line = 1;
             int globalOffset = 0;
@@ -46,7 +46,7 @@ namespace Lexer_Implementation.DynamicLexer
                         if (string.IsNullOrWhiteSpace(_stateMachine.Path))
                         {
                             _stateMachine.Reset();
-                            yield return new Lexeme
+                            yield return new Token
                             {
                                 Type = "EOF",
                                 Value = "EOF"
@@ -60,7 +60,7 @@ namespace Lexer_Implementation.DynamicLexer
                     globalOffset += lastState.value.Length;
                     iterationOffset = -1;
 
-                    yield return new Lexeme
+                    yield return new Token
                     {
                         Value = lastState.value.Trim(),
                         Type = lastState.state.LexemeType,
@@ -69,7 +69,7 @@ namespace Lexer_Implementation.DynamicLexer
                     _stateMachine.Reset();
                 }
             }
-            yield return new Lexeme
+            yield return new Token
             {
                 Type = "EOF",
                 Value = "EOF"
