@@ -9,6 +9,7 @@ using Lexer_Implementation.DynamicLexer;
 using Lexer_Implementation.StaticLexer;
 using Parser_Implementation;
 using Parser_Implementation.BnfReader;
+using Parser_Implementation.BnfRules.Alternatives;
 using Parser_Implementation.Lexemes;
 using Token = Lexer_Implementation.DynamicLexer.Token;
 
@@ -29,6 +30,7 @@ namespace ConsoleApp
             Console.WriteLine(result);
 
             node.Print(new NodePrinter());
+            Console.WriteLine(BnfRuleAlternative.counter); // type yra class type ir primitive
             Console.ReadLine();
         }
 

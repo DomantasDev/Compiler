@@ -48,7 +48,7 @@
 <ADD> ::= L[ArithExp]@0 @1 @2 <MULT> {*<ADD_OP> <MULT>}
 <MULT> ::= L[ArithExp]@0 @1 @2 <DOT> {*<MULT_OP> <DOT>} 
 <DOT> ::= L[BinaryExp]@0 @1 @2 <PRIMARY> {*<DOT_OP> <PRIMARY>}
-<PRIMARY> ::= <METHOD_CALL> | [LiteralExp]@0 <VAR> | [LiteralExp]@0 <NUMBER> | [LiteralExp]@0 *<BOOL> | [LiteralExp]@0 *<STRING> | <PAREN> | <NEG> | <NOT> | <OBJ_CREATION> | <CAST> | [LiteralExp]@0 *<NULL> | [LiteralExp]@0 *<THIS> | [LiteralExp]@0 *<BASE>
+<PRIMARY> ::= <METHOD_CALL> | [VariableExp]@0 <VAR> | [LiteralExp]@0 <NUMBER> | [LiteralExp]@0 *<BOOL> | [LiteralExp]@0 *<STRING> | <PAREN> | <NEG> | <NOT> | <OBJ_CREATION> | <CAST> | [LiteralExp]@0 *<NULL> | [LiteralExp]@0 *<THIS> | [LiteralExp]@0 *<BASE>
 
 <MEMBER_ACCESS> ::= <METHOD_CALL> | *<IDENT>
 <PAREN> ::= @1 *<PAREN_O> <EXPR> *<PAREN_C>
