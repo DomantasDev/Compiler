@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Lexer_Implementation.DynamicLexer;
+using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
 {

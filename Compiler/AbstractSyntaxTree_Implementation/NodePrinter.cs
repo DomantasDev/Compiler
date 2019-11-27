@@ -50,8 +50,7 @@ namespace AbstractSyntaxTree_Implementation
         }
         private void PrintTokenNode(string title, ITokenNode node)
         {
-            var token = node.Token;
-            PrintText($"{title}: {GetName(node)}", $"{token.Value}  {{line: {token.Line}}}");
+            PrintText($"{title}: {GetName(node)}", $"{node.Value}  {{line: {node.Line}}}");
         }
         private void PrintText(string title, string text = null)
         {

@@ -21,17 +21,7 @@ namespace Parser_Implementation.BnfRules
         public ExpectResult Expect()
         {
             var res =_lexemeSource.Expect(RuleName);
-            if(!res.Success)
-                return  new ExpectResult();
-
-            return new ExpectResult
-            {
-                Node = new TokenNode
-                {
-                    Token = res.Lexeme
-                },
-                Success = true
-            };
+            return !res.Success ? new ExpectResult() : res;
         }
     }
 }

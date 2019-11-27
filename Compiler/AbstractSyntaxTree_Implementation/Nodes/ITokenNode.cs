@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Lexer_Implementation.DynamicLexer;
+using Lexer_Contracts;
 
 namespace AbstractSyntaxTree_Implementation.Nodes
 {
     public interface ITokenNode
     {
-        Token Token { get; set; }
+        string Type { get; set; }
+        string Value { get; set; }
+        int Line { get; set; }
     }
 }

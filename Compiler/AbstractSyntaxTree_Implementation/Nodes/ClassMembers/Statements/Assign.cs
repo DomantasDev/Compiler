@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions;
-using Lexer_Implementation.StaticLexer;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements
 {

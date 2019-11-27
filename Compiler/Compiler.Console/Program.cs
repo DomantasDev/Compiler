@@ -4,14 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AbstractSyntaxTree_Implementation;
+using Lexer_Contracts;
 using Lexer_Implementation;
 using Lexer_Implementation.DynamicLexer;
-using Lexer_Implementation.StaticLexer;
 using Parser_Implementation;
 using Parser_Implementation.BnfReader;
 using Parser_Implementation.BnfRules.Alternatives;
 using Parser_Implementation.Lexemes;
-using Token = Lexer_Implementation.DynamicLexer.Token;
 
 namespace ConsoleApp
 {
@@ -30,7 +29,7 @@ namespace ConsoleApp
             Console.WriteLine(result);
 
             node.Print(new NodePrinter());
-            Console.WriteLine(BnfRuleAlternative.counter); // type yra class type ir primitive
+            // type yra class type ir primitive
             Console.ReadLine();
         }
 

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Lexer_Implementation.DynamicLexer
+namespace Lexer_Contracts
 {
     public class Token
     {

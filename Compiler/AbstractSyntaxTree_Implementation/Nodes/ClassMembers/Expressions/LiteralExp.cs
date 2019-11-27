@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Lexer_Implementation.DynamicLexer;
+using Lexer_Contracts;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
 {
     public class LiteralExp : Expression, ITokenNode
     {
-        public Token Token { get; set; }
+        public string Type { get; set; }
+        public string Value { get; set; }
+        public int Line { get; set; }
     }
 }

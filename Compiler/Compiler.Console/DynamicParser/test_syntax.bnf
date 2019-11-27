@@ -1,5 +1,4 @@
 <PROGRAM> ::= [Program]@0 1 <CLASS_DECL> {<CLASS_DECL>}
-<ASD> ::= [Program]@0 1 <CLASS_DECL> {<CLASS_DECL>}
 
 <CLASS_DECL> ::= [Class]@1 @ @2 *<KW_CLASS> *<IDENT> <CLASS_BODY> | [Class]@1 @2 @3 *<KW_CLASS> *<IDENT> <EXTENDS> <CLASS_BODY>  
 <EXTENDS> ::= *<KW_EXTENDS> *<IDENT>
@@ -16,8 +15,8 @@
 
 <VARIABLE_DECL_STMT> ::= [VariableDeclaration]@0 @1 @2 @4 <VISIBILITY> <TYPE> *<IDENT> *<OP_ASSIGN> <EXPR> | [VariableDeclaration]@0 @1 @2 @ <VISIBILITY> <TYPE> *<IDENT>
 
-<RETURN_TYPE> ::= <TYPE> | [Type]@0 *<KW_VOID>
-<TYPE> ::= [Type]@0 <SYSTEM_TYPE> | [Type]@0 *<IDENT>
+<RETURN_TYPE> ::= <TYPE> | [ValueType]@0 *<KW_VOID>
+<TYPE> ::= [ValueType]@0 <SYSTEM_TYPE> | [ReferenceType]@0 *<IDENT>
 <SYSTEM_TYPE> ::= *<KW_INT> | *<KW_STRING> | *<KW_FLOAT> | *<KW_BOOL>
 
 <PARAM_LIST> ::= @1 *<PAREN_O> <PARAMS> *<PAREN_C> | @ *<PAREN_O> *<PAREN_C>
@@ -47,10 +46,10 @@
 <COMPARE> ::= L[ComparisonExp]@0 @1 @2 <ADD> {*<COMPARE_OP> <ADD>}
 <ADD> ::= L[ArithExp]@0 @1 @2 <MULT> {*<ADD_OP> <MULT>}
 <MULT> ::= L[ArithExp]@0 @1 @2 <DOT> {*<MULT_OP> <DOT>} 
-<DOT> ::= L[BinaryExp]@0 @1 @2 <PRIMARY> {*<DOT_OP> <PRIMARY>}
+<DOT> ::= L[MemberExp]@0 @1 @2 <PRIMARY> {*<DOT_OP> <MEMBER_ACCESS>}
 <PRIMARY> ::= <METHOD_CALL> | [VariableExp]@0 <VAR> | [LiteralExp]@0 <NUMBER> | [LiteralExp]@0 *<BOOL> | [LiteralExp]@0 *<STRING> | <PAREN> | <NEG> | <NOT> | <OBJ_CREATION> | <CAST> | [LiteralExp]@0 *<NULL> | [LiteralExp]@0 *<THIS> | [LiteralExp]@0 *<BASE>
 
-<MEMBER_ACCESS> ::= <METHOD_CALL> | *<IDENT>
+<MEMBER_ACCESS> ::= <METHOD_CALL> | [VariableExp]@0 *<IDENT>
 <PAREN> ::= @1 *<PAREN_O> <EXPR> *<PAREN_C>
 <NEG> ::= [UnaryArithExp]@0 @1 *<ADD_OP> <EXPR>
 <NOT> ::= [UnarylogicExp]@0 @1 *<OP_NOT> <EXPR>

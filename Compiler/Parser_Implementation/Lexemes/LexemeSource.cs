@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Lexer_Contracts;
 using Lexer_Implementation.DynamicLexer;
 
 namespace Parser_Implementation.Lexemes
@@ -13,19 +14,19 @@ namespace Parser_Implementation.Lexemes
             _lexemes = lexemes;
         }
 
-        public LexemeExpectResult Expect(string lexemeName)
+        public ExpectResult Expect(string lexemeName)
         {
             if (_lexemes.Count == _offset)
-                return new LexemeExpectResult();
+                return new ExpectResult();
 
             if (_lexemes[_offset].Type == lexemeName)
             {
-                var res = new LexemeExpectResult(_lexemes[_offset]);
+                var res = new ExpectResult(true ,_lexemes[_offset].ToNode());
                 _offset++;
                 return res;
             }
             
-            return new LexemeExpectResult();
+            return new ExpectResult();
         }
 
         public int SetCheckpoint()

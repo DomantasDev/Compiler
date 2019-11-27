@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Lexer_Implementation.DynamicLexer;
-using Microsoft.Win32.SafeHandles;
-using Parser_Implementation.BnfRules;
-using Parser_Implementation.BnfRules.Contracts;
+using AbstractSyntaxTree_Implementation.Nodes;
+using Lexer_Contracts;
 
 namespace Parser_Implementation
 {
@@ -21,6 +18,16 @@ namespace Parser_Implementation
 
         //    return true;
         //}
+
+        public static TokenNode ToNode(this Token token)
+        {
+            return new TokenNode
+            {
+                Type = token.Type,
+                Value = token.Value,
+                Line = token.Line
+            };
+        }
 
         public static (List<Token> data, MetaData metaData) ExtractMetaData(this List<Token> lexemes)
         {

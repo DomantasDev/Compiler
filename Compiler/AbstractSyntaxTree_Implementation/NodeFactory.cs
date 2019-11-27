@@ -6,11 +6,14 @@ using AbstractSyntaxTree_Implementation.Nodes;
 using AbstractSyntaxTree_Implementation.Nodes.ClassMembers;
 using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions;
 using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binary;
+using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binary.Dot;
 using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Unary;
 using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements;
 using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements.If;
 using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements.IO;
-using Type = AbstractSyntaxTree_Implementation.Nodes.Type;
+using AbstractSyntaxTree_Implementation.Nodes.Types;
+using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
+using ValueType = AbstractSyntaxTree_Implementation.Nodes.Types.ValueType;
 
 namespace AbstractSyntaxTree_Implementation
 {
@@ -81,8 +84,14 @@ namespace AbstractSyntaxTree_Implementation
                     return CreateConstructor(parameters);
                 case "Visibility":
                     return CreateTokenNode<Visibility>(parameters);
+
                 case "Type":
                     return CreateTokenNode<Type>(parameters);
+                case "ReferenceType":
+                    return CreateTokenNode<ReferenceType>(parameters);
+                case "ValueType":
+                    return CreateTokenNode<ValueType>(parameters);
+
                 case "LiteralExp":
                     return CreateTokenNode<LiteralExp>(parameters);
                 case "VariableExp":
@@ -97,8 +106,9 @@ namespace AbstractSyntaxTree_Implementation
                     return CreateRead(parameters);
                 case "Write":
                     return CreateWrite(parameters);
-                case "BinaryExp":
-                    return CreateBinaryExp<BinaryExp>(parameters);
+
+                case "MemberExp":
+                    return CreateMemberExp(parameters);
                 case "ArithExp":
                     return CreateBinaryExp<ArithExp>(parameters);
                 case "ComparisonExp":
@@ -107,10 +117,12 @@ namespace AbstractSyntaxTree_Implementation
                     return CreateBinaryExp<EqualityExp>(parameters);
                 case "LogicExp":
                     return CreateBinaryExp<LogicExp>(parameters);
+
                 case "UnaryArithExp":
                     return CreateUnaryExp<UnaryArithExp>(parameters);
                 case "UnaryLogicExp":
                     return CreateUnaryExp<UnaryLogicExp>(parameters);
+
                 case "ObjCreationExp":
                     return CreateObjCreationExp(parameters);
                 case "Assign":
@@ -135,6 +147,22 @@ namespace AbstractSyntaxTree_Implementation
                 default:
                     throw new Exception($"Unrecognized class name: {className}");
             }
+        }
+
+        private MemberExp CreateMemberExp(List<Node> parameters)
+        {
+            parameters.CheckLength(3);
+            var right = parameters[2];
+            if (right is CallExp)
+                return CreateMemberExp<MemberCallExp>(parameters);
+            if (right is VariableExp)
+                return CreateMemberExp<MemberAccessExp>(parameters);
+            throw new Exception("Right side of member expression can only be CallExp or VariableExp");
+        }
+
+        private MemberExp CreateMemberExp<T>(List<Node> parameters) where T : MemberExp, new ()
+        {
+            return CreateBinaryExp<T>(parameters);
         }
 
         private Cast CreateCast(List<Node> parameters)
@@ -296,9 +324,12 @@ namespace AbstractSyntaxTree_Implementation
         private T CreateTokenNode<T>(List<Node> parameters) where T : Node, ITokenNode, new()
         {
             parameters.CheckLength(1);
+            var token = (TokenNode) parameters[0];
             return new T
             {
-                Token = ((TokenNode)parameters[0]).Token
+                Type = token.Type,
+                Value = token.Value,
+                Line = token.Line
             };
         }
 

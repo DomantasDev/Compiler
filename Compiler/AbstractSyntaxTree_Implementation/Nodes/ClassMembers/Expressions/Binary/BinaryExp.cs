@@ -1,10 +1,10 @@
 ﻿namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binary
 {
-    public class BinaryExp : Expression
+    public abstract class BinaryExp : Expression
     {
-        public Expression Left { get; set; }
-        public TokenNode Operator { get; set; }
-        public Expression Right { get; set; }
+        public virtual Expression Left { get; set; }
+        public virtual TokenNode Operator { get; set; }
+        public virtual Expression Right { get; set; }
 
         public override void Print(NodePrinter p)
         {

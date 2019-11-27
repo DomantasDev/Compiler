@@ -1,4 +1,5 @@
 ﻿using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions;
+using AbstractSyntaxTree_Implementation.Nodes.Types;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
 {

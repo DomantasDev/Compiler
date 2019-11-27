@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions;
+using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements
 {

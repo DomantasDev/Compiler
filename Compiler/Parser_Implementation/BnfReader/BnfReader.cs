@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
+using Lexer_Contracts;
 using Lexer_Implementation.DynamicLexer;
 using Parser_Implementation.BnfRules;
 using Parser_Implementation.BnfRules.Alternatives;

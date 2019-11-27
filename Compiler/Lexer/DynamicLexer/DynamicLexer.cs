@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Lexer_Contracts;
 using Lexer_Implementation.DynamicLexer.FSM;
 
 namespace Lexer_Implementation.DynamicLexer
