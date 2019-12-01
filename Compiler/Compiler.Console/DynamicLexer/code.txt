@@ -24,7 +24,7 @@ class Program
         int x := -1;
         float y := .5;
 
-        if(x)
+        if(x > 0)
         {
             x := 0;
             while(true)
@@ -48,7 +48,7 @@ class Animal
 {
     public constructor(){}
 
-    public virtual void Speak(string x)
+    public void Speak(string x)
     {
         write "Animal: \n\t" + x;
     }

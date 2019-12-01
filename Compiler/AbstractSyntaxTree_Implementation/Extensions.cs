@@ -12,5 +12,12 @@ namespace AbstractSyntaxTree_Implementation
             if(nodes.Count != expectedLength)
                 throw new Exception("Kazkas negerai");
         }
+
+        public static string CreateConstructorName(string className, IEnumerable<string> paramTypes)
+        {
+            paramTypes = paramTypes ?? new List<string>();
+            
+            return $"<{className}.{string.Join('.', paramTypes)}>";
+        }
     }
 }

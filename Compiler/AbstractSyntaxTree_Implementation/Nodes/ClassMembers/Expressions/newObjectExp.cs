@@ -1,29 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions;
+using AbstractSyntaxTree_Implementation.Nodes.Types;
 using AbstractSyntaxTree_Implementation.ResolveNames;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 
-namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements.IO
+namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
 {
-    public class Write : Statement
+    public class newObjectExp : Expression
     {
+        public ReferenceType Type { get; set; }
         public List<Expression> Arguments { get; set; }
 
         public override void Print(NodePrinter p)
         {
+            p.Print(nameof(Type), Type);
             p.Print(nameof(Arguments), Arguments);
         }
 
         public override void ResolveNames(Scope scope)
         {
-            Arguments.ForEach(x => x.ResolveNames(scope));
+            Type.ResolveNames(scope);
+            Arguments?.ForEach(x => x.ResolveNames(scope));
         }
 
         public override Type CheckTypes()
         {
-            return null;
+            //TODO make constructors parameterless
+            Arguments?.ForEach(x => x.CheckTypes());
+            return Type;
         }
     }
 }

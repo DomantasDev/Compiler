@@ -15,5 +15,11 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
             p.Print(nameof(Type), Type);
             p.Print(nameof(Expression), Expression);
         }
+
+        public override Type CheckTypes()
+        {
+            Type.IsCompatible(Expression.CheckTypes());
+            return Type;
+        }
     }
 }

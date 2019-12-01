@@ -39,37 +39,51 @@ namespace AbstractSyntaxTree_Implementation
         private Node CreateNodeList(List<List<Node>> parameters)
         {
             parameters.CheckLength(1);
-            return new NodeList
+            var node = new NodeList
             {
                 Nodes = parameters[0]
             };
+
+            return node;
         }
 
         private Node CreateBody(List<List<Node>> parameters)
         {
             parameters.CheckLength(1);
-            return new Body
+            var node = new Body
             {
                 Statements = parameters[0].Cast<Statement>().ToList()
             };
+
+            node.AddChildren(node.Statements?.ToArray());
+
+            return node;
         }
 
         private Node CreateClassBody(List<List<Node>> parameters)
         {
             parameters.CheckLength(1);
-            return new ClassBody
+            var node = new ClassBody
             {
                 Members = parameters[0].Cast<ClassMember>().ToList()
             };
+
+            node.AddChildren(node.Members?.ToArray());
+
+            return node;
         }
 
         private Node CreateProgram(List<List<Node>> parameters)
         {
             parameters.CheckLength(1);
-            return new Program
+            var node =  new Program
             {
                 CLasses = parameters[0].Cast<Class>().ToList()
             };
+
+            node.AddChildren(node.CLasses?.ToArray());
+
+            return node;
         }
 
         public Node CreateNode(string className, List<Node> parameters)
@@ -85,8 +99,6 @@ namespace AbstractSyntaxTree_Implementation
                 case "Visibility":
                     return CreateTokenNode<Visibility>(parameters);
 
-                case "Type":
-                    return CreateTokenNode<Type>(parameters);
                 case "ReferenceType":
                     return CreateTokenNode<ReferenceType>(parameters);
                 case "ValueType":
@@ -168,61 +180,87 @@ namespace AbstractSyntaxTree_Implementation
         private Cast CreateCast(List<Node> parameters)
         {
             parameters.CheckLength(2);
-            return new Cast
+            var node = new Cast
             {
                 Type = (Type)parameters[0],
                 Expression = (Expression)parameters[1]
             };
+
+            node.AddChildren(node.Type, node.Expression);
+
+            return node;
         }
 
         private Return CreateReturn(List<Node> parameters)
         {
             parameters.CheckLength(1);
-            return new Return
+            var node = new Return
             {
                 Expression = (Expression)parameters[0]
             };
+
+            node.AddChildren(node.Expression);
+
+            return node;
         }
 
         private Parameter CreateParameter(List<Node> parameters)
         {
             parameters.CheckLength(2);
-            return new Parameter
+            var node = new Parameter
             {
                 Type = (Type)parameters[0],
                 Name = (TokenNode)parameters[1]
             };
+
+            node.AddChildren(node.Type, node.Name);
+
+            return node;
         }
 
         private Constructor CreateConstructor(List<Node> parameters)
         {
             parameters.CheckLength(4);
-            return new Constructor
+            var node = new Constructor
             {
                 Visibility = (Visibility)parameters[0],
                 Parameters = ((NodeList)parameters[1])?.Nodes.Cast<Parameter>().ToList(),
                 BaseArguments = ((NodeList)parameters[2])?.Nodes.Cast<Expression>().ToList(),
                 Body = (Body)parameters[3]
             };
+
+            node.AddChildren(node.Body, node.Visibility, node.Body);
+            node.AddChildren(node.BaseArguments?.ToArray());
+            node.AddChildren(node.Parameters?.ToArray());
+
+            return node;
         }
 
         private ExpressionStatement CreateExpressionStatement(List<Node> parameters)
         {
             parameters.CheckLength(1);
-            return new ExpressionStatement
+            var node = new ExpressionStatement
             {
                 Expression = (Expression)parameters[0]
             };
+
+            node.AddChildren(node.Expression);
+
+            return node;
         }
 
         private Loop CreateLoop(List<Node> parameters)
         {
             parameters.CheckLength(2);
-            return new Loop
+            var node = new Loop
             {
                 Condition = (Expression)parameters[0],
                 Body = (Body)parameters[1]
             };
+
+            node.AddChildren(node.Body, node.Condition);
+
+            return node;
         }
 
         private Else CreateElse(List<Node> parameters)
@@ -232,93 +270,131 @@ namespace AbstractSyntaxTree_Implementation
             if((parameters[0] == null) == (parameters[1] == null))
                 throw new ArgumentException("invalid arguments for else");
 
-            return new Else
+            var node = new Else
             {
                 If = (If)parameters[0],
                 Body = (Body)parameters[1]
             };
+
+            node.AddChildren(node.If, node.Body);
+
+            return node;
         }
 
         private If CreateIf(List<Node> parameters)
         {
             parameters.CheckLength(3);
-            return new If
+            var node = new If
             {
                 Condition = (Expression)parameters[0],
                 Body = (Body)parameters[1],
                 Else = (Else)parameters[2]
             };
+
+            node.AddChildren(node.Condition, node.Body, node.Body, node.Else);
+
+            return node;
         }
 
         private CallExp CreateCallExp(List<Node> parameters)
         {
             parameters.CheckLength(2);
-            return new CallExp
+            var node = new CallExp
             {
                 MethodName = (TokenNode)parameters[0],
                 Arguments = ((NodeList)parameters[1])?.Nodes.Cast<Expression>().ToList()
             };
+
+            node.AddChildren(node.MethodName);
+            node.AddChildren(node.Arguments?.ToArray());
+
+            return node;
         }
 
         private Assign CreateAssign(List<Node> parameters)
         {
             parameters.CheckLength(2);
-            return new Assign
+            var node = new Assign
             {
-                VariableName = (TokenNode)parameters[0],
+                Variable = (TokenNode)parameters[0],
                 Expression = (Expression)parameters[1]
             };
+
+            node.AddChildren(node.Variable, node.Expression);
+
+            return node;
         }
 
-        private ObjCreationExp CreateObjCreationExp(List<Node> parameters)
+        private newObjectExp CreateObjCreationExp(List<Node> parameters)
         {
             parameters.CheckLength(2);
-            return new ObjCreationExp
+            var node = new newObjectExp
             {
-                Type = (Type)parameters[0],
+                Type = (ReferenceType)parameters[0],
                 Arguments = ((NodeList)parameters[1])?.Nodes.Cast<Expression>().ToList()
             };
+
+            node.AddChildren(node.Type);
+            node.AddChildren(node.Arguments?.ToArray());
+
+            return node;
         }
 
         private Write CreateWrite(List<Node> parameters)
         {
             parameters.CheckLength(1);
-            return new Write
+            var node = new Write
             {
                 Arguments = ((NodeList)parameters[0]).Nodes.Cast<Expression>().ToList()
             };
+
+            node.AddChildren(node.Arguments?.ToArray());
+
+            return node;
         }
 
         private Read CreateRead(List<Node> parameters)
         {
             parameters.CheckLength(1);
-            return new Read
+            var node = new Read
             {
                 Variables = ((NodeList)parameters[0]).Nodes.Cast<TokenNode>().ToList()
             };
+
+            node.AddChildren(node.Variables?.ToArray());
+
+            return node;
         }
 
         private VariableDeclaration CreateVariableDeclaration(List<Node> parameters)
         {
             parameters.CheckLength(4);
-            return new VariableDeclaration
+            var node = new VariableDeclaration
             {
                 Visibility = (Visibility)parameters[0],
                 Type = (Type)parameters[1],
                 Name = (TokenNode)parameters[2],
                 Expression = (Expression)parameters[3]
             };
+
+            node.AddChildren(node.Visibility, node.Type, node.Name, node.Expression);
+
+            return node;
         }
 
         private LocalVariableDeclaration CreateLocalVariableDeclaration(List<Node> parameters)
         {
             parameters.CheckLength(3);
-            return new LocalVariableDeclaration
+            var node = new LocalVariableDeclaration
             {
                 Type = (Type)parameters[0],
                 Name = (TokenNode)parameters[1],
                 Expression = (Expression)parameters[2]
             };
+
+            node.AddChildren(node.Type, node.Name, node.Expression);
+
+            return node;
         }
 
         private T CreateTokenNode<T>(List<Node> parameters) where T : Node, ITokenNode, new()
@@ -336,7 +412,7 @@ namespace AbstractSyntaxTree_Implementation
         private Node CreateMethod(List<Node> parameters)
         {
             parameters.CheckLength(6);
-            return new Method
+            var node = new Method
             {
                 Visibility = (Visibility) parameters[0],
                 Virtual_Override = (TokenNode) parameters[1],
@@ -345,39 +421,56 @@ namespace AbstractSyntaxTree_Implementation
                 Parameters = ((NodeList) parameters[4])?.Nodes.Cast<Parameter>().ToList(),
                 Body = (Body) parameters[5],
             };
+
+            node.AddChildren(node.Visibility, node.Virtual_Override, node.ReturnType, node.Name, node.Body);
+            node.AddChildren(node.Parameters?.ToArray());
+
+            return node;
         }
 
 
         private Node CreateClass(List<Node> parameters)
         {
             parameters.CheckLength(3);
-            return new Class
+            var node = new Class
             {
                 Name = (TokenNode)parameters[0],
-                Extends = (TokenNode)parameters[1],
+                Extends = (ReferenceType)parameters[1],
                 Body = (ClassBody)parameters[2],
             };
+
+            node.AddChildren(node.Name, node.Extends, node.Body);
+
+            return node;
         }
 
         private T CreateBinaryExp<T>(List<Node> parameters) where T : BinaryExp, new()
         {
             parameters.CheckLength(3);
-            return new T
+            var node = new T
             {
                 Left = (Expression)parameters[0],
                 Operator = (TokenNode)parameters[1],
                 Right = (Expression)parameters[2]
             };
+
+            node.AddChildren(node.Left, node.Operator, node.Right);
+
+            return node;
         }
 
         private T CreateUnaryExp<T>(List<Node> parameters) where T : UnaryExp, new()
         {
             parameters.CheckLength(2);
-            return new T
+            var node = new T
             {
                 Operator = (TokenNode)parameters[0],
                 Expression = (Expression)parameters[1]
             };
+
+            node.AddChildren(node.Operator, node.Expression);
+
+            return node;
         }
     }
 }

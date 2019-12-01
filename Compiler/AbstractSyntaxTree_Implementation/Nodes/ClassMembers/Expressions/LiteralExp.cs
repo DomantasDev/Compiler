@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Lexer_Contracts;
+using AbstractSyntaxTree_Implementation.Nodes.Types;
+using AbstractSyntaxTree_Implementation.ResolveNames;
+using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
+using ValueType = AbstractSyntaxTree_Implementation.Nodes.Types.ValueType;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
 {
@@ -10,5 +11,18 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
         public string Type { get; set; }
         public string Value { get; set; }
         public int Line { get; set; }
+
+        public override void ResolveNames(Scope scope)
+        {
+        }
+
+        public override Type CheckTypes()
+        {
+            return new ValueType
+            {
+                Value = Type.ToLower(),
+                Line = Line
+            };
+        }
     }
 }

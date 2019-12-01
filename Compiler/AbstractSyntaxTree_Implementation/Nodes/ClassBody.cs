@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using AbstractSyntaxTree_Implementation.Nodes.ClassMembers;
+using AbstractSyntaxTree_Implementation.Nodes.Types;
+using AbstractSyntaxTree_Implementation.ResolveNames;
 
 namespace AbstractSyntaxTree_Implementation.Nodes
 {
@@ -10,6 +12,23 @@ namespace AbstractSyntaxTree_Implementation.Nodes
         public override void Print(NodePrinter p)
         {
             p.Print("Members", Members);
+        }
+
+        public override void ResolveNames(Scope scope)
+        {
+            Members.ForEach(x => x.ResolveNames(scope));
+        }
+
+        public void AddNames(Scope scope)
+        {
+            Members.ForEach(x => x.AddName(scope));
+        }
+
+        public override Type CheckTypes()
+        {
+            Members.ForEach(x => x.CheckTypes());
+
+            return null;
         }
     }
 }

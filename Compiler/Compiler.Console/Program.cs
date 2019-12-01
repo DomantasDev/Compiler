@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AbstractSyntaxTree_Implementation;
+using AbstractSyntaxTree_Implementation.ResolveNames;
 using Lexer_Contracts;
 using Lexer_Implementation;
 using Lexer_Implementation.DynamicLexer;
@@ -24,12 +25,20 @@ namespace ConsoleApp
             //Print(lexemes);
 
             var parser = new Parser();
-            var result = parser.Parse(out var node);
+            var result = parser.Parse(out var root);
 
             Console.WriteLine(result);
 
-            node.Print(new NodePrinter());
-            // type yra class type ir primitive
+            root.Print(new NodePrinter());
+            Console.WriteLine("\n" + new string('-', 20) + "\n");
+
+            var scope = new Scope(null);
+            root.ResolveNames(scope);
+
+            Console.WriteLine();
+
+            root.CheckTypes();
+
             Console.ReadLine();
         }
 

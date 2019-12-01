@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using AbstractSyntaxTree_Implementation.ResolveNames;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
 {
@@ -13,6 +14,11 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
         {
             p.Print(nameof(Operator), Operator);
             p.Print(nameof(Expression), Expression);
+        }
+
+        public override void ResolveNames(Scope scope)
+        {
+            Expression.ResolveNames(scope);
         }
     }
 }

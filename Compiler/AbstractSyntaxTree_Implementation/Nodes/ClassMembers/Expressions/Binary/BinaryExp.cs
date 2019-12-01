@@ -1,4 +1,6 @@
-﻿namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binary
+﻿using AbstractSyntaxTree_Implementation.ResolveNames;
+
+namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binary
 {
     public abstract class BinaryExp : Expression
     {
@@ -11,6 +13,12 @@
             p.Print(nameof(Left), Left);
             p.Print(nameof(Operator), Operator);
             p.Print(nameof(Right), Right);
+        }
+
+        public override void ResolveNames(Scope scope)
+        {
+            Left.ResolveNames(scope);
+            Right.ResolveNames(scope);
         }
     }
 }
