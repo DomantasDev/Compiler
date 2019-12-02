@@ -48,7 +48,6 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
                 if (refType == null)
                 {
                     Console.WriteLine($"Method {Name.Value}, cannot be marked with {Virtual_Override.Value} because this class doesn't extend any other class. Line {Name.Line}");
-                    //return null;
                 }
                 else
                 {

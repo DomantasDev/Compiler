@@ -29,8 +29,8 @@ namespace ConsoleApp
 
             Console.WriteLine(result);
 
-            root.Print(new NodePrinter());
-            Console.WriteLine("\n" + new string('-', 20) + "\n");
+            //root.Print(new NodePrinter());
+            //Console.WriteLine("\n" + new string('-', 20) + "\n");
 
             var scope = new Scope(null);
             root.ResolveNames(scope);

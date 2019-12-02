@@ -26,7 +26,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements
 
         public override Type CheckTypes()
         {
-            var type = (Type)Variable.Target.GetType().GetProperty("Type")?.GetMethod.Invoke(Variable.Target, null);
+            var type = (Type)Variable.Target?.GetType().GetProperty("Type")?.GetMethod.Invoke(Variable.Target, null);
 
             type?.IsCompatible(Expression.CheckTypes());
 

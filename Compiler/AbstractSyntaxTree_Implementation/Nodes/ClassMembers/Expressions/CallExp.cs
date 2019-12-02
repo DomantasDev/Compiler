@@ -29,15 +29,15 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
         {
             if (Target != null)
             {
-                var expectedParamCount = Target.Parameters.Count;
-                var actualParamCount = Arguments.Count;
+                var expectedParamCount = Target.Parameters?.Count ?? 0;
+                var actualParamCount = Arguments?.Count ?? 0;
 
                 if (expectedParamCount != actualParamCount)
                     Console.WriteLine($"Expected {actualParamCount} parameters, got {actualParamCount}");
 
                 for (int i = 0; i < Math.Min(expectedParamCount, actualParamCount); i++)
                 {
-                    Target.Parameters[i].Type.IsEqual(Arguments[i].CheckTypes());
+                    Target.Parameters?[i].Type.IsEqual(Arguments?[i].CheckTypes());
                 }
             }
 

@@ -30,7 +30,8 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements.If
 
         public override Type CheckTypes()
         {
-            new ValueType { Value = "bool" }.IsEqual(Condition.CheckTypes());
+            var conditionType = Condition.CheckTypes();
+            new ValueType { Value = "bool", Line = conditionType.Line}.IsEqual(conditionType);
 
             Body?.CheckTypes();
             Else?.CheckTypes();

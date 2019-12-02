@@ -1,95 +1,44 @@
 class Program 
 {
-    public void main()
+    public int main()
     {
-        Animal animal := null;
-
-        string name;
-        read name;
-
-        if(name = "Dog")
+        while(true)
         {
-            animal := new Dog(name);
-        } 
-        else if (name = "Cat")
-        {
-            animal := new Cat(name, 3);
-        } 
-        else
-        {
-            animal := new Animal();
-        }
-
-        animal.Speak("Hello world!\\");
-        int x := -1;
-        float y := .5;
-
-        if(x > 0)
-        {
-            x := 0;
-            while(true)
+            if(true)
             {
-                x := x+1;
-                if(x = 3 | x = 6)
-                {
-                    continue;
-                }
-                if( x = 9)
-                {
-                    break;
-                }
-                write x;
+                break;
+            }
+            else 
+            {
+                break;
             }
         }
+        break;
+        if(false)
+        {
+            int x := 3;
+        }
+        x := 7;
     }
+
+
 }
 
-class Animal
+class A 
 {
-    public constructor(){}
-
-    public void Speak(string x)
+    public int M()
     {
-        write "Animal: \n\t" + x;
+        return 5;
     }
 }
 
-class Dog extends Animal
-{    
-    private int _name;
-
-    public constructor(string name):base()
+class B extends A
+{
+    public override int M(int x)
     {
-        this._name := name;
-    }
-
-    public override void Speak(string x)
-    {
-        write "Dog: \n\t" + x;
+        return 9;
     }
 }
 
-class Cat extends Animal
-{    
-    private int _name;
-    private int _age;
-
-    public constructor(string name, int age):base()
-    {
-        _name := name;
-        _age := age;
-    }
-
-    public override void Speak(string x)
-    {
-        base.Speak(x);
-        write "Cat: \n\t" + x;
-    }
-
-    public virtual int GetAge()
-    {
-        return _age;
-    }
-}
 
 
