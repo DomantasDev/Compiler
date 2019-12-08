@@ -1,4 +1,5 @@
 ﻿
+using AbstractSyntaxTree_Implementation.CodeGeneration;
 using AbstractSyntaxTree_Implementation.Nodes.Types;
 using AbstractSyntaxTree_Implementation.ResolveNames;
 
@@ -32,11 +33,16 @@ namespace AbstractSyntaxTree_Implementation.Nodes
             Body?.AddNames(scope);
         }
 
-        public override Type CheckTypes()
+        public override Type CheckTypes() // TODO check for duplicates in base class
         {
             Body?.CheckTypes();
 
             return null;
+        }
+
+        public override void GenerateCode(CodeWriter w)
+        {
+            base.GenerateCode(w);
         }
     }
 }

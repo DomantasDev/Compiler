@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using AbstractSyntaxTree_Implementation.CodeGeneration;
 using AbstractSyntaxTree_Implementation.ResolveNames;
 using AbstractSyntaxTree_Implementation.Nodes.Types;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
@@ -42,7 +43,12 @@ namespace AbstractSyntaxTree_Implementation.Nodes
 
         public virtual Type CheckTypes()
         {
-            throw new NotImplementedException($"{nameof(ResolveNames)} not implemented for {GetType()}");
+            throw new NotImplementedException($"{nameof(CheckTypes)} not implemented for {GetType()}");
+        }
+
+        public virtual void GenerateCode(CodeWriter w)
+        {
+            throw new NotImplementedException($"{nameof(GenerateCode)} not implemented for {GetType()}");
         }
     }
 }

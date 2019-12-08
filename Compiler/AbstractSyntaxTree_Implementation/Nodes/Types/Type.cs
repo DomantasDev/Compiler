@@ -1,5 +1,6 @@
 ﻿using System;
 using AbstractSyntaxTree_Implementation.ResolveNames;
+using Common;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.Types
 {
@@ -14,13 +15,15 @@ namespace AbstractSyntaxTree_Implementation.Nodes.Types
 
         public void IsEqual(Type other)
         {
+            if(other == null)
+                return;
             if (GetType() != other.GetType() || Value != other.Value)
                 TypeMismatch(this, other);
         }
 
         protected void TypeMismatch(Type expected, Type got)
         {
-            Console.WriteLine($"Type mismatch. Expected {expected.Value} got {got.Value}. Line {expected.Line}");
+            $"Type mismatch. Expected {expected.Value} got {got.Value}".RaiseError(expected.Line);
         }
 
         public bool IsArith()

@@ -10,6 +10,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements.If
 {
     public class If : Statement
     {
+        public TokenNode KwIf { get; set; }
         public Expression Condition { get; set; }
         public Body Body { get; set; }
         public Else Else { get; set; }
@@ -31,7 +32,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements.If
         public override Type CheckTypes()
         {
             var conditionType = Condition.CheckTypes();
-            new ValueType { Value = "bool", Line = conditionType.Line}.IsEqual(conditionType);
+            new ValueType { Value = "bool", Line = KwIf.Line}.IsEqual(conditionType);
 
             Body?.CheckTypes();
             Else?.CheckTypes();

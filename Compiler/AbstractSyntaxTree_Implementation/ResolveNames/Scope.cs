@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using AbstractSyntaxTree_Implementation.Nodes;
+using Common;
 
 namespace AbstractSyntaxTree_Implementation.ResolveNames
 {
@@ -24,7 +25,7 @@ namespace AbstractSyntaxTree_Implementation.ResolveNames
         public void Add(Name name, Node node)
         {
             if(!_members.TryAdd(name, node))
-                Console.WriteLine($"Duplicate name: {name}");
+                $"Duplicate name: \"{name}\"".RaiseError(name.Line);
         }
 
         public Node ResolveName(Name name)
@@ -36,7 +37,7 @@ namespace AbstractSyntaxTree_Implementation.ResolveNames
             if(ParentScope != null)
                 return ParentScope?.ResolveName(name);
 
-            Console.WriteLine($"UndeclaredVariable: {name.Value}, line: {name.Line}");
+            $"Undeclared variable: \"{name.Value}\"".RaiseError(name.Line);
 
             return null;
         }

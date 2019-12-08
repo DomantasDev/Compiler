@@ -78,10 +78,10 @@ namespace AbstractSyntaxTree_Implementation
             parameters.CheckLength(1);
             var node =  new Program
             {
-                CLasses = parameters[0].Cast<Class>().ToList()
+                Classes = parameters[0].Cast<Class>().ToList()
             };
 
-            node.AddChildren(node.CLasses?.ToArray());
+            node.AddChildren(node.Classes?.ToArray());
 
             return node;
         }
@@ -283,12 +283,13 @@ namespace AbstractSyntaxTree_Implementation
 
         private If CreateIf(List<Node> parameters)
         {
-            parameters.CheckLength(3);
+            parameters.CheckLength(4);
             var node = new If
             {
-                Condition = (Expression)parameters[0],
-                Body = (Body)parameters[1],
-                Else = (Else)parameters[2]
+                KwIf = (TokenNode)parameters[0],
+                Condition = (Expression)parameters[1],
+                Body = (Body)parameters[2],
+                Else = (Else)parameters[3]
             };
 
             node.AddChildren(node.Condition, node.Body, node.Body, node.Else);

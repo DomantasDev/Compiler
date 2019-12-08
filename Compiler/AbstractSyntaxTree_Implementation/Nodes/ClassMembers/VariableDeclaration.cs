@@ -8,7 +8,6 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
     {
         public Visibility Visibility { get; set; }
         public Type Type { get; set; }
-        public TokenNode Name { get; set; }
         public Expression Expression { get; set; }
 
         public override void Print(NodePrinter p)

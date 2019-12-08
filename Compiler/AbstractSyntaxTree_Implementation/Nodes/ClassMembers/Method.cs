@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AbstractSyntaxTree_Implementation.CodeGeneration;
 using AbstractSyntaxTree_Implementation.ResolveNames;
+using Common;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
@@ -13,7 +15,6 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
         public Visibility Visibility { get; set; }
         public TokenNode Virtual_Override { get; set; }
         public Type ReturnType { get; set; }
-        public TokenNode Name { get; set; }
         public List<Parameter> Parameters { get; set; }
         public Body Body { get; set; }
 
@@ -47,7 +48,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
                 var refType = FindAncestor<Class>().Extends;
                 if (refType == null)
                 {
-                    Console.WriteLine($"Method {Name.Value}, cannot be marked with {Virtual_Override.Value} because this class doesn't extend any other class. Line {Name.Line}");
+                    $"Method {Name.Value}, cannot be marked with {Virtual_Override.Value} because this class doesn't extend any other class".RaiseError(Name.Line);
                 }
                 else
                 {
@@ -64,7 +65,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
                             var actualParamCount = Parameters?.Count ?? 0;
 
                             if (expectedParamCount != actualParamCount)
-                                Console.WriteLine($"Expected {expectedParamCount} parameters, got {actualParamCount}");
+                                $"Expected {expectedParamCount} parameters, got {actualParamCount}".RaiseError(Name.Line);
 
                             for (int i = 0; i < Math.Min(expectedParamCount, actualParamCount); i++)
                             {
@@ -75,13 +76,18 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
                         }
                     }
                     if(refType == null)
-                        Console.WriteLine($"Method {Name.Value} doesn't exist on base type");
+                        $"Method {Name.Value} doesn't exist on base type".RaiseError(Name.Line);
                 }
             }
 
             Body?.CheckTypes();
 
             return null;
+        }
+
+        public override void GenerateCode(CodeWriter w)
+        {
+
         }
     }
 }

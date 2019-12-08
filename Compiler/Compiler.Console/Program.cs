@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using AbstractSyntaxTree_Implementation;
 using AbstractSyntaxTree_Implementation.ResolveNames;
+using Common;
 using Lexer_Contracts;
 using Lexer_Implementation;
 using Lexer_Implementation.DynamicLexer;
@@ -24,7 +25,11 @@ namespace ConsoleApp
             //    .GetLexemes(File.ReadAllText("../../../DynamicLexer/code.txt"));
             //Print(lexemes);
 
-            var parser = new Parser();
+            var code = "../../../DynamicLexer/code.txt";
+
+            ErrorWriter.File = code;
+
+            var parser = new Parser(code);
             var result = parser.Parse(out var root);
 
             Console.WriteLine(result);

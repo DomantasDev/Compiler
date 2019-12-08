@@ -21,7 +21,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
 
         public override Type CheckTypes()
         {
-            return (Type)Target?.GetType().GetProperty("Type")?.GetMethod.Invoke(Target, null); ;
+            return (Type)Target?.GetType().GetProperty("Type")?.GetMethod.Invoke(Target, null);
         }
     }
 }

@@ -14,12 +14,12 @@ namespace Parser_Implementation
     {
         private readonly IBnfRule _rootRule;
 
-        public Parser()
+        public Parser(string pathToCode)
         {
             var dynamicLexer = new DynamicLexer("../../../DynamicParser/inception.bnf");
 
             var lexemeSource = new LexemeSource(new DynamicLexer("../../../DynamicLexer/lexemes.bnf")
-                .GetLexemes(File.ReadAllText("../../../DynamicLexer/code.txt")).ToList());
+                .GetLexemes(File.ReadAllText(pathToCode)).ToList());
 
             var bnfReader = new BnfReader.BnfReader(dynamicLexer, lexemeSource);
             _rootRule = bnfReader.GetRootRule("../../../DynamicParser/test_syntax.bnf");
