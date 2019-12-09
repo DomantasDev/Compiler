@@ -1,0 +1,14 @@
+entry point 
+node programa turi entry point label
+pradzioj generuojam malloc Program ir call i main
+stacka dalinam  i frames. I statine ir dinamine dali
+i call begin rezervuoja 3 vietas stacke: IP, SP, FP
+naujas FP = SP - num args
+instrukcijos dirbancios su adresais
+push_int push_float...
+stringu lentele- easy mode
+
+create obj instrukcija, kuriai paduoti dydi objektom kiekvieno projekto pradzioj yra pointeris i vtable 
+instrukcija alloc(size of object), po alloc setinam Vtable adresa pirma fielda
+
+VMas koda pradeda vykdyt nuo 1 adreso, 0 yra null'ui

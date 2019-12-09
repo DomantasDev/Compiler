@@ -15,7 +15,7 @@ namespace AbstractSyntaxTree_Implementation.CodeGeneration
 
         static Instruction()
         {
-            AddInstruction(0x10, "I_ADD", 0 );
+            AddInstruction(0x10, "I_ADD", 0 ); // pasidaryt enuma
         }
 
         public static void AddInstruction(int code, string name, int numOps)

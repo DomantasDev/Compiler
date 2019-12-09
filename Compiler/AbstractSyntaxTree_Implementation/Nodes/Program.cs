@@ -63,7 +63,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes
 
         public override void GenerateCode(CodeWriter w)
         {
-            //TODO generate entry point
+            //TODO generate entry point. alloc(size), set Vtable address
 
             Classes.ForEach(x => x.GenerateCode(w));
         }
