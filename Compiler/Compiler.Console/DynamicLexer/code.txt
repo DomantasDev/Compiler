@@ -1,6 +1,6 @@
 class Program 
 {
-    public int main()
+    public int Main()
     {
         while(true)
         {
@@ -13,12 +13,6 @@ class Program
                 break;
             }
         }
-        break;
-        if(false)
-        {
-            int x := 3;
-        }
-        x := 7;
     }
 
 

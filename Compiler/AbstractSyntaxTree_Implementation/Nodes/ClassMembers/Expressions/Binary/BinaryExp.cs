@@ -1,4 +1,5 @@
-﻿using AbstractSyntaxTree_Implementation.ResolveNames;
+﻿using AbstractSyntaxTree_Implementation.Nodes.Types;
+using AbstractSyntaxTree_Implementation.ResolveNames;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binary
 {

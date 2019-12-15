@@ -7,9 +7,8 @@ using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
 {
-    public class newObjectExp : Expression
+    public class NewObjectExp : Expression
     {
-        public ReferenceType Type { get; set; }
         public List<Expression> Arguments { get; set; }
 
         public override void Print(NodePrinter p)

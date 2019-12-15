@@ -12,3 +12,4 @@ create obj instrukcija, kuriai paduoti dydi objektom kiekvieno projekto pradzioj
 instrukcija alloc(size of object), po alloc setinam Vtable adresa pirma fielda
 
 VMas koda pradeda vykdyt nuo 1 adreso, 0 yra null'ui
+

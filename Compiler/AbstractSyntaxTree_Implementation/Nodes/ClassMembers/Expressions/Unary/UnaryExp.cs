@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AbstractSyntaxTree_Implementation.ResolveNames;
+﻿using AbstractSyntaxTree_Implementation.ResolveNames;
 
-namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
+namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Unary
 {
     public abstract class UnaryExp : Expression
     {

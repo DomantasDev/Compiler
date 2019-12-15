@@ -3,7 +3,7 @@ using AbstractSyntaxTree_Implementation.ResolveNames;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
 {
-    public abstract class ClassMember : Node
+    public abstract class ClassMember : Node, ITargetable
     {
         public TokenNode Name { get; set; }
         public Label StartLabel { get; set; } = new Label();

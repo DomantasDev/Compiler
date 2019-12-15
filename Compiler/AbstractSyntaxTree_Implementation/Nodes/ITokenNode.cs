@@ -7,7 +7,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes
 {
     public interface ITokenNode
     {
-        string Type { get; set; }
+        string TokenType { get; set; }
         string Value { get; set; }
         int Line { get; set; }
     }

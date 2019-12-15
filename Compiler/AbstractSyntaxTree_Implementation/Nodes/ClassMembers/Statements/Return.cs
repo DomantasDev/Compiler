@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using AbstractSyntaxTree_Implementation.CodeGeneration;
 using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions;
 using AbstractSyntaxTree_Implementation.Nodes.Types;
 using AbstractSyntaxTree_Implementation.ResolveNames;
@@ -31,6 +32,18 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements
             retType.IsCompatible(Expression?.CheckTypes() ?? new ValueType { Value = "void"});
 
             return null;
+        }
+
+        public override void GenerateCode(CodeWriter w)
+        {
+            if (Expression != null)
+            {
+                w.Write(Instr.I_RETV);
+            }
+            else
+            {
+                w.Write(Instr.I_RET);
+            }
         }
     }
 }

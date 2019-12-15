@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Common;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Unary
@@ -9,14 +10,14 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Unary
     {
         public override Type CheckTypes()
         {
-            var type = Expression.CheckTypes();
-            if (type.Value != "bool")
+            Type = Expression.CheckTypes();
+            if (Type.Value != "bool")
             {
-                Console.WriteLine($"{type.Value} cannot be used in logic expression");
+                $"\"{Type.Value}\" cannot be used in logic expression".RaiseError(Operator.Line);
                 return null;
             }
 
-            return type;
+            return Type;
         }
     }
 }

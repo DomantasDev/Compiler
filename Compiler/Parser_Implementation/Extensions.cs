@@ -23,7 +23,7 @@ namespace Parser_Implementation
         {
             return new TokenNode
             {
-                Type = token.Type,
+                TokenType = token.Type,
                 Value = token.Value,
                 Line = token.Line
             };

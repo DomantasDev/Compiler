@@ -326,10 +326,10 @@ namespace AbstractSyntaxTree_Implementation
             return node;
         }
 
-        private newObjectExp CreateObjCreationExp(List<Node> parameters)
+        private NewObjectExp CreateObjCreationExp(List<Node> parameters)
         {
             parameters.CheckLength(2);
-            var node = new newObjectExp
+            var node = new NewObjectExp
             {
                 Type = (ReferenceType)parameters[0],
                 Arguments = ((NodeList)parameters[1])?.Nodes.Cast<Expression>().ToList()
@@ -404,7 +404,7 @@ namespace AbstractSyntaxTree_Implementation
             var token = (TokenNode) parameters[0];
             return new T
             {
-                Type = token.Type,
+                TokenType = token.TokenType,
                 Value = token.Value,
                 Line = token.Line
             };

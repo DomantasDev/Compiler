@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using AbstractSyntaxTree_Implementation.Nodes.Types;
+using Common;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 using ValueType = AbstractSyntaxTree_Implementation.Nodes.Types.ValueType;
 
@@ -11,14 +12,14 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Unary
     {
         public override Type CheckTypes()
         {
-            var type = Expression.CheckTypes();
-            if (!type.IsArith())
+            Type = Expression.CheckTypes();
+            if (!Type.IsArith())
             {
-                Console.WriteLine($"{type.Value} cannot be used in arithmetic expression");
+                $"\"{Type.Value}\" cannot be used in arithmetic expression".RaiseError(Operator.Line);
                 return null;
             }
 
-            return type;
+            return Type;
         }
          
     }

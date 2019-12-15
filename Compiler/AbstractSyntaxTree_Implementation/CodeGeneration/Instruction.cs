@@ -6,29 +6,35 @@ namespace AbstractSyntaxTree_Implementation.CodeGeneration
 {
     public class Instruction
     {
-        public int Code { get; private set; }
-        public string Name { get; private set; }
+        private Instr InstructionType { get; set; }
+        public string Name => InstructionType.ToString();
+
+        public int Code => (int)InstructionType;
         public int NumOps { get; private set; }
 
-        public static Dictionary<int, Instruction> InstructionsByCode { get; set; }
-        public static Dictionary<string, Instruction> InstructionsByName { get; set; }
+        public static Dictionary<Instr, Instruction> InstructionsByCode { get; set; }
+        //public static Dictionary<string, Instruction> InstructionsByName { get; set; }
 
         static Instruction()
         {
-            AddInstruction(0x10, "I_ADD", 0 ); // pasidaryt enuma
+            AddInstruction(Instr.I_ALLOC_H, 1);
+            AddInstruction(Instr.I_CALL_BEGIN, 0);
+            AddInstruction(Instr.I_VCALL, 2);
+
+            AddInstruction(Instr.I_FLOAT_PUSH, 1);
+            AddInstruction(Instr.I_INT_PUSH, 1);
         }
 
-        public static void AddInstruction(int code, string name, int numOps)
+        public static void AddInstruction(Instr instructionType, int numOps)
         {
             var instr = new Instruction
             {
-                Code = code,
-                Name = name,
+                InstructionType = instructionType,
                 NumOps = numOps
             };
 
-            InstructionsByCode.Add(code, instr);
-            InstructionsByName.Add(name, instr);
+            InstructionsByCode.Add(instructionType, instr);
+            //InstructionsByName.Add(name, instr);
         }
     }
 }

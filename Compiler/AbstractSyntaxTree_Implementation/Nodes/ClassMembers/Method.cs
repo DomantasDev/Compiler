@@ -12,11 +12,16 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
 {
     public class Method : ClassMember
     {
+        public static int LocalVariableCount { get; set; }
         public Visibility Visibility { get; set; }
         public TokenNode Virtual_Override { get; set; }
         public Type ReturnType { get; set; }
         public List<Parameter> Parameters { get; set; }
         public Body Body { get; set; }
+
+        public int NumLocals { get; set; }
+
+        public int VTableSlot { get; set; }
 
         public override void Print(NodePrinter p)
         {
@@ -30,10 +35,14 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
 
         public override void ResolveNames(Scope scope)
         {
+            LocalVariableCount = 0;
+
             scope = new Scope(scope);
             ReturnType.ResolveNames(scope);
             Parameters?.ForEach(x => x.ResolveNames(scope));
             Body?.ResolveNames(scope);
+
+            NumLocals = LocalVariableCount;
         }
 
         public override void AddName(Scope scope)
@@ -87,7 +96,11 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
 
         public override void GenerateCode(CodeWriter w)
         {
-
+            w.PlaceLabel(StartLabel);
+            if(NumLocals > 0)
+                w.Write(Instr.I_ALLOC_S, NumLocals);
+            Body.GenerateCode(w);
+            w.Write(Instr.I_RET);
         }
     }
 }

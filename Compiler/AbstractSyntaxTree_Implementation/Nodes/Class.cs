@@ -1,5 +1,6 @@
 ﻿
 using AbstractSyntaxTree_Implementation.CodeGeneration;
+using AbstractSyntaxTree_Implementation.Nodes.ClassMembers;
 using AbstractSyntaxTree_Implementation.Nodes.Types;
 using AbstractSyntaxTree_Implementation.ResolveNames;
 
@@ -10,6 +11,10 @@ namespace AbstractSyntaxTree_Implementation.Nodes
         public TokenNode Name { get; set; }
         public ReferenceType Extends { get; set; }
         public ClassBody Body { get; set; }
+
+        public Label VTableLabel { get; } = new Label();
+        public Slots<Method> VTableSlots { get; set; }
+        public Slots<VariableDeclaration> HeapSlots { get; set; }
 
 
         public Scope Scope { get; set; }
@@ -42,7 +47,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes
 
         public override void GenerateCode(CodeWriter w)
         {
-            base.GenerateCode(w);
+            Body.GenerateCode(w);
         }
     }
 }

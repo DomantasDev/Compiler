@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using AbstractSyntaxTree_Implementation.CodeGeneration;
 using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions;
 using AbstractSyntaxTree_Implementation.ResolveNames;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
@@ -38,6 +39,20 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements.If
             Else?.CheckTypes();
 
             return null;
+        }
+
+        public override void GenerateCode(CodeWriter w)
+        {
+            var next = w.NewLabel();
+            var end = w.NewLabel();
+
+            Condition.GenerateCode(w); 
+            w.Write(Instr.I_JZ, next);
+            Body?.GenerateCode(w);
+            w.Write(Instr.I_JMP, end);
+            w.PlaceLabel(next);
+            Else?.GenerateCode(w);
+            w.PlaceLabel(end);
         }
     }
 }

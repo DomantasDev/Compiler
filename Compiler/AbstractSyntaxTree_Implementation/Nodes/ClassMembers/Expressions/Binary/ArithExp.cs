@@ -1,4 +1,5 @@
 ﻿using System;
+using Common;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 using ValueType = AbstractSyntaxTree_Implementation.Nodes.Types.ValueType;
 
@@ -11,18 +12,20 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binar
             var leftType = Left.CheckTypes();
             var rightType = Right.CheckTypes();
 
-            if (Left.CheckTypes().IsArith())
+            Type = leftType;
+
+            if (leftType.IsArith())
             {
                 leftType.IsEqual(rightType);
             }
             else
             {
-                Console.WriteLine($"These values cannot be used in arithmetic expression: {leftType.Value}, {rightType.Value}. Line {Operator.Line}");
+                $"Values: \"{leftType.Value}\", \"{rightType.Value}\", cannot be used in arithmetic expression".RaiseError(Operator.Line);
             }
 
             return new ValueType
             {
-                Value = "int",
+                Value = leftType.Value,
                 Line = Operator.Line
             };
         }

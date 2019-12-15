@@ -10,6 +10,8 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
         public Type Type { get; set; }
         public Expression Expression { get; set; }
 
+        public int HeapSlot { get; set; }
+
         public override void Print(NodePrinter p)
         {
             p.Print("visibility", Visibility);

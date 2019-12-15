@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using AbstractSyntaxTree_Implementation.Nodes;
 
@@ -31,5 +32,28 @@ namespace AbstractSyntaxTree_Implementation.CodeGeneration
             return _parent?.GetSlot(node);
         }
 
+        public Dictionary<T, int> GetSlots()
+        {
+            
+            if (_parent == null)
+            {
+                return new Dictionary<T, int>(_slots);
+            }
+
+            var parentSlots = _parent.GetSlots();
+            foreach (var slot in _slots)
+            {
+                parentSlots[slot.Key] = slot.Value;
+            }
+
+            return parentSlots;
+        }
+
+    }
+
+    public class Slot
+    {
+        public int Nr { get; set; }
+        public Label Label { get; set; }
     }
 }

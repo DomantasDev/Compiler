@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using AbstractSyntaxTree_Implementation.CodeGeneration;
 using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions;
 using AbstractSyntaxTree_Implementation.ResolveNames;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
@@ -12,6 +13,9 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements
     {
         public Expression Condition { get; set; }
         public Body Body { get; set; }
+
+        public Label StartLabel { get; } = new Label();
+        public Label EndLabel { get; } = new Label();
 
         public override void Print(NodePrinter p)
         {
@@ -32,6 +36,15 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements
             Body?.CheckTypes();
 
             return null;
+        }
+
+        public override void GenerateCode(CodeWriter w)
+        {
+            w.PlaceLabel(StartLabel);
+            Condition.GenerateCode(w);
+            w.Write(Instr.I_JZ, EndLabel);
+            Body.GenerateCode(w);
+            w.Write(Instr.I_JMP, StartLabel);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Common;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 using ValueType = AbstractSyntaxTree_Implementation.Nodes.Types.ValueType;
 
@@ -13,13 +14,18 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binar
             var leftType = Left.CheckTypes();
             var rightType = Right.CheckTypes();
 
+            Type = new ValueType
+            {
+                Value = "bool"
+            };
+
             if (leftType.Value == "bool")
             {
                 leftType.IsEqual(rightType);
             }
             else
             {
-                Console.WriteLine($"These values cannot be checked for equality: {leftType.Value}, {rightType.Value}. Line {Operator.Line}");
+                $"Values: \"{leftType.Value}\", \"{rightType.Value}\", cannot be checked for equality".RaiseError(Operator.Line);
             }
 
             return new ValueType
