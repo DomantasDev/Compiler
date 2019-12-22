@@ -38,6 +38,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements
         {
             if (Expression != null)
             {
+                Expression.GenerateCode(w);
                 w.Write(Instr.I_RETV);
             }
             else

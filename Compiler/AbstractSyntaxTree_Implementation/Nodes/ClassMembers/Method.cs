@@ -20,8 +20,8 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
         public Body Body { get; set; }
 
         public int NumLocals { get; set; }
-
         public int VTableSlot { get; set; }
+        public bool IsEntryPoint { get; set; }
 
         public override void Print(NodePrinter p)
         {
@@ -63,10 +63,10 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
                 {
                     while (refType != null)
                     {
-                        var method = (Method)refType.Target?.Body?.Members.FirstOrDefault(x => x is Method m && m.Name.Value == Name.Value);
+                        var method = (Method)refType.TargetClass?.Body?.Members.FirstOrDefault(x => x is Method m && m.Name.Value == Name.Value);
                         if (method == null)
                         {
-                            refType = refType.Target?.Extends;
+                            refType = refType.TargetClass?.Extends;
                         }
                         else
                         {
@@ -101,6 +101,9 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
                 w.Write(Instr.I_ALLOC_S, NumLocals);
             Body.GenerateCode(w);
             w.Write(Instr.I_RET);
+
+            if(IsEntryPoint)
+                w.Write(Instr.I_EXIT);
         }
     }
 }

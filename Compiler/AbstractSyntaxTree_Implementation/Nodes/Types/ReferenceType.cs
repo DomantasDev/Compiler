@@ -7,10 +7,10 @@ namespace AbstractSyntaxTree_Implementation.Nodes.Types
 {
     public class ReferenceType : Type
     {
-        public new Class Target { get; set; }
+        public Class TargetClass => (Class) Target;
         public override void ResolveNames(Scope scope)
         {
-            Target = (Class)scope.ResolveName(new Name(this, NameType.Class));
+            Target = scope.ResolveName(new Name(this, NameType.Class));
         }
 
         public override void IsCompatible(Type other)
@@ -23,7 +23,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.Types
                 if (Value == otherRefType.Value)
                     return;
 
-                otherRefType = otherRefType.Target.Extends;
+                otherRefType = ((Class)otherRefType.Target).Extends;
             } while (otherRefType != null);
             
         }

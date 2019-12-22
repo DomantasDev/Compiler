@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AbstractSyntaxTree_Implementation.CodeGeneration;
 using AbstractSyntaxTree_Implementation.Nodes.Types;
 using AbstractSyntaxTree_Implementation.ResolveNames;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
@@ -13,6 +14,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binar
         public override Type CheckTypes()
         {
             var varExp = (VariableExp)Right;
+            Type = varExp.CheckTypes();
             var leftType = Left.CheckTypes();
 
             if (!(leftType is ReferenceType refType))
@@ -24,16 +26,17 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binar
 
                 while (refType != null)
                 {
-                    var variable = (VariableDeclaration)refType.Target?.Body.Members.FirstOrDefault(x =>
+                    var variable = (VariableDeclaration)refType.TargetClass?.Body.Members.FirstOrDefault(x =>
                         x is VariableDeclaration v &&
                         v.Name.Value == varExp.Value);
 
                     if (variable == null)
                     {
-                        refType = refType.Target?.Extends;
+                        refType = refType.TargetClass?.Extends;
                     }
                     else
                     {
+                        varExp.Target = variable;
                         return variable.Type;
                     }
                 }
@@ -41,6 +44,13 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binar
             }
 
             return null;
+        }
+
+        public override void GenerateCode(CodeWriter w)
+        {
+            Left.GenerateCode(w);
+            var fieldHeapSlot = ((VariableDeclaration)((VariableExp)Right).Target).HeapSlot;
+            w.Write(Instr.I_GET_H, fieldHeapSlot);
         }
     }
 }

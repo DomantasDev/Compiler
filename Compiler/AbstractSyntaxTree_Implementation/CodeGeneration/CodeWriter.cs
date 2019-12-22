@@ -7,7 +7,7 @@ namespace AbstractSyntaxTree_Implementation.CodeGeneration
 {
     public class CodeWriter
     {
-        private List<int> _code;
+        private readonly List<int> _code = new List<int>{0};
 
         public Label NewLabel()
         {
@@ -25,39 +25,79 @@ namespace AbstractSyntaxTree_Implementation.CodeGeneration
             CompleteLabel(label, _code.Count);
         }
 
-        public void Write(Instr instrType, List<Label> ops = null)
+        public void Write(Label x)
         {
-            var instruction = Instruction.InstructionsByCode[instrType];
-
-            _code.Add(instruction.Code);
-            ops.ForEach(AddOp);
+            _code.Add(x.Value.Value);
         }
 
-        public void Write(Instr instrType, params Label[] ops)
-        {
-            Write(instrType, ops.ToList());
-        }
+        //public void Write(Instr instrType, List<Label> ops = null)
+        //{
+        //    var instruction = Instruction.InstructionsByCode[instrType];
 
-        public void Write(Instr instrType, params int[] ops)
+        //    if(instruction.NumOps != (ops?.Count ?? 0))
+        //        throw new Exception("dafuq r u doin");
+
+        //    _code.Add(instruction.Code);
+        //    ops?.ForEach(AddOp);
+        //}
+
+        //public void Write(Instr instrType, params Label[] ops)
+        //{
+        //    Write(instrType, ops.ToList());
+        //}
+
+        //public void Write(Instr instrType, params int[] ops)
+        //{
+        //    var instruction = Instruction.InstructionsByCode[instrType];
+        //    _code.Add(instruction.Code);
+        //    foreach (var op in ops)
+        //    {
+        //        _code.Add(op);
+        //    }
+        //}
+
+        public void Write(Instr instrType, params object[] ops)
         {
             var instruction = Instruction.InstructionsByCode[instrType];
             _code.Add(instruction.Code);
             foreach (var op in ops)
             {
-                _code.Add(op);
+                AddOp(op);
             }
         }
 
-        private void AddOp(Label op)
+        public void Disassemble()
         {
-            if (op.Value.HasValue)
+            Console.WriteLine(string.Join(',', _code));
+
+            int offset = 1;
+            while (offset < _code.Count)
             {
-                _code.Add(op.Value.Value);
+                var opCode = _code[offset];
+                var instr = Instruction.InstructionsByCode[(Instr) opCode];
+                var ops = _code.Skip(offset + 1).Take(instr.NumOps).ToList();
+                Console.WriteLine($"{offset.ToString().PadRight(4)}:\t{instr.Name.PadRight(10)}  {string.Join(',', ops)}");
+                offset += 1 + ops.Count;
             }
-            else
+        }
+
+        private void AddOp(object operand)
+        {
+            if (operand is Label op)
             {
-                op.Offsets.Add(_code.Count);
-                _code.Add(9999);
+                if (op.Value.HasValue)
+                {
+                    _code.Add(op.Value.Value);
+                }
+                else
+                {
+                    op.Offsets.Add(_code.Count);
+                    _code.Add(9999);
+                }
+            }
+            else if (operand is int x)
+            {
+                _code.Add(x);
             }
         }
     }

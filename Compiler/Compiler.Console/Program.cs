@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AbstractSyntaxTree_Implementation;
+using AbstractSyntaxTree_Implementation.CodeGeneration;
 using AbstractSyntaxTree_Implementation.ResolveNames;
 using Common;
 using Lexer_Contracts;
@@ -45,6 +46,10 @@ namespace ConsoleApp
                 Console.WriteLine();
 
                 root.CheckTypes();
+
+                var codeWriter = new CodeWriter();
+                root.GenerateCode(codeWriter);
+                codeWriter.Disassemble();
             }
             Console.ReadLine();
         }

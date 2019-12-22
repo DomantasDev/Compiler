@@ -2,37 +2,33 @@ class Program
 {
     public int Main()
     {
-        while(true)
-        {
-            if(true)
-            {
-                break;
-            }
-            else 
-            {
-                break;
-            }
-        }
+        A a := new B();
+        
+        a.B();
     }
-
-
 }
 
-class A 
+class A
 {
-    public int M()
+    public int A()
     {
-        return 5;
+        return 11;
+    }
+    public int B()
+    {
+        return 22;
     }
 }
 
 class B extends A
 {
-    public override int M(int x)
+    public override int B()
     {
-        return 9;
+        return 2222;
+    }
+
+    public int C()
+    {
+        return 33;
     }
 }
-
-
-

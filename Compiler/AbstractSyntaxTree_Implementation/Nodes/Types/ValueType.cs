@@ -14,7 +14,6 @@ namespace AbstractSyntaxTree_Implementation.Nodes.Types
             if (other.GetType() != typeof(ValueType) || Value != other.Value)
             {
                 TypeMismatch(this, other);
-                return;
             }
         }
     }

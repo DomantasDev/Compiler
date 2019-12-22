@@ -326,10 +326,10 @@ namespace AbstractSyntaxTree_Implementation
             return node;
         }
 
-        private NewObjectExp CreateObjCreationExp(List<Node> parameters)
+        private newObjectExp CreateObjCreationExp(List<Node> parameters)
         {
             parameters.CheckLength(2);
-            var node = new NewObjectExp
+            var node = new newObjectExp
             {
                 Type = (ReferenceType)parameters[0],
                 Arguments = ((NodeList)parameters[1])?.Nodes.Cast<Expression>().ToList()

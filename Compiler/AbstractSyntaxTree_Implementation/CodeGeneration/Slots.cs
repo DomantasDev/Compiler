@@ -14,7 +14,7 @@ namespace AbstractSyntaxTree_Implementation.CodeGeneration
         {
             _parent = parent;
         }
-        private Dictionary<T, int> _slots;
+        private readonly Dictionary<T, int> _slots = new Dictionary<T, int>();
         public int NextSlot { get; private set; }
 
         public void Add(T node)
@@ -47,6 +47,12 @@ namespace AbstractSyntaxTree_Implementation.CodeGeneration
             }
 
             return parentSlots;
+        }
+
+        public int GetNumSlots()
+        {
+            var slots = GetSlots();
+            return slots.Count;
         }
 
     }

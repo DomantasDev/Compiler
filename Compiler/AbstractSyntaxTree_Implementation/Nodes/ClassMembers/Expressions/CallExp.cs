@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using AbstractSyntaxTree_Implementation.CodeGeneration;
 using AbstractSyntaxTree_Implementation.ResolveNames;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 
@@ -8,9 +9,11 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
 {
     public class CallExp : Expression
     {
-        public Method Target { get; set; }
+        public Method TargetMethod { get; set; }
         public TokenNode MethodName { get; set; }
         public List<Expression> Arguments { get; set; }
+
+        public Expression TargetExpression { get; set; }
 
         public override void Print(NodePrinter p)
         {
@@ -20,16 +23,17 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
 
         public override void ResolveNames(Scope scope)
         {
-            Target = (Method)scope.ResolveName(new Name(MethodName, NameType.Method));
+            TargetMethod = (Method)scope.ResolveName(new Name(MethodName, NameType.Method));
             Arguments?.ForEach(x => x.ResolveNames(scope));
             //handle method name
         }
 
         public override Type CheckTypes()
         {
-            if (Target != null)
+            if (TargetMethod != null)
             {
-                var expectedParamCount = Target.Parameters?.Count ?? 0;
+                Type = TargetMethod.ReturnType;
+                var expectedParamCount = TargetMethod.Parameters?.Count ?? 0;
                 var actualParamCount = Arguments?.Count ?? 0;
 
                 if (expectedParamCount != actualParamCount)
@@ -37,11 +41,26 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
 
                 for (int i = 0; i < Math.Min(expectedParamCount, actualParamCount); i++)
                 {
-                    Target.Parameters?[i].Type.IsEqual(Arguments?[i].CheckTypes());
+                    TargetMethod.Parameters?[i].Type.IsEqual(Arguments?[i].CheckTypes());
                 }
             }
 
-            return Target?.ReturnType;
+            return Type;
+        }
+
+        public override void GenerateCode(CodeWriter w)
+        {
+            w.Write(Instr.I_CALL_BEGIN);
+            if (TargetExpression == null)
+            {
+                w.Write(Instr.I_GET_C);
+            }
+            else
+            {
+                TargetExpression.GenerateCode(w);
+            }
+            Arguments?.ForEach(x => x.GenerateCode(w));
+            w.Write(Instr.I_VCALL, TargetMethod.VTableSlot, Arguments?.Count ?? 0);
         }
     }
 }

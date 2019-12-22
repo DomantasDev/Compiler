@@ -45,6 +45,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements
             w.Write(Instr.I_JZ, EndLabel);
             Body.GenerateCode(w);
             w.Write(Instr.I_JMP, StartLabel);
+            w.PlaceLabel(EndLabel);
         }
     }
 }

@@ -53,8 +53,10 @@ namespace AbstractSyntaxTree_Implementation.Nodes
             if(entryClass == null)
                 $"Class \"Program\" not found".RaiseError();
 
-            if(entryMethod == null)
+            if (entryMethod == null)
                 $"Method \"Main\" not found in class \"Program\"".RaiseError();
+            else
+                entryMethod.IsEntryPoint = true;
         }
 
         public override Type CheckTypes()
@@ -70,9 +72,24 @@ namespace AbstractSyntaxTree_Implementation.Nodes
             //TODO generate entry point. alloc(size), set Vtable address
 
             Classes.ForEach(x => x.GenerateCode(w));
+            
 
+            //TODO generate VTables, set vtable addresses on newly created objects
+            w.Write(Instr.I_BEGIN_VTABLE);
+            Classes.ForEach(x => GenerateVTable(w, x));
+        }
 
-            //TODO generate VTables
+        private void GenerateVTable(CodeWriter w, Class classNode)
+        {
+            w.PlaceLabel(classNode.VTableLabel);
+            var slots = classNode.VTableSlots.GetSlots()
+                .ToDictionary(x => x.Value, x => x.Key)
+                .OrderBy(x => x.Key)
+                .ToList(); // remove after debug
+            foreach (var keyValuePair in slots)
+            {
+                w.Write(keyValuePair.Value.StartLabel);
+            }
         }
 
         private void GetHeapSlots() // surasti metodu ir fieldu numerius
@@ -91,7 +108,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes
 
             foreach (var classDecl in classesByInheritanceLevel.SelectMany(x => x.Classes))
             {
-                var parentVTableSlots = classDecl.Extends?.Target.VTableSlots;
+                var parentVTableSlots = classDecl.Extends?.TargetClass.VTableSlots;
                 var vTableSlots = new Slots<Method>(parentVTableSlots);
                 foreach (var method in classDecl.Body?.Members.OfType<Method>() ?? new List<Method>())
                 {
@@ -101,7 +118,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes
 
                 classDecl.VTableSlots = vTableSlots;
 
-                var parentHeapSlots = classDecl.Extends?.Target.HeapSlots;
+                var parentHeapSlots = classDecl.Extends?.TargetClass.HeapSlots;
                 var heapSlots = new Slots<VariableDeclaration>(parentHeapSlots);
                 foreach (var field in classDecl.Body?.Members.OfType<VariableDeclaration>() ?? new List<VariableDeclaration>())
                 {
@@ -116,7 +133,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes
         private int GetInheritanceLevel(Class c)
         {
             int i = 0;
-            while ((c = c.Extends?.Target)!= null)
+            while ((c = c.Extends?.TargetClass)!= null)
                 i++;
             return i;
         }

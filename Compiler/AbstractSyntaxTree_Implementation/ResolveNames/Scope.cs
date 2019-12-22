@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
 using AbstractSyntaxTree_Implementation.Nodes;
+using AbstractSyntaxTree_Implementation.Nodes.ClassMembers;
 using Common;
 
 namespace AbstractSyntaxTree_Implementation.ResolveNames
 {
     public class Scope
     {
-        public static Dictionary<string, Node> ClassTable = new Dictionary<string, Node>();
+        public static Dictionary<string, Class> ClassTable = new Dictionary<string, Class>();
         public readonly Scope ParentScope;
         //public List<Scope> Children { get; set; }
         public string Name { get; set; }
@@ -52,6 +54,12 @@ namespace AbstractSyntaxTree_Implementation.ResolveNames
         //        if()
         //    }
         //}
+
+        public ClassMember ResolveForClass(string className, Name memberName)
+        {
+            var classNode = ClassTable[className];
+            return (ClassMember)classNode.Scope.ResolveName(memberName);
+        }
 
     }
 }

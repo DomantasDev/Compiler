@@ -2,13 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AbstractSyntaxTree_Implementation.CodeGeneration;
 using AbstractSyntaxTree_Implementation.Nodes.Types;
+using AbstractSyntaxTree_Implementation.ResolveNames;
+using Common;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binary.Dot
 {
     public class MemberCallExp : MemberExp
     {
+        public override void ResolveNames(Scope scope)
+        {
+            Left.ResolveNames(scope);
+        }
+
         public override Type CheckTypes()
         {
             var callExp = (CallExp)Right;
@@ -16,20 +24,21 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binar
 
             if (!(leftType is ReferenceType refType))
             {
-                Console.WriteLine($"Only a reference type can be on the left side of member access expression. Line{Operator.Line}");
+                $"Only a reference type can be on the left side of member access expression. Line{Operator.Line}"
+                    .RaiseError(callExp.MethodName.Line);
             }
             else
             {
 
                 while (refType != null)
                 {
-                    var method = (Method)refType.Target?.Body.Members.FirstOrDefault(x =>
-                        x is Method v &&
-                        v.Name.Value == callExp.MethodName.Value);
+                    var method = (Method)refType.TargetClass?.Body.Members.FirstOrDefault(x =>
+                            x is Method v &&
+                            v.Name.Value == callExp.MethodName.Value);
 
                     if (method == null)
                     {
-                        refType = refType.Target?.Extends;
+                        refType = refType.TargetClass?.Extends;
                     }
                     else
                     {
@@ -37,20 +46,31 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binar
                         var actualParamCount = callExp.Arguments?.Count ?? 0;
 
                         if (expectedParamCount != actualParamCount)
-                            Console.WriteLine($"Expected {expectedParamCount} parameters, got {actualParamCount}");
+                            $"Expected {expectedParamCount} parameters, got {actualParamCount}"
+                                .RaiseError(callExp.MethodName.Line);
 
                         for (int i = 0; i < Math.Min(expectedParamCount, actualParamCount); i++)
                         {
                             method.Parameters?[i].Type.IsCompatible(callExp.Arguments?[i].CheckTypes());
                         }
 
+                        callExp.TargetMethod = method;
                         return method.ReturnType;
                     }
                 }
-                Console.WriteLine($"{leftType.Value} doesn't contain a method named {callExp.MethodName.Value}");
+
+                $"{leftType.Value} doesn't contain a method named {callExp.MethodName.Value}"
+                    .RaiseError(callExp.MethodName.Line);
             }
 
             return null;
+        }
+
+        public override void GenerateCode(CodeWriter w)
+        {
+            var callExp = (CallExp)Right;
+            callExp.TargetExpression = Left;
+            callExp.GenerateCode(w);
         }
     }
 }
