@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using AbstractSyntaxTree_Implementation.CodeGeneration;
 using AbstractSyntaxTree_Implementation.ResolveNames;
 using AbstractSyntaxTree_Implementation.Nodes.Types;
+using CodeGeneration.CodeGeneration;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 
 namespace AbstractSyntaxTree_Implementation.Nodes

@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using AbstractSyntaxTree_Implementation.Nodes;
 
-namespace AbstractSyntaxTree_Implementation.CodeGeneration
+namespace CodeGeneration.CodeGeneration
 {
-    public class Slots<T> where T : Node
+    public class Slots<T>
     {
         private readonly Slots<T> _parent;
 
-        public Slots(Slots<T> parent)
+        public Slots(Slots<T> parent, int startingIndex = 0)
         {
             _parent = parent;
+            NextSlot = parent?.NextSlot ?? startingIndex;
         }
         private readonly Dictionary<T, int> _slots = new Dictionary<T, int>();
         public int NextSlot { get; private set; }
@@ -32,18 +30,18 @@ namespace AbstractSyntaxTree_Implementation.CodeGeneration
             return _parent?.GetSlot(node);
         }
 
-        public Dictionary<T, int> GetSlots()
+        public Dictionary<int, T> GetSlots()
         {
             
             if (_parent == null)
             {
-                return new Dictionary<T, int>(_slots);
+                return _slots.ToDictionary(x => x.Value, x => x.Key);
             }
 
             var parentSlots = _parent.GetSlots();
             foreach (var slot in _slots)
             {
-                parentSlots[slot.Key] = slot.Value;
+                parentSlots[slot.Value] = slot.Key;
             }
 
             return parentSlots;

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -7,7 +7,6 @@
   <ItemGroup>
     <ProjectReference Include="..\CodeGeneration\CodeGeneration.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\Lexer_Contracts\Lexer_Contracts.csproj" />
   </ItemGroup>
 
 </Project>

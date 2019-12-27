@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using CodeGeneration.CodeGeneration;
 using Common;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 
@@ -18,6 +19,12 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Unary
             }
 
             return Type;
+        }
+
+        public override void GenerateCode(CodeWriter w)
+        {
+            Expression.GenerateCode(w);
+            w.Write(Instr.I_NOT);
         }
     }
 }

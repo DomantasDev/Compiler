@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace AbstractSyntaxTree_Implementation.CodeGeneration
+namespace CodeGeneration.CodeGeneration
 {
     public class CodeWriter
     {
-        private readonly List<int> _code = new List<int>{0};
+        public List<int> Code { get; } = new List<int> {0};
 
         public Label NewLabel()
         {
@@ -17,17 +16,17 @@ namespace AbstractSyntaxTree_Implementation.CodeGeneration
         public void CompleteLabel(Label label, int value)
         {
             label.Value = value;
-            label.Offsets.ForEach(x => _code[x] = value);
+            label.Offsets.ForEach(x => Code[x] = value);
         }
 
         public void PlaceLabel(Label label)
         {
-            CompleteLabel(label, _code.Count);
+            CompleteLabel(label, Code.Count);
         }
 
         public void Write(Label x)
         {
-            _code.Add(x.Value.Value);
+            Code.Add(x.Value.Value);
         }
 
         //public void Write(Instr instrType, List<Label> ops = null)
@@ -59,7 +58,7 @@ namespace AbstractSyntaxTree_Implementation.CodeGeneration
         public void Write(Instr instrType, params object[] ops)
         {
             var instruction = Instruction.InstructionsByCode[instrType];
-            _code.Add(instruction.Code);
+            Code.Add(instruction.Code);
             foreach (var op in ops)
             {
                 AddOp(op);
@@ -68,14 +67,22 @@ namespace AbstractSyntaxTree_Implementation.CodeGeneration
 
         public void Disassemble()
         {
-            Console.WriteLine(string.Join(',', _code));
+            Console.WriteLine(string.Join(',', Code));
 
             int offset = 1;
-            while (offset < _code.Count)
+            while (offset < Code.Count)
             {
-                var opCode = _code[offset];
+                var opCode = Code[offset];
                 var instr = Instruction.InstructionsByCode[(Instr) opCode];
-                var ops = _code.Skip(offset + 1).Take(instr.NumOps).ToList();
+
+                if (instr.InstructionType == Instr.I_BEGIN_VTABLE)
+                {
+                    var vTable = string.Join(',', Code.Skip(offset + 1));
+                    Console.WriteLine($"Virtual Table: {vTable}");
+                    break;
+                }
+
+                var ops = Code.Skip(offset + 1).Take(instr.NumOps).ToList();
                 Console.WriteLine($"{offset.ToString().PadRight(4)}:\t{instr.Name.PadRight(10)}  {string.Join(',', ops)}");
                 offset += 1 + ops.Count;
             }
@@ -87,17 +94,17 @@ namespace AbstractSyntaxTree_Implementation.CodeGeneration
             {
                 if (op.Value.HasValue)
                 {
-                    _code.Add(op.Value.Value);
+                    Code.Add(op.Value.Value);
                 }
                 else
                 {
-                    op.Offsets.Add(_code.Count);
-                    _code.Add(9999);
+                    op.Offsets.Add(Code.Count);
+                    Code.Add(9999);
                 }
             }
             else if (operand is int x)
             {
-                _code.Add(x);
+                Code.Add(x);
             }
         }
     }

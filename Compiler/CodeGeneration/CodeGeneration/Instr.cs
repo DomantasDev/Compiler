@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AbstractSyntaxTree_Implementation.CodeGeneration
+﻿namespace CodeGeneration.CodeGeneration
 {
     public enum Instr
     {
@@ -20,18 +16,19 @@ namespace AbstractSyntaxTree_Implementation.CodeGeneration
 
         I_SET_L = 20, // priskiria reiksme lokaliam kitamajam stacke
         I_SET_H, // priskiria reiksme objekto kitamajam heape
+        I_SET_A, // sets specified address
 
         I_GET_LA, // get local address
 
-        I_GET_L,
+        I_GET_L = 25,
         I_GET_H,
-        I_GET_C, // gets current object address 
+        I_GET_C, // gets current object address (push(HFP))
 
         I_PUSH, 
         //I_INT_PUSH,
-        I_INT_POP,
+        //I_INT_POP,
         //I_FLOAT_PUSH,
-        I_FLOAT_POP,
+        //I_FLOAT_POP,
         
         I_INT_ADD = 30,
         I_INT_SUB,
@@ -41,6 +38,7 @@ namespace AbstractSyntaxTree_Implementation.CodeGeneration
         I_INT_LESSEQ,
         I_INT_GR,
         I_INT_GREQ,
+        I_INT_NEG,
 
         I_FLOAT_ADD = 40,
         I_FLOAT_SUB,
@@ -50,9 +48,9 @@ namespace AbstractSyntaxTree_Implementation.CodeGeneration
         I_FLOAT_LESSEQ,
         I_FLOAT_GR,
         I_FLOAT_GREQ,
+        I_FLOAT_NEG,
 
-        I_NEG = 50,
-        I_NOT,
+        I_NOT = 50,
         I_AND,
         I_OR,
         I_EQ,

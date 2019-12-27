@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AbstractSyntaxTree_Implementation.CodeGeneration;
 using AbstractSyntaxTree_Implementation.Nodes.Types;
 using AbstractSyntaxTree_Implementation.ResolveNames;
+using CodeGeneration.CodeGeneration;
+using Common;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binary.Dot
@@ -19,7 +20,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binar
 
             if (!(leftType is ReferenceType refType))
             {
-                Console.WriteLine($"Only a reference type can be on the left side of member access expression. Line{Operator.Line}");
+                $"Only a reference type can be on the left side of member access expression.".RaiseError(Operator.Line);
             }
             else
             {
@@ -40,7 +41,8 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binar
                         return variable.Type;
                     }
                 }
-                Console.WriteLine($"{leftType.Value} doesn't contain a member named {varExp.Value}");
+
+                $"{leftType.Value} doesn't contain a member named {varExp.Value}.".RaiseError(varExp.Line);
             }
 
             return null;

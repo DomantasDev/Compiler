@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AbstractSyntaxTree_Implementation.CodeGeneration;
-using AbstractSyntaxTree_Implementation.Nodes.Types;
+﻿using System.Collections.Generic;
 using AbstractSyntaxTree_Implementation.ResolveNames;
+using CodeGeneration.CodeGeneration;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
 {
-    public class newObjectExp : Expression
+    public class NewObjectExp : Expression
     {
         public List<Expression> Arguments { get; set; }
 
@@ -37,7 +34,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
 
             var fieldCount = classNode.HeapSlots.GetNumSlots();
             var vTableLabel = classNode.VTableLabel;
-            w.Write(Instr.I_ALLOC_H, vTableLabel, fieldCount);
+            w.Write(Instr.I_ALLOC_H, vTableLabel, fieldCount + 1);
         }
     }
 }

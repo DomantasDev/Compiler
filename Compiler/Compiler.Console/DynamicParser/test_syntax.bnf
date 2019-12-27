@@ -28,7 +28,7 @@
 <RETURN_STMT> ::= [Return]@1 *<KW_RETURN> <EXPR> |[Return]@ *<KW_RETURN>
 <BREAK_STMT> ::= [LoopControl]@0 *<KW_BREAK>
 <CONTINUE_STMT> ::= [LoopControl]@0 *<KW_CONTINUE>
-<ASSIGN_STMT> ::= [Assign]@0 @2 *<IDENT> *<OP_ASSIGN> <EXPR> | [Assign]@2 @4 *<THIS> *<DOT_OP> *<IDENT> *<OP_ASSIGN> <EXPR>
+<ASSIGN_STMT> ::= [Assign]@0 @2 *<IDENT> *<OP_ASSIGN> <EXPR> | [Assign]@2 @4 *<THIS> *<DOT_OP> *<IDENT> *<OP_ASSIGN> <EXPR> | [Assign]@0 @2 <DOT> *<OP_ASSIGN> <EXPR>
 <LOCAL_VARIABLE_DECL_STMT> ::= [LocalVariableDeclaration]@0 @1 @3 <TYPE> *<IDENT> *<OP_ASSIGN> <EXPR> | [LocalVariableDeclaration]@0 @1 @ <TYPE> *<IDENT>
 <WHILE_STMT> ::= [Loop]@2 @4 *<KW_WHILE> *<PAREN_O> <EXPR> *<PAREN_C> <BODY>
 <IF_STMT> ::= [If]@0 @1 @2 @3 *<KW_IF> <CONDITION> <BODY> <ELSE> | [If]@0 @1 @2 @ *<KW_IF> <CONDITION> <BODY>

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using AbstractSyntaxTree_Implementation.CodeGeneration;
 using AbstractSyntaxTree_Implementation.Nodes.Types;
 using AbstractSyntaxTree_Implementation.ResolveNames;
+using CodeGeneration.CodeGeneration;
 using Common;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 
@@ -55,6 +53,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binar
                         }
 
                         callExp.TargetMethod = method;
+                        Type = callExp.TargetMethod.ReturnType;
                         return method.ReturnType;
                     }
                 }

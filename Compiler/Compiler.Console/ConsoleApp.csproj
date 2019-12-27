@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CodeExecution\CodeExecution.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Lexer\Lexer_Implementation.csproj" />
     <ProjectReference Include="..\Parser_Implementation\Parser_Implementation.csproj" />

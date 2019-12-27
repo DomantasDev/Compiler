@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AbstractSyntaxTree_Implementation.CodeGeneration;
 using AbstractSyntaxTree_Implementation.ResolveNames;
+using CodeGeneration.CodeGeneration;
 using Common;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 
@@ -21,7 +19,6 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
 
         public int NumLocals { get; set; }
         public int VTableSlot { get; set; }
-        public bool IsEntryPoint { get; set; }
 
         public override void Print(NodePrinter p)
         {
@@ -97,13 +94,11 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
         public override void GenerateCode(CodeWriter w)
         {
             w.PlaceLabel(StartLabel);
-            if(NumLocals > 0)
-                w.Write(Instr.I_ALLOC_S, NumLocals);
+            var localVariables = NumLocals - Parameters?.Count ?? 0;
+            if (localVariables > 0)
+                w.Write(Instr.I_ALLOC_S, localVariables);
             Body.GenerateCode(w);
             w.Write(Instr.I_RET);
-
-            if(IsEntryPoint)
-                w.Write(Instr.I_EXIT);
         }
     }
 }

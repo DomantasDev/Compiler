@@ -1,19 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using AbstractSyntaxTree_Implementation;
-using AbstractSyntaxTree_Implementation.CodeGeneration;
 using AbstractSyntaxTree_Implementation.ResolveNames;
+using CodeExecution;
+using CodeGeneration.CodeGeneration;
 using Common;
 using Lexer_Contracts;
-using Lexer_Implementation;
-using Lexer_Implementation.DynamicLexer;
 using Parser_Implementation;
-using Parser_Implementation.BnfReader;
-using Parser_Implementation.BnfRules.Alternatives;
-using Parser_Implementation.Lexemes;
 
 namespace ConsoleApp
 {
@@ -31,25 +23,31 @@ namespace ConsoleApp
             ErrorWriter.File = code;
 
             var parser = new Parser(code);
-            var result = parser.Parse(out var root);
+            var success = parser.Parse(out var root);
 
-            Console.WriteLine(result);
+            if(!success)
+                Console.WriteLine("Parsing failed");
 
             //root.Print(new NodePrinter());
             //Console.WriteLine("\n" + new string('-', 20) + "\n");
 
-            if (result)
+            if (success)
             {
                 var scope = new Scope(null);
                 root.ResolveNames(scope);
 
-                Console.WriteLine();
+                if (ErrorWriter.ErrorCount == 0)
+                    root.CheckTypes();
 
-                root.CheckTypes();
+                if (ErrorWriter.ErrorCount == 0)
+                {
+                    var codeWriter = new CodeWriter();
+                    root.GenerateCode(codeWriter);
+                    codeWriter.Disassemble();
 
-                var codeWriter = new CodeWriter();
-                root.GenerateCode(codeWriter);
-                codeWriter.Disassemble();
+                    var vm = new VirtualMachine(codeWriter.Code.ToArray());
+                    vm.Execute();
+                }
             }
             Console.ReadLine();
         }

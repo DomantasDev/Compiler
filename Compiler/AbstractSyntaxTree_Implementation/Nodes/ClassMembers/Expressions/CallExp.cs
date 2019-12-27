@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using AbstractSyntaxTree_Implementation.CodeGeneration;
 using AbstractSyntaxTree_Implementation.ResolveNames;
+using CodeGeneration.CodeGeneration;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
@@ -51,6 +50,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
         public override void GenerateCode(CodeWriter w)
         {
             w.Write(Instr.I_CALL_BEGIN);
+            Arguments?.ForEach(x => x.GenerateCode(w));
             if (TargetExpression == null)
             {
                 w.Write(Instr.I_GET_C);
@@ -59,7 +59,6 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
             {
                 TargetExpression.GenerateCode(w);
             }
-            Arguments?.ForEach(x => x.GenerateCode(w));
             w.Write(Instr.I_VCALL, TargetMethod.VTableSlot, Arguments?.Count ?? 0);
         }
     }

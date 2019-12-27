@@ -1,7 +1,7 @@
 ﻿using System;
-using AbstractSyntaxTree_Implementation.CodeGeneration;
-using AbstractSyntaxTree_Implementation.Nodes.Types;
+using System.Globalization;
 using AbstractSyntaxTree_Implementation.ResolveNames;
+using CodeGeneration.CodeGeneration;
 using Common;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 using ValueType = AbstractSyntaxTree_Implementation.Nodes.Types.ValueType;
@@ -20,11 +20,13 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
 
         public override Type CheckTypes()
         {
-            return new ValueType
+            Type =  new ValueType
             {
                 Value = TokenType.ToLower(),
                 Line = Line
             };
+
+            return Type;
         }
 
         public override void GenerateCode(CodeWriter w)
@@ -39,7 +41,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
                 case "INT":
                     return int.Parse(Value);
                 case "FLOAT":
-                    return BitConverter.ToInt32(BitConverter.GetBytes(float.Parse(Value)));
+                    return BitConverter.ToInt32(BitConverter.GetBytes(float.Parse(Value, CultureInfo.InvariantCulture)));
                 case "BOOL":
                     return Value == "true" ? 1 : 0;
                 //TODO string?

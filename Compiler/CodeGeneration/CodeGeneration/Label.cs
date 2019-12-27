@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace AbstractSyntaxTree_Implementation.CodeGeneration
+namespace CodeGeneration.CodeGeneration
 {
     public class Label
     {

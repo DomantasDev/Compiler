@@ -2,9 +2,28 @@ class Program
 {
     public int Main()
     {
-        A a := new B();
-        
-        a.B();
+        Fibonachi counter := new Fibonachi();
+        int result := counter.Count(30);
+        return result;
+    }
+}
+
+class Fibonachi
+{
+    public int Count(int x)
+    {
+        if( x <= 0)
+        {
+            return 0;
+        }
+        else if(x = 1)
+        {
+            return 1;
+        }
+        else
+        {
+            return Count(x - 1) + Count(x - 2);
+        }
     }
 }
 
@@ -14,21 +33,24 @@ class A
     {
         return 11;
     }
-    public int B()
+    public int B(int x)
     {
-        return 22;
+        return x * x;
     }
 }
 
 class B extends A
 {
-    public override int B()
+    public int X;
+
+    public override int B(int x)
     {
         return 2222;
     }
 
-    public int C()
+    public A C()
     {
-        return 33;
+        X := 1234;
+        return new A();
     }
 }

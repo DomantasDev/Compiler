@@ -1,7 +1,6 @@
-﻿using System.Threading;
-using AbstractSyntaxTree_Implementation.CodeGeneration;
-using AbstractSyntaxTree_Implementation.Nodes.Types;
+﻿using AbstractSyntaxTree_Implementation.Nodes.Types;
 using AbstractSyntaxTree_Implementation.ResolveNames;
+using CodeGeneration.CodeGeneration;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
 {
@@ -20,7 +19,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
 
         public override void ResolveNames(Scope scope)
         {
-            StackSlot = ++Method.LocalVariableCount;
+            StackSlot = Method.LocalVariableCount++;
             Type.ResolveNames(scope);
             scope.Add(new Name(Name, NameType.Variable), this);
         }

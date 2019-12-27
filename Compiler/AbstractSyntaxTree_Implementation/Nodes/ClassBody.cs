@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using AbstractSyntaxTree_Implementation.CodeGeneration;
 using AbstractSyntaxTree_Implementation.Nodes.ClassMembers;
 using AbstractSyntaxTree_Implementation.Nodes.Types;
 using AbstractSyntaxTree_Implementation.ResolveNames;
+using CodeGeneration.CodeGeneration;
 
 namespace AbstractSyntaxTree_Implementation.Nodes
 {

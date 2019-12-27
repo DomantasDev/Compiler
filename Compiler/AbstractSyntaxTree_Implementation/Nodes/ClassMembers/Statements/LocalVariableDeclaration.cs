@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AbstractSyntaxTree_Implementation.CodeGeneration;
-using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions;
+﻿using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions;
 using AbstractSyntaxTree_Implementation.ResolveNames;
+using CodeGeneration.CodeGeneration;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements
@@ -24,7 +21,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements
 
         public override void ResolveNames(Scope scope)
         {
-            StackSlot = ++Method.LocalVariableCount;
+            StackSlot = Method.LocalVariableCount++;
             Type.ResolveNames(scope);
             scope.Add(new Name(Name, NameType.Variable), this);
             Expression?.ResolveNames(scope);

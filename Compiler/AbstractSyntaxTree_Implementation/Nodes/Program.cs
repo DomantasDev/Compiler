@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using AbstractSyntaxTree_Implementation.CodeGeneration;
 using AbstractSyntaxTree_Implementation.Nodes.ClassMembers;
 using AbstractSyntaxTree_Implementation.ResolveNames;
+using CodeGeneration.CodeGeneration;
 using Common;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 
@@ -55,8 +53,6 @@ namespace AbstractSyntaxTree_Implementation.Nodes
 
             if (entryMethod == null)
                 $"Method \"Main\" not found in class \"Program\"".RaiseError();
-            else
-                entryMethod.IsEntryPoint = true;
         }
 
         public override Type CheckTypes()
@@ -69,21 +65,34 @@ namespace AbstractSyntaxTree_Implementation.Nodes
         public override void GenerateCode(CodeWriter w)
         {
             GetHeapSlots();
+
             //TODO generate entry point. alloc(size), set Vtable address
+            GenerateEntryPoint(w);
+
 
             Classes.ForEach(x => x.GenerateCode(w));
             
-
-            //TODO generate VTables, set vtable addresses on newly created objects
             w.Write(Instr.I_BEGIN_VTABLE);
             Classes.ForEach(x => GenerateVTable(w, x));
+        }
+
+        private void GenerateEntryPoint(CodeWriter w)
+        {
+            w.Write(Instr.I_CALL_BEGIN);
+
+            var fieldCount = entryClass.HeapSlots.GetNumSlots();
+            var vTableLabel = entryClass.VTableLabel;
+            w.Write(Instr.I_ALLOC_H, vTableLabel, fieldCount + 1);
+
+            w.Write(Instr.I_VCALL, entryMethod.VTableSlot, 0);
+
+            w.Write(Instr.I_EXIT);
         }
 
         private void GenerateVTable(CodeWriter w, Class classNode)
         {
             w.PlaceLabel(classNode.VTableLabel);
             var slots = classNode.VTableSlots.GetSlots()
-                .ToDictionary(x => x.Value, x => x.Key)
                 .OrderBy(x => x.Key)
                 .ToList(); // remove after debug
             foreach (var keyValuePair in slots)
@@ -119,7 +128,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes
                 classDecl.VTableSlots = vTableSlots;
 
                 var parentHeapSlots = classDecl.Extends?.TargetClass.HeapSlots;
-                var heapSlots = new Slots<VariableDeclaration>(parentHeapSlots);
+                var heapSlots = new Slots<VariableDeclaration>(parentHeapSlots, 1);
                 foreach (var field in classDecl.Body?.Members.OfType<VariableDeclaration>() ?? new List<VariableDeclaration>())
                 {
                     heapSlots.Add(field);

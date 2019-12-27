@@ -1,6 +1,7 @@
 ﻿using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions;
 using AbstractSyntaxTree_Implementation.Nodes.Types;
 using AbstractSyntaxTree_Implementation.ResolveNames;
+using CodeGeneration.CodeGeneration;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
 {
@@ -36,6 +37,11 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
             Type.IsCompatible(Expression?.CheckTypes());
 
             return null;
+        }
+
+        public override void GenerateCode(CodeWriter w)
+        {
+            //TODO remove expression
         }
     }
 }
