@@ -56,8 +56,8 @@
 <SEMICOLON> ::= ";"
 <COLON> ::= ":"
 <COMMA> ::= ","
-<COMMENT> ::= "##" <CHARS> | "##"
-<MULTI_LINE_COMMENT> ::= "#*" <COMMENT_CHARS> "*#" | "#*" "*#"
+s<COMMENT> ::= "##" <CHARS> | "##"
+s<MULTI_LINE_COMMENT> ::= "#*" <COMMENT_CHARS> "*#" | "#*" "*#"
 *<COMMENT_CHARS> ::= <COMMENT_CHAR> | <COMMENT_CHAR> <COMMENT_CHARS>
 +<COMMENT_CHAR> ::= <SPACE> | <LETTER> | <DIGIT> | <COMMENT_SYMBOLS>
 +<COMMENT_SYMBOLS> ::= "\n" | "\t" | "\r" | "-" | "+" | "?" | "!" | "_" | "/" | "@" | "$" | "%" | "^" | "&" | "." | "," | ":" | "(" | ")" | "{" | "}" | "[" | "]"

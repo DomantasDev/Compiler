@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Lexer_Contracts;
+using Lexer_Implementation.DynamicLexer.BnfReader;
 using Lexer_Implementation.DynamicLexer.FSM;
 
 namespace Lexer_Implementation.DynamicLexer
@@ -10,11 +11,14 @@ namespace Lexer_Implementation.DynamicLexer
     public class DynamicLexer
     {
         private readonly StateMachine _stateMachine;
+        private readonly List<string> _skippableRules;
         public DynamicLexer(string pathToBNF)
         {
             var reader = new BNFReader(pathToBNF);
-            var (rules, helpers) = reader.GetRules();
-            helpers.Add(new BNFRule
+            var bnfData = reader.GetRules();
+            _skippableRules = bnfData.SkippableRules;
+
+            bnfData.HelperRules.Add(new BNFRule
             {
                 Name = "SPACE",
                 Alternatives = new List<List<BNFRule>> { new List<BNFRule> { new BNFRule
@@ -23,12 +27,12 @@ namespace Lexer_Implementation.DynamicLexer
                     TerminalValue = " "
                 } } } 
             });
-            LinkRules(rules.Union(helpers).ToList());
+            LinkRules(bnfData.Rules.Union(bnfData.HelperRules).ToList());
 
-            _stateMachine = new StateMachineBuilder().Build(rules);
+            _stateMachine = new StateMachineBuilder().Build(bnfData.Rules);
         }
 
-        public IEnumerable<Token> GetLexemes(string code)
+        public IEnumerable<Token> GetLexemes(string code, bool skip = true)
         {
             int line = 1;
             int globalOffset = 0;
@@ -61,12 +65,16 @@ namespace Lexer_Implementation.DynamicLexer
                     globalOffset += lastState.value.Length;
                     iterationOffset = -1;
 
-                    yield return new Token
+                    if (!skip || !_skippableRules.Contains(lastState.state.LexemeType))
                     {
-                        Value = lastState.value.Trim(),
-                        Type = lastState.state.LexemeType,
-                        Line = line
-                    };
+                        yield return new Token
+                        {
+                            Value = lastState.value.Trim(),
+                            Type = lastState.state.LexemeType,
+                            Line = line
+                        };
+                    }
+                        
                     _stateMachine.Reset();
                 }
             }

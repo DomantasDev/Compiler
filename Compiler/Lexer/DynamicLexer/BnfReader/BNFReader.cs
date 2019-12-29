@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
-namespace Lexer_Implementation.DynamicLexer
+namespace Lexer_Implementation.DynamicLexer.BnfReader
 {
     public class BNFReader
     {
@@ -15,7 +12,7 @@ namespace Lexer_Implementation.DynamicLexer
             _pathToBnf = pathToBNF;
         }
 
-        public (List<BNFRule> rules, List<BNFRule> helperRules) GetRules()
+        public BnfData GetRules()
         {
             var bnf = File.ReadAllText(_pathToBnf).Split('\n');
 
@@ -26,37 +23,42 @@ namespace Lexer_Implementation.DynamicLexer
             return GetRules(bnf);
         }
 
-        private (List<BNFRule> rules, List<BNFRule> helperRules) GetRules(string[] BNFRules)
+        private BnfData GetRules(string[] BNFRules)
         {
             var rules = new List<BNFRule>();
             var helpers = new List<BNFRule>();
-            foreach (var ru in BNFRules)
+            var skippableRules = new List<string>();
+            foreach (var rule in BNFRules)
             {
-                var rule = ru;
-
                 var newRootRule = new BNFRule
                 {
                     IsTerminal = false,
                     Alternatives = new List<List<BNFRule>>()
                 };
 
+                var x = rule.Split("::=");
+                var name = x[0].Trim();
+
                 List<BNFRule> currentRules;
-                if (rule.StartsWith('*'))
+                if (name.StartsWith('*'))
                 {
                     currentRules = helpers;
-                    rule = rule.Substring(1);
+                    name = name.Substring(1);
                 }
-                else if(rule.StartsWith('+'))
+                else if (name.StartsWith('+'))
                 {
                     currentRules = helpers;
-                    rule = rule.Substring(1);
+                    name = name.Substring(1);
                     newRootRule.IsAtom = true;
+                }
+                else if (name.StartsWith('s'))
+                {
+                    currentRules = rules;
+                    name = name.Substring(1);
+                    skippableRules.Add(name.Substring(1, name.Length - 2));
                 }
                 else
                     currentRules = rules;
-
-                var x = rule.Split("::=");
-                var name = x[0].Trim();
 
                 newRootRule.Name = name.Substring(1, name.Length - 2);
 
@@ -93,7 +95,12 @@ namespace Lexer_Implementation.DynamicLexer
                 currentRules.Add(newRootRule);
             }
 
-            return (rules, helpers);
+            return new BnfData
+            {
+                Rules = rules,
+                HelperRules = helpers,
+                SkippableRules = skippableRules
+            };
         }
 
         private readonly Dictionary<char, char>  _escapeChars = new Dictionary<char, char>
