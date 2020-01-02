@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.Globalization;
+using System.Linq;
 using CodeGeneration.CodeGeneration;
 using Common;
 
@@ -7,7 +10,7 @@ namespace CodeExecution
 {
     public class VirtualMachine
     {
-        private readonly int[] _code = new int[4096];
+        private readonly int[] _memory = new int[4096];
         private int IP;
         private int SP;
         private int SFP;
@@ -15,15 +18,18 @@ namespace CodeExecution
         private int HP;
         private bool _running;
 
+        private MemoryAllocator _allocator;
+
         public VirtualMachine(int[] code)
         {
-            code.CopyTo(_code,0);
+            code.CopyTo(_memory,0);
             IP = 1;
             SP = 1024;
             SFP = 1024;
             HP = 2048;
             HFP = 2048;
             _running = true;
+            _allocator = new MemoryAllocator(_memory);
         }
 
         public void Execute()
@@ -123,12 +129,21 @@ namespace CodeExecution
                     if (condition == 0)
                         IP = newIp;
                     break;
+
                 case Instr.I_ALLOC_S:
                     SP += Read();
                     break;
+
                 case Instr.I_ALLOC_H:
                     AllocHeap(Read(), Read());
                     break;
+                case Instr.I_ALLOC_HS:
+                    AllocString(Read());
+                    break;
+                case Instr.I_DEL:
+                    Delete();
+                    break;
+
                 case Instr.I_CALL_BEGIN:
                     SP += 5;
                     break;
@@ -154,10 +169,14 @@ namespace CodeExecution
                     Push(HFP);
                     break;
                 case Instr.I_GET_L:
-                    Push(_code[SFP + Read()]);
+                    Push(_memory[SFP + Read()]);
                     break;
                 case Instr.I_GET_H:
-                    Push(_code[Pop() + Read()]);
+                    Push(_memory[Pop() + Read()]);
+                    break;
+
+                case Instr.I_WRITE:
+                    Write(Read());
                     break;
 
 
@@ -183,39 +202,80 @@ namespace CodeExecution
             //for (int i = 0; i < Math.Max(stackNum, heapNum); i++)
             //{
             //    Console.Write($"{i.ToString().PadRight(3)}:");
-            //    Console.Write($"{_code[1024 + i].ToString().PadLeft(12)}");
-            //    Console.WriteLine($"{_code[2048 + i].ToString().PadLeft(10)}");
+            //    Console.Write($"{_memory[1024 + i].ToString().PadLeft(12)}");
+            //    Console.WriteLine($"{_memory[2048 + i].ToString().PadLeft(10)}");
             //}
             //Console.WriteLine(new string('-', 30));
+        }
+
+        private void Write(int numArgs)
+        {
+            for (int i = 0; i < numArgs; i++)
+            {
+                PrintArgument((PrimitiveType)Pop());
+            }
+
+            void PrintArgument(PrimitiveType prim)
+            {
+                switch (prim)
+                {
+                    case PrimitiveType.Int:
+                        Console.Write(Pop());
+                        break;
+                    case PrimitiveType.Float:
+                        Console.Write(PopFloat().ToString(CultureInfo.InvariantCulture));
+                        break;
+                    case PrimitiveType.Bool:
+                        Console.Write(PopBool());
+                        break;
+                    case PrimitiveType.String:
+                        PrintString(Pop());
+                        break;
+                }
+            }
+
+            void PrintString(int address)
+            {
+                string s = string.Empty;
+                char c = (char) _memory[address];
+
+                for (int i = 1; c != 0; i++)
+                {
+                    s += c;
+                    c = (char) _memory[address + i];
+                }
+
+                Console.Write(s.ReplaceWithEscapeChars());
+            }
         }
 
         private void SetAddress()
         {
             var address = Pop();
             var value = Pop();
-            _code[address] = value;
+            _memory[address] = value;
         }
 
         private void SetHeap(int slot)
         {
             var value = Pop();
-            _code[HFP + slot] = value;
+            _memory[HFP + slot] = value;
         }
 
         private void SetLocal(int slot)
         {
             var value = Pop();
-            _code[SFP + slot] = value;
+            _memory[SFP + slot] = value;
         }
 
         private void Return(int value)
         {
             var tempSFP = SFP;
-            IP = _code[tempSFP - 5];
-            SP = _code[tempSFP - 4];
-            SFP = _code[tempSFP - 3];
+            IP = _memory[tempSFP - 5];
+            SP = _memory[tempSFP - 4];
+            SFP = _memory[tempSFP - 3];
             //HP = _code[tempSFP - 2];
-            HFP = _code[tempSFP - 1];
+            HFP = _memory[tempSFP - 1];
 
             Push(value);
         }
@@ -223,15 +283,15 @@ namespace CodeExecution
         {
             var objectAddress = Pop();
 
-            _code[SP - numArgs - 5] = IP;    //IP
-            _code[SP - numArgs - 4] = SP - numArgs - 5;  // SP
-            _code[SP - numArgs - 3] = SFP; // SFP
-            _code[SP - numArgs - 2] = HP; // HP
-            _code[SP - numArgs - 1] = HFP; // HFP
+            _memory[SP - numArgs - 5] = IP;    //IP
+            _memory[SP - numArgs - 4] = SP - numArgs - 5;  // SP
+            _memory[SP - numArgs - 3] = SFP; // SFP
+            _memory[SP - numArgs - 2] = HP; // HP
+            _memory[SP - numArgs - 1] = HFP; // HFP
 
             
-            var vTableAddress = _code[objectAddress];
-            var methodAddress = _code[vTableAddress + methodNumber];
+            var vTableAddress = _memory[objectAddress];
+            var methodAddress = _memory[vTableAddress + methodNumber];
 
             IP = methodAddress;
             SFP = SP - numArgs;
@@ -240,9 +300,28 @@ namespace CodeExecution
 
         private void AllocHeap(int vTableAddress, int size)
         {
-            _code[HP] = vTableAddress;
-            Push(HP);
-            HP += size;
+            //_code[HP] = vTableAddress;
+            //Push(HP);
+            //HP += size;
+            var address = _allocator.Allocate(size);
+            _memory[address] = vTableAddress;
+            Push(address);
+        }
+        private void AllocString(int stringLength)
+        {
+            var address = _allocator.Allocate(stringLength + 1);
+            for (int i = 0; i < stringLength; i++)
+            {
+                _memory[address + i] = Read();
+            }
+
+            _memory[stringLength + 1] = 0;
+            Push(address);
+        }
+
+        private void Delete()
+        {
+            _allocator.Delete(Pop());
         }
 
         private void BinaryOp<T, RT>(Func<T> pop, Func<T, T, RT> operation, Action<RT> push)
@@ -277,12 +356,12 @@ namespace CodeExecution
 
         private int Read()
         {
-            return _code[IP++];
+            return _memory[IP++];
         }
 
         private int Pop()
         {
-            return _code[--SP];
+            return _memory[--SP];
         }
 
         private float PopFloat()
@@ -301,7 +380,7 @@ namespace CodeExecution
 
         private void Push(int x)
         {
-            _code[SP++] = x;
+            _memory[SP++] = x;
         }
 
         private void PushFLoat(float x)

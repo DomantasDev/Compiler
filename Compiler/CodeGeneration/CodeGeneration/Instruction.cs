@@ -17,7 +17,10 @@ namespace CodeGeneration.CodeGeneration
         {
             AddInstruction(Instr.I_PUSH, 1);
 
-            AddInstruction(Instr.I_ALLOC_H, 2); // vtable address, num of fields
+            AddInstruction(Instr.I_ALLOC_H, 2); // vTable address, num of fields
+            AddInstruction(Instr.I_ALLOC_HS, 1); // string length, reads the string
+            AddInstruction(Instr.I_DEL);
+
             AddInstruction(Instr.I_ALLOC_S, 1);
 
             AddInstruction(Instr.I_CALL_BEGIN);
@@ -63,6 +66,9 @@ namespace CodeGeneration.CodeGeneration
             AddInstruction(Instr.I_AND);
             AddInstruction(Instr.I_EQ);
             AddInstruction(Instr.I_NEQ);
+
+            AddInstruction(Instr.I_WRITE, 1); // num args
+            AddInstruction(Instr.I_READ); // TODO
 
             AddInstruction(Instr.I_EXIT);
             //AddInstruction(Instr.I_FLOAT_PUSH, 1);

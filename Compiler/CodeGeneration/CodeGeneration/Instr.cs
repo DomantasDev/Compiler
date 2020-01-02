@@ -3,7 +3,10 @@
     public enum Instr
     {
         I_ALLOC_H = 1, //kuria objekta heape
-        I_ALLOC_S, //alokuoja atminty
+        I_ALLOC_HS, // alloc string in sheap
+        I_DEL, // deletes obj in heap
+
+        I_ALLOC_S, //alokuoja atminty stacke
         I_CALL_BEGIN,
         I_RET,
         I_RETV,
@@ -57,6 +60,9 @@
         I_NEQ,
 
         I_EXIT = 99,
+
+        I_WRITE = 100,
+        I_READ,
 
         //for disassembler only
         I_BEGIN_VTABLE = 1000

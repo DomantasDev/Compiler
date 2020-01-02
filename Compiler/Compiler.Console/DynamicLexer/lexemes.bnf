@@ -18,7 +18,7 @@
 *<CHARS> ::= <CHAR> | <CHARS> <CHAR>
 +<CHAR> ::= <LETTER> | <SYMBOL> | <DIGIT>
 +<LETTER> ::= "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "y" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "r" | "s" | "t" | "u" | "v" | "x" | "w" | "q" | "z" |  "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "Y" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "R" | "S" | "T" | "U" | "V" | "X" | "W" | "Q" | "Z"
-+<SYMBOL> ::= "-" | "+" | "?" | "!" | "_" | "*" | "/" | "@" | "#" | "$" | "%" | "^" | "&" | "." | "," | ":" | "(" | ")" | "{" | "}" | "[" | "]" | <SPACE>
++<SYMBOL> ::= "=" | "-" | "+" | "?" | "!" | "_" | "*" | "/" | "@" | "#" | "$" | "%" | "^" | "&" | "." | "," | ":" | ";" | "(" | ")" | "{" | "}" | "[" | "]" | <SPACE>
 *<DIGITS> ::= <DIGIT> | <DIGITS> <DIGIT>
 +<DIGIT> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 <NULL> ::= "null"
@@ -51,6 +51,7 @@
 <KW_OVERRIDE> ::= "override"
 <KW_BREAK> ::= "break"
 <KW_CONTINUE> ::= "continue"
+<KW_DELETE> ::= "delete"
 <OP_ASSIGN> ::= ":="
 <OP_NOT> ::= "!"
 <SEMICOLON> ::= ";"

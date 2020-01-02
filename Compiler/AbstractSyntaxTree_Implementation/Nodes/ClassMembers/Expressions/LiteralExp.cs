@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
+using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements.If;
+using AbstractSyntaxTree_Implementation.Nodes.Types;
 using AbstractSyntaxTree_Implementation.ResolveNames;
 using CodeGeneration.CodeGeneration;
 using Common;
@@ -20,18 +23,42 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
 
         public override Type CheckTypes()
         {
-            Type =  new ValueType
+            if (TokenType == "STRING")
             {
-                Value = TokenType.ToLower(),
-                Line = Line
-            };
+                Type = new StringType
+                {
+                    Value = TokenType.ToLower(),
+                    Line = Line
+                };
+            }
+            else
+            {
+                Type = new ValueType
+                {
+                    Value = TokenType.ToLower(),
+                    Line = Line
+                };
+            }
+            
 
             return Type;
         }
 
         public override void GenerateCode(CodeWriter w)
         {
-            w.Write(Instr.I_PUSH, GetInt());
+            if (TokenType == "STRING")
+            {
+                w.Write(Instr.I_ALLOC_HS, Value.Length - 2);
+                var ints = Value.Skip(1).SkipLast(1).Select(x => (int) x);
+                foreach (var i in ints)
+                {
+                    w.Write(i);
+                }
+            }
+            else
+            {
+                w.Write(Instr.I_PUSH, GetInt());
+            }
         }
 
         private int GetInt()
@@ -44,7 +71,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
                     return BitConverter.ToInt32(BitConverter.GetBytes(float.Parse(Value, CultureInfo.InvariantCulture)));
                 case "BOOL":
                     return Value == "true" ? 1 : 0;
-                //TODO string?
+
                 default:
                     throw new Exception($"{nameof(LiteralExp)}".UnexpectedError(Line));
             }

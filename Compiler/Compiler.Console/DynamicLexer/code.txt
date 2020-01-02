@@ -2,13 +2,13 @@ class Program
 {
     public int Main()
     {
-        Fibonachi counter := new Fibonachi();
+        Fibonacci counter := new Fibonacci();
         int result := counter.Count(30);
         return result;
     }
 }
 
-class Fibonachi
+class Fibonacci
 {
     public int Count(int x)
     {

@@ -16,14 +16,14 @@
 <VARIABLE_DECL_STMT> ::= [VariableDeclaration]@0 @1 @2 @4 <VISIBILITY> <TYPE> *<IDENT> *<OP_ASSIGN> <EXPR> | [VariableDeclaration]@0 @1 @2 @ <VISIBILITY> <TYPE> *<IDENT>
 
 <RETURN_TYPE> ::= <TYPE> | [ValueType]@0 *<KW_VOID>
-<TYPE> ::= [ValueType]@0 <SYSTEM_TYPE> | [ReferenceType]@0 *<IDENT>
-<SYSTEM_TYPE> ::= *<KW_INT> | *<KW_STRING> | *<KW_FLOAT> | *<KW_BOOL>
+<TYPE> ::= <SYSTEM_TYPE> | [ReferenceType]@0 *<IDENT>
+<SYSTEM_TYPE> ::= [ValueType]@0 *<KW_INT> | [StringType]@0 *<KW_STRING> | [ValueType]@0 *<KW_FLOAT> | [ValueType]@0 *<KW_BOOL>
 
 <PARAM_LIST> ::= @1 *<PAREN_O> <PARAMS> *<PAREN_C> | @ *<PAREN_O> *<PAREN_C>
 <PARAMS> ::= [NodeList]@0 2 <PARAM> {*<COMMA> <PARAM>}
 <PARAM> ::= [Parameter]@0 @1 <TYPE> *<IDENT>
 
-<STMT> ::= <BREAK_STMT> *<SEMICOLON> | <RETURN_STMT> *<SEMICOLON> | <CONTINUE_STMT> *<SEMICOLON> | <ASSIGN_STMT> *<SEMICOLON> | <LOCAL_VARIABLE_DECL_STMT> *<SEMICOLON> | <EXPR_STMT> *<SEMICOLON> | <WRITE_STMT> *<SEMICOLON> | <READ_STMT> *<SEMICOLON> | <WHILE_STMT> | <IF_STMT>
+<STMT> ::= <BREAK_STMT> *<SEMICOLON> | <RETURN_STMT> *<SEMICOLON> | <CONTINUE_STMT> *<SEMICOLON> | <ASSIGN_STMT> *<SEMICOLON> | <LOCAL_VARIABLE_DECL_STMT> *<SEMICOLON> | <EXPR_STMT> *<SEMICOLON> | <WRITE_STMT> *<SEMICOLON> | <READ_STMT> *<SEMICOLON> | <WHILE_STMT> | <IF_STMT> | <DELETE> *<SEMICOLON>
 <EXPR_STMT> ::= [ExpressionStatement]@0 <EXPR>
 <RETURN_STMT> ::= [Return]@1 *<KW_RETURN> <EXPR> |[Return]@ *<KW_RETURN>
 <BREAK_STMT> ::= [LoopControl]@0 *<KW_BREAK>
@@ -34,6 +34,7 @@
 <IF_STMT> ::= [If]@0 @1 @2 @3 *<KW_IF> <CONDITION> <BODY> <ELSE> | [If]@0 @1 @2 @ *<KW_IF> <CONDITION> <BODY>
 <CONDITION> ::= @1 *<PAREN_O> <EXPR> *<PAREN_C>
 <ELSE> ::= [Else]@1 @ *<KW_ELSE> <IF_STMT> | [Else]@ @1 *<KW_ELSE> <BODY>
+<DELETE> ::= [Delete]@1 *<KW_DELETE> <EXPR>
 
 <WRITE_STMT> ::= [Write]@1 *<KW_WRITE> <ARGS>
 <READ_STMT> ::= [Read]@1 *<KW_READ> <VAR_LIST>

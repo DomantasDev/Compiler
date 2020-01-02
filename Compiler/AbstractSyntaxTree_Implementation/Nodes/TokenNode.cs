@@ -16,7 +16,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes
 
         public override void ResolveNames(Scope scope)
         {
-            Target = scope.ResolveName(new Name(this, NameType.Variable));
+            Target = scope.ResolveName(new Name(this, NameType.Variable)); // TODO ar tikrai gerai, kad Variable?
         }
     }
 }

@@ -10,9 +10,12 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binar
 {
     public class MemberCallExp : MemberExp
     {
+
+        public CallExp CallExp => (CallExp) Right;
         public override void ResolveNames(Scope scope)
         {
             Left.ResolveNames(scope);
+            CallExp.Arguments?.ForEach(x => x.ResolveNames(scope));
         }
 
         public override Type CheckTypes()
@@ -27,7 +30,6 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binar
             }
             else
             {
-
                 while (refType != null)
                 {
                     var method = (Method)refType.TargetClass?.Body.Members.FirstOrDefault(x =>

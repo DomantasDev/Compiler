@@ -103,6 +103,8 @@ namespace AbstractSyntaxTree_Implementation
                     return CreateTokenNode<ReferenceType>(parameters);
                 case "ValueType":
                     return CreateTokenNode<ValueType>(parameters);
+                case "StringType":
+                    return CreateTokenNode<StringType>(parameters);
 
                 case "LiteralExp":
                     return CreateTokenNode<LiteralExp>(parameters);
@@ -155,10 +157,21 @@ namespace AbstractSyntaxTree_Implementation
                     return CreateReturn(parameters);
                 case "Cast":
                     return CreateCast(parameters);
+                case "Delete":
+                    return CreateDelete(parameters);
 
                 default:
                     throw new Exception($"Unrecognized class name: {className}");
             }
+        }
+
+        private Delete CreateDelete(List<Node> parameters)
+        {
+            parameters.CheckLength(1);
+            return new Delete
+            {
+               Expression = (Expression)parameters[0]
+            };
         }
 
         private MemberExp CreateMemberExp(List<Node> parameters)

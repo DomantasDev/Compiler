@@ -1,5 +1,6 @@
 ﻿using System;
 using AbstractSyntaxTree_Implementation.ResolveNames;
+using CodeGeneration.CodeGeneration;
 using Common;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.Types
@@ -23,7 +24,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.Types
 
         protected void TypeMismatch(Type expected, Type got)
         {
-            $"Type mismatch. Expected {expected.Value} got {got.Value}".RaiseError(expected.Line);
+            $"Type mismatch. Expected {expected.Value} got {got.Value}".RaiseError(got.Line);
         }
 
         public bool IsArith()
@@ -40,5 +41,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.Types
         {
             return this is ValueType;
         }
+
+        public abstract PrimitiveType GetPrimitiveType();
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using AbstractSyntaxTree_Implementation.ResolveNames;
+using CodeGeneration.CodeGeneration;
 
 namespace AbstractSyntaxTree_Implementation.Nodes.Types
 {
@@ -16,7 +17,10 @@ namespace AbstractSyntaxTree_Implementation.Nodes.Types
         public override void IsCompatible(Type other)
         {
             if (!(other is ReferenceType otherRefType))
+            {
+                TypeMismatch(this, other);
                 return;
+            }
 
             do
             {
@@ -26,6 +30,12 @@ namespace AbstractSyntaxTree_Implementation.Nodes.Types
                 otherRefType = ((Class)otherRefType.Target).Extends;
             } while (otherRefType != null);
             
+
+        }
+
+        public override PrimitiveType GetPrimitiveType()
+        {
+            throw new Exception("bad stuff");
         }
     }
 }

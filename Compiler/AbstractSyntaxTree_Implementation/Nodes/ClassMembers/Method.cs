@@ -94,7 +94,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
         public override void GenerateCode(CodeWriter w)
         {
             w.PlaceLabel(StartLabel);
-            var localVariables = NumLocals - Parameters?.Count ?? 0;
+            var localVariables = NumLocals - (Parameters?.Count ?? 0);
             if (localVariables > 0)
                 w.Write(Instr.I_ALLOC_S, localVariables);
             Body.GenerateCode(w);
