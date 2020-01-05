@@ -15,7 +15,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binar
         public override Type CheckTypes()
         {
             var varExp = (VariableExp)Right;
-            Type = varExp.CheckTypes();
+            
             var leftType = Left.CheckTypes();
 
             if (!(leftType is ReferenceType refType))
@@ -38,7 +38,8 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binar
                     else
                     {
                         varExp.Target = variable;
-                        return variable.Type;
+                        Type = varExp.Type = variable.Type;
+                        return Type;
                     }
                 }
 

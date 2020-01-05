@@ -27,7 +27,7 @@ namespace AbstractSyntaxTree_Implementation.ResolveNames
         public void Add(Name name, Node node)
         {
             if(!_members.TryAdd(name, node))
-                $"Duplicate name: \"{name}\"".RaiseError(name.Line);
+                $"Duplicate name: \"{name.Value}\"".RaiseError(name.Line);
         }
 
         public Node ResolveName(Name name)

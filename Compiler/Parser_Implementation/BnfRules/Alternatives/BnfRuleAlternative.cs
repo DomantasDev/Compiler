@@ -27,7 +27,6 @@ namespace Parser_Implementation.BnfRules.Alternatives
         {
             var results = new List<IndexedItem<ExpectResult>>(BnfRules.Count);
             var checkpoint = LexemeSource.SetCheckpoint();
-            
 
             for (var i = 0; i < BnfRules.Count; i++)
             {
@@ -39,10 +38,14 @@ namespace Parser_Implementation.BnfRules.Alternatives
                     continue;
                 }
 
+                var temp = _repetitionSucceeded; 
                 var result = BnfRules[i].Expect();
+                _repetitionSucceeded = temp;
+
                 if (!result.Success)
                 {
                     LexemeSource.RevertCheckPoint(checkpoint);
+
                     return new ExpectResult(false);
                 }
 
@@ -85,6 +88,11 @@ namespace Parser_Implementation.BnfRules.Alternatives
             if (!_repetitions.Any() && paramGroups.All(p => p.Count <= 1))
             {
                 var parameters = paramGroups.Select(p => p.FirstOrDefault()).ToList();
+
+                if (parameters.Count == 2 && parameters[1] == null && MetaData.Class == "Assign")
+                {
+
+                }
                 newNode = NodeFactory.CreateNode(MetaData.Class, parameters);
             }
             else
@@ -190,8 +198,11 @@ namespace Parser_Implementation.BnfRules.Alternatives
             {
                 var firstParamGroup = MetaData.ParamGroups.FirstOrDefault()?.Params;
 
-                if(firstParamGroup.Any())
+                if (firstParamGroup.Any())
+                {
                     return results[firstParamGroup.First()]; // return @x
+                }
+
                 return new ExpectResult(true); // return null if @
             }
 

@@ -26,7 +26,16 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements
         public override void GenerateCode(CodeWriter w)
         {
             var loop = FindAncestor<Loop>();
-            w.Write(Instr.I_JMP, loop.EndLabel);
+            switch (TokenType)
+            {
+                case "KW_BREAK":
+                    w.Write(Instr.I_JMP, loop.EndLabel);
+                    break;
+                case "KW_CONTINUE":
+                    w.Write(Instr.I_JMP, loop.StartLabel);
+                    break;
+            }
+            
         }
     }
 }

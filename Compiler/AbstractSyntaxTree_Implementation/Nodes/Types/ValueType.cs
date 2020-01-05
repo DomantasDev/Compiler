@@ -18,6 +18,21 @@ namespace AbstractSyntaxTree_Implementation.Nodes.Types
             }
         }
 
+        public override void IsEquatable(Type other)
+        {
+            if (!(other is ValueType otherValueType) || otherValueType.Value != Value)
+            {
+                EqualityTypeMismatch(this, other);
+                return;
+            }
+
+            if (otherValueType.Value == "null")
+            {
+                TypeMismatch(this, other);
+                return;
+            }
+        }
+
         public override PrimitiveType GetPrimitiveType()
         {
             switch (Value)

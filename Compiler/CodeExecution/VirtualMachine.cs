@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using CodeGeneration.CodeGeneration;
 using Common;
 
@@ -10,7 +11,7 @@ namespace CodeExecution
 {
     public class VirtualMachine
     {
-        private readonly int[] _memory = new int[4096];
+        private readonly int[] _memory = new int[8192];
         private int IP;
         private int SP;
         private int SFP;
@@ -18,18 +19,22 @@ namespace CodeExecution
         private int HP;
         private bool _running;
 
+        private Random _random;
+
         private MemoryAllocator _allocator;
 
         public VirtualMachine(int[] code)
         {
             code.CopyTo(_memory,0);
             IP = 1;
-            SP = 1024;
-            SFP = 1024;
-            HP = 2048;
-            HFP = 2048;
+            SP = 2048;
+            SFP = 2048;
+            HP = 4096;
+            HFP = 4096;
             _running = true;
             _allocator = new MemoryAllocator(_memory);
+
+            _random = new Random(); 
         }
 
         public void Execute()
@@ -39,12 +44,11 @@ namespace CodeExecution
                 ExecuteOne();
             }
 
-            Console.WriteLine($"ProgramResult = {Pop()}");
+            //Console.WriteLine(Pop());
         }
 
         private void ExecuteOne()
         {
-
             var cmd = Read();
             switch ((Instr)cmd)
             {
@@ -166,17 +170,31 @@ namespace CodeExecution
                     SetAddress();
                     break;
                 case Instr.I_GET_C:
+                    if(HFP == 0)
+                        throw new NullReferenceException();
                     Push(HFP);
                     break;
                 case Instr.I_GET_L:
                     Push(_memory[SFP + Read()]);
                     break;
                 case Instr.I_GET_H:
-                    Push(_memory[Pop() + Read()]);
+                    GetObjectField();
                     break;
 
                 case Instr.I_WRITE:
                     Write(Read());
+                    break;
+                case Instr.I_SLEEP:
+                    Thread.Sleep(Pop());
+                    break;
+                case Instr.I_RAND_INT:
+                    Push(_random.Next(Pop()));
+                    break;
+                case Instr.I_CLEAR:
+                    Console.Clear();
+                    break;
+                case Instr.I_GET_KEY:
+                    GetKey();
                     break;
 
 
@@ -206,6 +224,26 @@ namespace CodeExecution
             //    Console.WriteLine($"{_memory[2048 + i].ToString().PadLeft(10)}");
             //}
             //Console.WriteLine(new string('-', 30));
+        }
+
+        private void GetObjectField()
+        {
+            var address = Pop();
+            if(address == 0)
+                throw  new NullReferenceException();
+            Push(_memory[address + Read()]);
+        }
+
+        private void GetKey()
+        {
+            if (Console.KeyAvailable)
+            {
+                var key = Console.ReadKey(true).Key;
+                Push((int)key);
+                return;
+            }
+
+            Push(0);
         }
 
         private void Write(int numArgs)
@@ -252,6 +290,8 @@ namespace CodeExecution
         private void SetAddress()
         {
             var address = Pop();
+            if (address == 0)
+                throw new NullReferenceException();
             var value = Pop();
             _memory[address] = value;
         }
@@ -259,6 +299,10 @@ namespace CodeExecution
         private void SetHeap(int slot)
         {
             var value = Pop();
+
+            if(HFP == 0)
+                throw new NullReferenceException();
+
             _memory[HFP + slot] = value;
         }
 
@@ -282,6 +326,8 @@ namespace CodeExecution
         private void VCall(int methodNumber, int numArgs)
         {
             var objectAddress = Pop();
+            if(objectAddress == 0)
+                throw new NullReferenceException();
 
             _memory[SP - numArgs - 5] = IP;    //IP
             _memory[SP - numArgs - 4] = SP - numArgs - 5;  // SP
@@ -315,13 +361,16 @@ namespace CodeExecution
                 _memory[address + i] = Read();
             }
 
-            _memory[stringLength + 1] = 0;
+            _memory[address + stringLength + 1] = 0;
             Push(address);
         }
 
         private void Delete()
         {
-            _allocator.Delete(Pop());
+            var address = Pop();
+            if(address == 0)
+                throw new NullReferenceException();
+            _allocator.Delete(address);
         }
 
         private void BinaryOp<T, RT>(Func<T> pop, Func<T, T, RT> operation, Action<RT> push)
@@ -336,7 +385,7 @@ namespace CodeExecution
         {
             T a = pop();
             var result = operation(a);
-            push(a);
+            push(result);
         }
 
         //private void NumericOp<T>(NumericOpType opType) where T : struct

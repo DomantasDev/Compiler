@@ -2,55 +2,490 @@ class Program
 {
     public int Main()
     {
-        Fibonacci counter := new Fibonacci();
-        int result := counter.Count(30);
-        return result;
+        Strings strings := new Strings();
+        strings.Init();
+
+        Board board := new Board();
+        int rowCount := 10;
+        int colCount := 6;
+        board.Init(rowCount, colCount, strings); 
+
+        Shape shape := new Line();
+        shape.Init();
+
+        int velX := 0;
+
+        int i := 0;
+        bool running := true;
+        while(running)
+        {
+            board.SetShape(shape, strings.occupied);
+
+            clearConsole;
+            board.Draw();
+
+            board.SetShape(shape, strings.free);
+
+            shape.offsetY := i;
+            int key := getKey;
+            if(key = 37)
+            {
+                velX := -1;
+                write velX;
+            }
+            else if(key = 39)
+            {
+                velX := 1;
+            }
+            shape.offsetX := shape.offsetX + velX;
+
+            ##write i, "\n";
+
+            if(board.IsCollision(shape))
+            {       
+                if(i = 1)
+                {
+                    running := false;
+                    write strings.gameOver;
+                    break;
+                }
+                shape.offsetY := shape.offsetY - 1;
+                shape.offsetX := shape.offsetX - velX;
+                board.SetShape(shape, strings.occupied);
+
+                board.CheckCompletedLines();
+
+                shape := new Line(); ## generate random shape
+                shape.Init();
+                i := 0;
+
+                ##write "when collision gets detected\n";
+
+                ## check for completed lines
+            }
+            else
+            {
+                board.SetShape(shape, strings.occupied);
+            }
+
+            velX := 0;
+
+            i := i + 1;
+            sleep 500;
+        }
+
+        return 0;
+    }
+
+}
+
+##-------------------------------------------SHAPES-------------------------------
+
+class Shape
+{
+    public int offsetX;
+    public int offsetY;
+
+    public void Init()
+    {   
+        write "SHIT";
+    }
+
+    public Point GetPoints()
+    {
+        write "SHIT";
+    }
+
+    public void Rotate()
+    {
+        write "SHIT";
     }
 }
 
-class Fibonacci
+class Line extends Shape
 {
-    public int Count(int x)
+    public int state;
+
+    public Point state1;
+    public Point state2;
+
+    public virtual void Init()
     {
-        if( x <= 0)
+        state := 0;
+        Point newPoint;
+
+        ##----state 1----------
+
+        state1 := new Point();
+        state1.Init(0, 0);
+
+        newPoint := new Point();
+        newPoint.Init(1, 0);
+        state1.Add(newPoint);
+
+        ##----state 2-------------
+
+        state2 := new Point();
+        state2.Init(0, 0);
+
+        newPoint := new Point();
+        newPoint.Init(0, 1);
+        state2.Add(newPoint);
+    }
+
+    public virtual Point GetPoints()
+    {
+        if(state = 0)
         {
-            return 0;
-        }
-        else if(x = 1)
-        {
-            return 1;
+            return state1;
         }
         else
         {
-            return Count(x - 1) + Count(x - 2);
+            return state2;
+        }
+    }
+
+    public virtual void Rotate()
+    {
+        if(state = 0)
+        {
+            state := 1;
+        }
+        else
+        {
+            state := 0;
         }
     }
 }
 
-class A
+##----------------------------------------------POINT-------------------------------------
+
+class Point
 {
-    public int A()
+    public int X;
+    public int Y;
+
+    public Point nextPoint;
+
+    public void Init(int x, int y)
     {
-        return 11;
+        X := x;
+        Y := y;
+
+        nextPoint := null;
     }
-    public int B(int x)
+
+    public void Add(Point newPoint)
     {
-        return x * x;
+        Point point := this;
+
+        while(point.nextPoint <> null)
+        {
+            point := point.nextPoint;    
+        }
+
+        point.nextPoint := newPoint;
     }
 }
 
-class B extends A
+##----------------------------------------------------BOARD---------------------------------------------------------------
+class Board
 {
-    public int X;
+    public Row firstRow;
+    public Strings strings;
 
-    public override int B(int x)
+    public int rowCount;
+    public int columnCount;
+
+    public int score;
+
+    public Tile GetTile(int row, int column)
     {
-        return 2222;
+        if(row >= rowCount)
+        {
+            write "nu ka cia blet darai, row: ", row, "\n";
+        }
+        return firstRow.GetRow(row).firstTile.GetTile(column);
     }
 
-    public A C()
+    public void Init(int rows, int columns, Strings s)
     {
-        X := 1234;
-        return new A();
+        score := 0;
+        rowCount := rows;
+        columnCount := columns;
+        strings := s;
+
+        firstRow := new Row();
+
+        int i := 0;
+        int j := 1;
+
+        while(i < rowCount)
+        {
+            Tile rootTile := new Tile();
+            rootTile.Init(strings.free);
+
+            j := 1;
+            while(j < columnCount)
+            {
+                Tile tile := new Tile();
+                tile.Init(strings.free);
+                rootTile.Add(tile);
+                j := j + 1;
+            }
+
+            if(i = 0)
+            {
+                firstRow.Init(rootTile);
+            }
+            else
+            {
+                Row row := new Row();
+                row.Init(rootTile);
+                firstRow.Add(row);
+            }
+            i := i + 1;
+        }
+    }
+
+    public void Draw()
+    {
+        Row row := firstRow;
+        Tile tile;
+
+        while(row <> null)
+        {
+            tile := row.firstTile;
+            while(tile <> null)
+            {
+                write tile.value;
+                tile := tile.nextTile;
+            }
+            write strings.newLine;
+            row := row.nextRow;
+        }
+        write strings.score, score;
+    }
+
+    public void SetShape(Shape shape, string value)
+    {
+        Point points := shape.GetPoints();
+        Tile tile;
+
+        while(points <> null)
+        {
+            tile := GetTile(points.Y + shape.offsetY, points.X + shape.offsetX);
+            tile.value := value;
+
+            points := points.nextPoint;
+        }
+    }
+
+    public bool IsCollision(Shape shape)
+    {
+        Point points := shape.GetPoints();
+        Tile tile;
+
+        ##write "\tsearching for collision\n";
+
+        while(points <> null)
+        {
+            if(points.Y + shape.offsetY >= rowCount)
+            {
+                ##write "Colision found ", points.Y + shape.offsetY ,"\n";
+                return true;
+            }
+            tile := GetTile(points.Y + shape.offsetY, points.X + shape.offsetX);
+
+            ##write "\ty: ", points.Y;
+
+            if(tile.value = strings.occupied)
+            {
+                ##write "Colision found\n";
+                return true;
+            }
+            points := points.nextPoint;
+        }
+        ##write "\tcollision not found\n";
+        return false;
+    }
+
+    public void CheckCompletedLines()
+    {
+        Row row := firstRow;
+        bool foundCompleted;
+        int currentRow := 0;
+
+        while(row <> null)
+        {
+            foundCompleted := true;
+            Tile tile := row.firstTile;
+
+            while(tile <> null)
+            {
+                ##write "row: ", currentRow, " value: ", tile.value, "\n";
+                if(tile.value = strings.free)
+                {
+                   
+                    foundCompleted := false;
+                    break;
+                }
+                tile := tile.nextTile;
+            }
+            if(foundCompleted)
+            {
+                ##write "found completed: ", currentRow, "\n";
+                score := score + 100;
+                MoveLinesDown(currentRow);
+                CheckCompletedLines();
+                break;
+            }
+            row := row.nextRow;
+            currentRow := currentRow + 1;
+        }
+
+        ##write "no completed lines\n";
+    }
+
+    public void MoveLinesDown(int completedLine)
+    {
+        completedLine := completedLine - 1;
+        
+        int i := 0;
+        while(completedLine >= 0)
+        {
+            Row row := firstRow.GetRow(completedLine);
+            Row nextRow := row.nextRow;
+
+            if(nextRow = null)
+            {
+                break;
+            }
+            
+            Tile tile := row.firstTile;
+            Tile tileBellow := nextRow.firstTile;
+            while(tile <> null)
+            {
+                tileBellow.value := tile.value;
+
+                tile := tile.nextTile;
+                tileBellow := tileBellow.nextTile;
+            }
+
+            completedLine := completedLine - 1;
+        }
+
+        Tile tilea := firstRow.firstTile;
+
+        while(tilea <> null)
+        {
+            tilea.value := strings.free;
+            tilea := tilea.nextTile;
+        }
+    }
+}
+
+##------------------------------------------------------ROW------------------------------------
+class Row
+{
+    public Tile firstTile;
+
+    public Row nextRow;
+
+    public void Init(Tile tile)
+    {
+        firstTile := tile;
+        nextRow := null;
+    }
+
+    public void Add(Row newRow)
+    {
+        Row row := this;
+
+        while(row.nextRow <> null)
+        {
+            row := row.nextRow;    
+        }
+
+        row.nextRow := newRow;
+    }
+
+    public Row GetRow(int rowIndex)
+    {
+        Row row := this;
+        int i := 0;
+
+        while(i < rowIndex)
+        {
+            row := row.nextRow;
+            i := i + 1;
+        }
+
+        return row;
+    }
+}
+
+##------------------------------------------------------------TILE-----------------------
+class Tile
+{
+    public bool occupied;
+    public string value;
+
+    public Tile nextTile;
+
+    public void Init(string s)
+    {
+        value := s;
+        occupied := false;
+        nextTile := null;
+    }
+
+    public void Add(Tile newTile)
+    {
+        Tile tile := this;
+
+        while(tile.nextTile <> null)
+        {
+            tile := tile.nextTile;    
+        }
+
+        tile.nextTile := newTile;
+    }
+
+    public Tile GetTile(int column)
+    {
+        Tile tile := this;
+        int i := 0;
+
+        while(i < column)
+        {
+            tile := tile.nextTile;
+            i := i + 1;
+        }
+
+        return tile;
+    }
+}
+
+##---------------------------------------string constants-------------------
+class Strings
+{
+    public string borderH;
+    public string borderV;
+    public string free;
+    public string occupied;
+    public string newLine;
+    public string score;
+    public string gameOver;
+
+    public void Init()
+    {
+        borderV := "|";
+        borderH := "";
+        free := ".";
+        occupied := "0";
+        newLine := "\n";
+        score := "score: ";
+        gameOver := "\nGAME OVER";
     }
 }

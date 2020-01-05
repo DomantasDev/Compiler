@@ -14,6 +14,17 @@ namespace AbstractSyntaxTree_Implementation.Nodes.Types
                 TypeMismatch(this, other);
         }
 
+        public override void IsEquatable(Type other)
+        {
+            if (other.Value == "null")
+                return;
+
+            if (!(other is StringType otherStringType))
+            {
+                TypeMismatch(this, other);
+            }
+        }
+
         public override PrimitiveType GetPrimitiveType()
         {
             return PrimitiveType.String;

@@ -23,18 +23,20 @@
 <PARAMS> ::= [NodeList]@0 2 <PARAM> {*<COMMA> <PARAM>}
 <PARAM> ::= [Parameter]@0 @1 <TYPE> *<IDENT>
 
-<STMT> ::= <BREAK_STMT> *<SEMICOLON> | <RETURN_STMT> *<SEMICOLON> | <CONTINUE_STMT> *<SEMICOLON> | <ASSIGN_STMT> *<SEMICOLON> | <LOCAL_VARIABLE_DECL_STMT> *<SEMICOLON> | <EXPR_STMT> *<SEMICOLON> | <WRITE_STMT> *<SEMICOLON> | <READ_STMT> *<SEMICOLON> | <WHILE_STMT> | <IF_STMT> | <DELETE> *<SEMICOLON>
+<STMT> ::= <BREAK_STMT> *<SEMICOLON> | <RETURN_STMT> *<SEMICOLON> | <CONTINUE_STMT> *<SEMICOLON> | <ASSIGN_STMT> *<SEMICOLON> | <LOCAL_VARIABLE_DECL_STMT> *<SEMICOLON> | <EXPR_STMT> *<SEMICOLON> | <WRITE_STMT> *<SEMICOLON> | <READ_STMT> *<SEMICOLON> | <WHILE_STMT> | <IF_STMT> | <DELETE> *<SEMICOLON> | <SLEEP> *<SEMICOLON> | <CLEAR_CONSOLE> *<SEMICOLON>
 <EXPR_STMT> ::= [ExpressionStatement]@0 <EXPR>
 <RETURN_STMT> ::= [Return]@1 *<KW_RETURN> <EXPR> |[Return]@ *<KW_RETURN>
 <BREAK_STMT> ::= [LoopControl]@0 *<KW_BREAK>
 <CONTINUE_STMT> ::= [LoopControl]@0 *<KW_CONTINUE>
-<ASSIGN_STMT> ::= [Assign]@0 @2 *<IDENT> *<OP_ASSIGN> <EXPR> | [Assign]@2 @4 *<THIS> *<DOT_OP> *<IDENT> *<OP_ASSIGN> <EXPR> | [Assign]@0 @2 <DOT> *<OP_ASSIGN> <EXPR>
+<ASSIGN_STMT> ::= [Assign]@0 @2 *<IDENT> *<OP_ASSIGN> <EXPR> | [Assign]@0 @2 <DOT> *<OP_ASSIGN> <EXPR>
 <LOCAL_VARIABLE_DECL_STMT> ::= [LocalVariableDeclaration]@0 @1 @3 <TYPE> *<IDENT> *<OP_ASSIGN> <EXPR> | [LocalVariableDeclaration]@0 @1 @ <TYPE> *<IDENT>
 <WHILE_STMT> ::= [Loop]@2 @4 *<KW_WHILE> *<PAREN_O> <EXPR> *<PAREN_C> <BODY>
 <IF_STMT> ::= [If]@0 @1 @2 @3 *<KW_IF> <CONDITION> <BODY> <ELSE> | [If]@0 @1 @2 @ *<KW_IF> <CONDITION> <BODY>
 <CONDITION> ::= @1 *<PAREN_O> <EXPR> *<PAREN_C>
 <ELSE> ::= [Else]@1 @ *<KW_ELSE> <IF_STMT> | [Else]@ @1 *<KW_ELSE> <BODY>
 <DELETE> ::= [Delete]@1 *<KW_DELETE> <EXPR>
+<SLEEP> ::= [Sleep]@1 *<KW_SLEEP> <EXPR>
+<CLEAR_CONSOLE> ::= [ClearConsole]@0 *<KW_CLEAR_CONSOLE>
 
 <WRITE_STMT> ::= [Write]@1 *<KW_WRITE> <ARGS>
 <READ_STMT> ::= [Read]@1 *<KW_READ> <VAR_LIST>
@@ -48,7 +50,7 @@
 <ADD> ::= L[ArithExp]@0 @1 @2 <MULT> {*<ADD_OP> <MULT>}
 <MULT> ::= L[ArithExp]@0 @1 @2 <DOT> {*<MULT_OP> <DOT>} 
 <DOT> ::= L[MemberExp]@0 @1 @2 <PRIMARY> {*<DOT_OP> <MEMBER_ACCESS>}
-<PRIMARY> ::= <METHOD_CALL> | [VariableExp]@0 <VAR> | [LiteralExp]@0 <NUMBER> | [LiteralExp]@0 *<BOOL> | [LiteralExp]@0 *<STRING> | <PAREN> | <NEG> | <NOT> | <OBJ_CREATION> | <CAST> | [LiteralExp]@0 *<NULL> | [LiteralExp]@0 *<THIS> | [LiteralExp]@0 *<BASE>
+<PRIMARY> ::= <METHOD_CALL> | [VariableExp]@0 <VAR> | [LiteralExp]@0 <NUMBER> | [LiteralExp]@0 *<BOOL> | [LiteralExp]@0 *<STRING> | <PAREN> | <NEG> | <NOT> | <OBJ_CREATION> | <CAST> | [LiteralExp]@0 *<NULL> | [LiteralExp]@0 *<THIS> | [LiteralExp]@0 *<BASE> | <GET_KEY> | <RAND_INT>
 
 <MEMBER_ACCESS> ::= <METHOD_CALL> | [VariableExp]@0 *<IDENT>
 <PAREN> ::= @1 *<PAREN_O> <EXPR> *<PAREN_C>
@@ -56,9 +58,10 @@
 <NOT> ::= [UnarylogicExp]@0 @1 *<OP_NOT> <EXPR>
 <CAST> ::= [Cast]@1 @3 *<PAREN_O> <TYPE> *<PAREN_C> <EXPR>
 <OBJ_CREATION> ::= [ObjCreationExp]@1 @2 *<KW_NEW> <TYPE> <ARG_LIST>
-<METHOD_CALL> ::= [CallExp]@0 @1 <METHOD_NAME> <ARG_LIST>
+<METHOD_CALL> ::= [CallExp]@0 @1 *<IDENT> <ARG_LIST>
 <ARG_LIST> ::= @1 *<PAREN_O> <ARGS> *<PAREN_C> | @ *<PAREN_O> *<PAREN_C>
 <ARGS> ::= [NodeList]@0 2 <EXPR> {*<COMMA> <EXPR>}
-<METHOD_NAME> ::= *<IDENT>
 <VAR> ::= *<IDENT>
 <NUMBER> ::= *<FLOAT> | *<INT>
+<GET_KEY> ::= [GetKey]@0 *<KW_GET_KEY>
+<RAND_INT> ::= [RandInt]@1 *<KW_RAND_INT> <EXPR>

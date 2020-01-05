@@ -16,23 +16,13 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions.Binar
 
             Type = new ValueType
             {
-                Value = "bool"
-            };
-
-            if (leftType.IsEquatable())
-            {
-                leftType.IsEqual(rightType);
-            }
-            else
-            {
-                $"Values: \"{leftType.Value}\", \"{rightType.Value}\", cannot be checked for equality".RaiseError(Operator.Line);
-            }
-
-            return new ValueType
-            {
                 Value = "bool",
                 Line = Operator.Line
             };
+
+            leftType.IsEquatable(rightType);
+
+            return Type;
         }
     }
 }

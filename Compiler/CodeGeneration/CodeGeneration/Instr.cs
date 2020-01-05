@@ -63,6 +63,10 @@
 
         I_WRITE = 100,
         I_READ,
+        I_SLEEP,
+        I_RAND_INT,
+        I_CLEAR,
+        I_GET_KEY,
 
         //for disassembler only
         I_BEGIN_VTABLE = 1000

@@ -23,41 +23,64 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
 
         public override Type CheckTypes()
         {
-            if (TokenType == "STRING")
+            switch (TokenType)
             {
-                Type = new StringType
-                {
-                    Value = TokenType.ToLower(),
-                    Line = Line
-                };
+                case "THIS":
+                    Type = new ReferenceType
+                    {
+                        Value = FindAncestor<Class>().Name.Value
+                    };
+                    break;
+                case "NULL":
+                    Type = new ReferenceType
+                    {
+                        Value = TokenType.ToLower()
+                    };
+                    break;
+                case "STRING":
+                    Type = new StringType
+                    {
+                        Value = TokenType.ToLower()
+                    };
+                    break;
+                default:
+                    Type = new ValueType
+                    {
+                        Value = TokenType.ToLower()
+                    };
+                    break;
             }
-            else
-            {
-                Type = new ValueType
-                {
-                    Value = TokenType.ToLower(),
-                    Line = Line
-                };
-            }
-            
 
+            Type.Line = Line;
             return Type;
         }
 
         public override void GenerateCode(CodeWriter w)
         {
-            if (TokenType == "STRING")
+            switch (TokenType)
             {
-                w.Write(Instr.I_ALLOC_HS, Value.Length - 2);
-                var ints = Value.Skip(1).SkipLast(1).Select(x => (int) x);
-                foreach (var i in ints)
+                case "THIS":
+                    w.Write(Instr.I_GET_C);
+                    break;
+                case "NULL":
+                    w.Write(Instr.I_PUSH, 0);
+                    break;
+
+                case "STRING":
                 {
-                    w.Write(i);
+                    w.Write(Instr.I_ALLOC_HS, Value.Length - 2);
+                    var ints = Value.Skip(1).SkipLast(1).Select(x => (int) x);
+                    foreach (var i in ints)
+                    {
+                        w.Write(i);
+                    }
+
+                    break;
                 }
-            }
-            else
-            {
-                w.Write(Instr.I_PUSH, GetInt());
+
+                default:
+                    w.Write(Instr.I_PUSH, GetInt());
+                    break;
             }
         }
 

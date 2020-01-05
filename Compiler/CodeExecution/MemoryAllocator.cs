@@ -17,7 +17,7 @@ namespace CodeExecution
             set => _memory[_offset] = value;
         }
 
-        public MemoryAllocator(int[] memory, int offset = 2048, int heapSize = 1024)
+        public MemoryAllocator(int[] memory, int offset = 4096, int heapSize = 4096)
         {
             _memory = memory;
             _offset = offset;

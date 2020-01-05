@@ -27,6 +27,11 @@ namespace AbstractSyntaxTree_Implementation.Nodes.Types
             $"Type mismatch. Expected {expected.Value} got {got.Value}".RaiseError(got.Line);
         }
 
+        protected void EqualityTypeMismatch(Type a, Type b)
+        {
+            $"Values: \"{a.Value}\", \"{b.Value}\", cannot be checked for equality".RaiseError(Line);
+        }
+
         public bool IsArith()
         {
             return Value == "int" || Value == "float";
@@ -37,10 +42,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.Types
             return IsArith();
         }
 
-        public bool IsEquatable()
-        {
-            return this is ValueType;
-        }
+        public abstract void IsEquatable(Type other);
 
         public abstract PrimitiveType GetPrimitiveType();
     }

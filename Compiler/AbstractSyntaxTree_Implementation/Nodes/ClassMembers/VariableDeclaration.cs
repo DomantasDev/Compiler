@@ -34,7 +34,8 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers
 
         public override Type CheckTypes()
         {
-            Type.IsCompatible(Expression?.CheckTypes());
+            if (Expression != null)
+                Type.IsCompatible(Expression.CheckTypes());
 
             return null;
         }

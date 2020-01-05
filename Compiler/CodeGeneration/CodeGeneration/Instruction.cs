@@ -69,6 +69,10 @@ namespace CodeGeneration.CodeGeneration
 
             AddInstruction(Instr.I_WRITE, 1); // num args
             AddInstruction(Instr.I_READ); // TODO
+            AddInstruction(Instr.I_SLEEP); // pops sleep time in ms
+            AddInstruction(Instr.I_RAND_INT); // pops max value
+            AddInstruction(Instr.I_CLEAR);
+            AddInstruction(Instr.I_GET_KEY); 
 
             AddInstruction(Instr.I_EXIT);
             //AddInstruction(Instr.I_FLOAT_PUSH, 1);

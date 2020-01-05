@@ -1,0 +1,28 @@
+class Program 
+{
+    public int Main()
+    {
+        Fibonacci counter := new Fibonacci();
+        int result := counter.Count(32);
+        return result;
+    }
+}
+
+class Fibonacci
+{
+    public int Count(int x)
+    {
+        if( x <= 0)
+        {
+            return 0;
+        }
+        else if(x = 1)
+        {
+            return 1;
+        }
+        else
+        {
+            return Count(x - 1) + Count(x - 2);
+        }
+    }
+}

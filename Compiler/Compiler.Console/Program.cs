@@ -45,6 +45,8 @@ namespace ConsoleApp
                     root.GenerateCode(codeWriter);
                     codeWriter.Disassemble();
 
+                    Console.WriteLine($"code length: {codeWriter.Code.Count}");
+
                     var vm = new VirtualMachine(codeWriter.Code.ToArray());
                     vm.Execute();
                 }

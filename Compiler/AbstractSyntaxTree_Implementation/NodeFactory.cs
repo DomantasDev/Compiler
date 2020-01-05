@@ -157,12 +157,40 @@ namespace AbstractSyntaxTree_Implementation
                     return CreateReturn(parameters);
                 case "Cast":
                     return CreateCast(parameters);
+
                 case "Delete":
                     return CreateDelete(parameters);
+                case "Sleep":
+                    return CreateSleep(parameters);
+                case "RandInt":
+                    return CreateRandInt(parameters);
+                case "ClearConsole":
+                    return CreateTokenNode<ClearConsole>(parameters);
+                case "GetKey":
+                    return CreateTokenNode<GetKey>(parameters);
+
 
                 default:
                     throw new Exception($"Unrecognized class name: {className}");
             }
+        }
+
+        private RandInt CreateRandInt(List<Node> parameters)
+        {
+            parameters.CheckLength(1);
+            return new RandInt
+            {
+                Expression = (Expression)parameters[0]
+            };
+        }
+
+        private Sleep CreateSleep(List<Node> parameters)
+        {
+            parameters.CheckLength(1);
+            return new Sleep
+            {
+                Expression = (Expression)parameters[0]
+            };
         }
 
         private Delete CreateDelete(List<Node> parameters)
