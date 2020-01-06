@@ -1,0 +1,30 @@
+class Program
+{
+    public void Main()
+    {
+        Operation x := new CoolOperation();
+        x.Operate();
+    }
+}
+
+class Operation
+{
+    public void Operate()
+    {
+        write "Operate called\n";
+        OnOperate();
+    }
+
+    public void OnOperate()
+    {
+        write "Base OnOperate called\n";
+    }
+}
+
+class CoolOperation extends Operation
+{
+    public void OnOperate()
+    {
+        write "Derived OnOperate called\n";
+    }
+}

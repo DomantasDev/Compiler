@@ -31,7 +31,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.Types
                 if (Value == otherRefType.Value)
                     return;
 
-                otherRefType = ((Class)otherRefType.Target).Extends;
+                otherRefType = otherRefType.TargetClass?.Extends;
             } while (otherRefType != null);
 
             TypeMismatch(this, other);

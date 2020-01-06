@@ -30,16 +30,17 @@ namespace AbstractSyntaxTree_Implementation.ResolveNames
                 $"Duplicate name: \"{name.Value}\"".RaiseError(name.Line);
         }
 
-        public Node ResolveName(Name name)
+        public Node ResolveName(Name name, bool suppressError = false)
         {
             Node result;
             if (_members.TryGetValue(name, out result))
                 return result;
 
             if(ParentScope != null)
-                return ParentScope?.ResolveName(name);
+                return ParentScope?.ResolveName(name, suppressError);
 
-            $"Undeclared variable: \"{name.Value}\"".RaiseError(name.Line);
+            if(!suppressError)
+                $"Undeclared variable: \"{name.Value}\"".RaiseError(name.Line);
 
             return null;
         }
@@ -55,10 +56,21 @@ namespace AbstractSyntaxTree_Implementation.ResolveNames
         //    }
         //}
 
-        public ClassMember ResolveForClass(string className, Name memberName)
+        public static Node ResolveForClass(string className, Name memberName)
         {
             var classNode = ClassTable[className];
-            return (ClassMember)classNode.Scope.ResolveName(memberName);
+            while (classNode != null)
+            {
+                var member = classNode.Scope.ResolveName(memberName, true);
+                if (member != null)
+                    return member;
+
+                classNode = classNode.Extends?.TargetClass;
+            }
+
+            $"Undeclared variable: \"{memberName.Value}\"".RaiseError(memberName.Line);
+
+            return null;
         }
 
     }

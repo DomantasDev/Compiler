@@ -1,15 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Text;
-using AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions;
-using AbstractSyntaxTree_Implementation.Nodes.Types;
+﻿using AbstractSyntaxTree_Implementation.Nodes.Types;
 using AbstractSyntaxTree_Implementation.ResolveNames;
 using CodeGeneration.CodeGeneration;
 using Common;
 using Type = AbstractSyntaxTree_Implementation.Nodes.Types.Type;
 
-namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements
+namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
 {
-    public class RandInt : Statement
+    public class RandInt : Expression
     {
         public Expression Expression { get; set; }
 

@@ -16,11 +16,16 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
 
         public override void ResolveNames(Scope scope)
         {
-            Target = scope.ResolveName(new Name(this, NameType.Variable));
+            Target = scope.ResolveName(new Name(this, NameType.Variable), true);
         }
 
         public override Type CheckTypes()
         {
+            if (Target == null)
+            {
+                var parentClass = FindAncestor<Class>();
+                Target = Scope.ResolveForClass(parentClass.Name.Value, new Name(this, NameType.Variable));
+            }
             Type = (Type)Target?.GetType().GetProperty("Type")?.GetMethod.Invoke(Target, null);
             return Type;
         }

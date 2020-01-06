@@ -236,6 +236,12 @@ namespace CodeExecution
 
         private void GetKey()
         {
+            //int key = 0;
+            //while (Console.KeyAvailable)
+            //{
+            //    key = (int)Console.ReadKey(true).Key;
+            //}
+
             if (Console.KeyAvailable)
             {
                 var key = Console.ReadKey(true).Key;
@@ -349,9 +355,15 @@ namespace CodeExecution
             //_code[HP] = vTableAddress;
             //Push(HP);
             //HP += size;
+
+
             var address = _allocator.Allocate(size);
             _memory[address] = vTableAddress;
             Push(address);
+            if (size == 7)
+            {
+
+            }
         }
         private void AllocString(int stringLength)
         {

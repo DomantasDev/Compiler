@@ -26,20 +26,12 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements
 
         public override Type CheckTypes()
         {
-            Type type;
-            if (Variable is TokenNode tokenNode)
-            {
-                type = (Type)tokenNode.Target?.GetType().GetProperty("Type")?.GetMethod.Invoke(tokenNode.Target, null);
-            }
-            else if (Variable is MemberAccessExp memberAccess)
-            {
-                type = memberAccess.CheckTypes();
-            }
-            else
-            {
-                throw new Exception("bad stuff");
-            }
+            Type type = Variable.CheckTypes();
 
+            if (type == null)
+            {
+
+            }
             type?.IsCompatible(Expression.CheckTypes());
 
             return null;
@@ -56,7 +48,7 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements
                 w.Write(Instr.I_INT_ADD);
                 w.Write(Instr.I_SET_A);
             }
-            else if (Variable is TokenNode variable)
+            else if (Variable is VariableExp variable)
             {
                 switch (variable.Target)
                 {
@@ -72,6 +64,10 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Statements
                     //TODO add member access expression
 
                 }
+            }
+            else
+            {
+                throw new Exception("bad stuff");
             }
         }
     }

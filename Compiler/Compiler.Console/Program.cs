@@ -9,7 +9,6 @@ using Parser_Implementation;
 
 namespace ConsoleApp
 {
-    // sutvarkyt member access expr, if, ctor, (null meta true
     class Program
     {
         static void Main(string[] args)
@@ -18,7 +17,7 @@ namespace ConsoleApp
             //    .GetLexemes(File.ReadAllText("../../../DynamicLexer/code.txt"));
             //Print(lexemes);
 
-            var code = "../../../DynamicLexer/code.txt";
+            var code = "../../../DynamicLexer/Tetris.txt";
 
             ErrorWriter.File = code;
 
@@ -36,16 +35,16 @@ namespace ConsoleApp
                 var scope = new Scope(null);
                 root.ResolveNames(scope);
 
-                if (ErrorWriter.ErrorCount == 0)
+                //if (ErrorWriter.ErrorCount == 0)
                     root.CheckTypes();
 
                 if (ErrorWriter.ErrorCount == 0)
                 {
                     var codeWriter = new CodeWriter();
                     root.GenerateCode(codeWriter);
-                    codeWriter.Disassemble();
+                    //codeWriter.Disassemble();
 
-                    Console.WriteLine($"code length: {codeWriter.Code.Count}");
+                    //Console.WriteLine($"code length: {codeWriter.Code.Count}");
 
                     var vm = new VirtualMachine(codeWriter.Code.ToArray());
                     vm.Execute();

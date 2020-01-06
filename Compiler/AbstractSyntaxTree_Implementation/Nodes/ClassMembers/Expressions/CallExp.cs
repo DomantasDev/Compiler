@@ -22,13 +22,18 @@ namespace AbstractSyntaxTree_Implementation.Nodes.ClassMembers.Expressions
 
         public override void ResolveNames(Scope scope)
         {
-            TargetMethod = (Method)scope.ResolveName(new Name(MethodName, NameType.Method));
+            TargetMethod = (Method)scope.ResolveName(new Name(MethodName, NameType.Method), true);
             Arguments?.ForEach(x => x.ResolveNames(scope));
             //handle method name
         }
 
         public override Type CheckTypes()
         {
+            if (TargetMethod == null)
+            {
+                var parentClass = FindAncestor<Class>();
+                TargetMethod = (Method)Scope.ResolveForClass(parentClass.Name.Value, new Name(MethodName, NameType.Method));
+            }
             if (TargetMethod != null)
             {
                 Type = TargetMethod.ReturnType;

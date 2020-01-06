@@ -1,19 +1,27 @@
 class Program 
 {
+    public int velX;
+    public bool rotating;
+    public Shape shape;
+
     public int Main()
     {
         Strings strings := new Strings();
         strings.Init();
+
+        ShapeFactory factory := new ShapeFactory();
 
         Board board := new Board();
         int rowCount := 10;
         int colCount := 6;
         board.Init(rowCount, colCount, strings); 
 
-        Shape shape := new Line();
+        shape := new Line();
         shape.Init();
+        shape.offsetX := colCount / 2 - 1;
 
-        int velX := 0;
+        velX := 0;
+        rotating := false;
 
         int i := 0;
         bool running := true;
@@ -26,20 +34,14 @@ class Program
 
             board.SetShape(shape, strings.free);
 
-            shape.offsetY := i;
-            int key := getKey;
-            if(key = 37)
-            {
-                velX := -1;
-                write velX;
-            }
-            else if(key = 39)
-            {
-                velX := 1;
-            }
-            shape.offsetX := shape.offsetX + velX;
+            Move();
 
-            ##write i, "\n";
+            if(board.IsCollision(shape))
+            {
+                Revert();
+            }
+
+            shape.offsetY := i;
 
             if(board.IsCollision(shape))
             {       
@@ -50,33 +52,77 @@ class Program
                     break;
                 }
                 shape.offsetY := shape.offsetY - 1;
-                shape.offsetX := shape.offsetX - velX;
                 board.SetShape(shape, strings.occupied);
 
                 board.CheckCompletedLines();
 
-                shape := new Line(); ## generate random shape
+                delete shape;
+
+                shape := factory.GetShape();
                 shape.Init();
+                shape.offsetX := colCount / 2 - 1;
                 i := 0;
-
-                ##write "when collision gets detected\n";
-
-                ## check for completed lines
-            }
-            else
-            {
-                board.SetShape(shape, strings.occupied);
             }
 
             velX := 0;
+            rotating := false;
 
             i := i + 1;
-            sleep 500;
+            sleep 1000;
         }
 
         return 0;
     }
 
+    public void Move()
+    {
+            int key := getKey;
+            if(key = 37)
+            {
+                velX := -1;
+            }
+            else if(key = 39)
+            {
+                velX := 1;
+            }
+            else if(key = 38)
+            {
+                rotating := true;
+                shape.Rotate();
+            }
+            shape.offsetX := shape.offsetX + velX;
+    }
+
+    public void Revert()
+    {
+        shape.offsetX := shape.offsetX - velX;
+        if(rotating)
+        {
+            shape.RevertRotation();
+        }
+    }
+
+}
+
+class ShapeFactory
+{
+    public Shape GetShape()
+    {
+        Shape shape := null;
+
+        int rand := randInt 2;
+        if(rand = 0)
+        {
+            shape := new Line();
+        }
+        else if(rand = 1)
+        {
+            shape := new Square();
+        }
+
+        shape.Init();
+        return shape;
+    }
 }
 
 ##-------------------------------------------SHAPES-------------------------------
@@ -85,6 +131,8 @@ class Shape
 {
     public int offsetX;
     public int offsetY;
+
+    public int a;
 
     public void Init()
     {   
@@ -100,6 +148,48 @@ class Shape
     {
         write "SHIT";
     }
+
+    public void RevertRotation()
+    {
+        write "SHIT";
+    }
+}
+
+class Square extends Shape
+{
+    public Point state;
+
+    public virtual void Init()
+    {
+        offsetY := 0;
+        offsetX := 0;
+
+        Point newPoint;
+
+        state := new Point();
+        state.Init(0, 0);
+
+        newPoint := new Point();
+        newPoint.Init(1, 0);
+        state.Add(newPoint);
+
+        newPoint := new Point();
+        newPoint.Init(0, 1);
+        state.Add(newPoint);
+
+        newPoint := new Point();
+        newPoint.Init(1, 1);
+        state.Add(newPoint);
+    }
+
+    public Point GetPoints()
+    {
+        return state;
+    }
+
+    public void Rotate(){}
+
+    public void RevertRotation(){}
 }
 
 class Line extends Shape
@@ -111,13 +201,19 @@ class Line extends Shape
 
     public virtual void Init()
     {
+        offsetY := 0;
+        offsetX := 0;
         state := 0;
         Point newPoint;
 
         ##----state 1----------
 
         state1 := new Point();
-        state1.Init(0, 0);
+        state1.Init(-1, 0);
+
+        newPoint := new Point();
+        newPoint.Init(0, 0);
+        state1.Add(newPoint);
 
         newPoint := new Point();
         newPoint.Init(1, 0);
@@ -126,7 +222,11 @@ class Line extends Shape
         ##----state 2-------------
 
         state2 := new Point();
-        state2.Init(0, 0);
+        state2.Init(0, -1);
+
+        newPoint := new Point();
+        newPoint.Init(0, 0);
+        state2.Add(newPoint);
 
         newPoint := new Point();
         newPoint.Init(0, 1);
@@ -155,6 +255,11 @@ class Line extends Shape
         {
             state := 0;
         }
+    }
+
+    public void RevertRotation()
+    {
+        Rotate();
     }
 }
 
@@ -201,9 +306,9 @@ class Board
 
     public Tile GetTile(int row, int column)
     {
-        if(row >= rowCount)
+        if(row >= rowCount | column >= columnCount | row < 0 | column < 0)
         {
-            write "nu ka cia blet darai, row: ", row, "\n";
+            return null;
         }
         return firstRow.GetRow(row).firstTile.GetTile(column);
     }
@@ -264,7 +369,7 @@ class Board
             write strings.newLine;
             row := row.nextRow;
         }
-        write strings.score, score;
+        write strings.score, score, strings.newLine;
     }
 
     public void SetShape(Shape shape, string value)
@@ -286,27 +391,25 @@ class Board
         Point points := shape.GetPoints();
         Tile tile;
 
-        ##write "\tsearching for collision\n";
-
         while(points <> null)
         {
             if(points.Y + shape.offsetY >= rowCount)
             {
-                ##write "Colision found ", points.Y + shape.offsetY ,"\n";
                 return true;
             }
             tile := GetTile(points.Y + shape.offsetY, points.X + shape.offsetX);
 
-            ##write "\ty: ", points.Y;
+            if(tile = null)
+            {
+                return true;
+            }
 
             if(tile.value = strings.occupied)
             {
-                ##write "Colision found\n";
                 return true;
             }
             points := points.nextPoint;
         }
-        ##write "\tcollision not found\n";
         return false;
     }
 
@@ -428,7 +531,6 @@ class Row
 ##------------------------------------------------------------TILE-----------------------
 class Tile
 {
-    public bool occupied;
     public string value;
 
     public Tile nextTile;
@@ -436,7 +538,7 @@ class Tile
     public void Init(string s)
     {
         value := s;
-        occupied := false;
+       
         nextTile := null;
     }
 
