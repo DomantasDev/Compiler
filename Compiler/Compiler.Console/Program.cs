@@ -17,7 +17,7 @@ namespace ConsoleApp
             //    .GetLexemes(File.ReadAllText("../../../DynamicLexer/code.txt"));
             //Print(lexemes);
 
-            var code = "../../../DynamicLexer/Tetris.txt";
+            var code = "../../../DynamicLexer/asd.txt";
 
             ErrorWriter.File = code;
 
@@ -42,15 +42,23 @@ namespace ConsoleApp
                 {
                     var codeWriter = new CodeWriter();
                     root.GenerateCode(codeWriter);
-                    //codeWriter.Disassemble();
+                    codeWriter.Disassemble();
 
                     //Console.WriteLine($"code length: {codeWriter.Code.Count}");
 
                     var vm = new VirtualMachine(codeWriter.Code.ToArray());
-                    vm.Execute();
+                    try
+                    {
+                        vm.Execute();
+                    }
+                    catch (Exception e)
+                    {
+                        if(e.Message != "")
+                            e.Message.RaiseError();
+                    }
                 }
             }
-            Console.ReadLine();
+            //Console.ReadLine();
         }
 
         private static void Print(IEnumerable<Token> lexemes)

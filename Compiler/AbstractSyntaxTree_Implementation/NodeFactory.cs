@@ -120,6 +120,8 @@ namespace AbstractSyntaxTree_Implementation
                     return CreateRead(parameters);
                 case "Write":
                     return CreateWrite(parameters);
+                case "ReadInt":
+                    return CreateTokenNode<ReadInt>(parameters);
 
                 case "MemberExp":
                     return CreateMemberExp(parameters);
@@ -174,6 +176,7 @@ namespace AbstractSyntaxTree_Implementation
                     throw new Exception($"Unrecognized class name: {className}");
             }
         }
+
 
         private RandInt CreateRandInt(List<Node> parameters)
         {

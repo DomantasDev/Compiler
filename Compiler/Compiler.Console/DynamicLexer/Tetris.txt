@@ -16,7 +16,7 @@ class Program
         int colCount := 6;
         board.Init(rowCount, colCount, strings); 
 
-        shape := new Line();
+        shape := factory.GetShape();
         shape.Init();
         shape.offsetX := colCount / 2 - 1;
 
@@ -110,7 +110,7 @@ class ShapeFactory
     {
         Shape shape := null;
 
-        int rand := randInt 2;
+        int rand := randInt 3;
         if(rand = 0)
         {
             shape := new Line();
@@ -118,6 +118,9 @@ class ShapeFactory
         else if(rand = 1)
         {
             shape := new Square();
+        }else if(rand = 2)
+        {
+            shape := new Triangle();
         }
 
         shape.Init();
@@ -132,26 +135,150 @@ class Shape
     public int offsetX;
     public int offsetY;
 
-    public int a;
-
     public void Init()
     {   
-        write "SHIT";
+        write "BASE";
     }
 
     public Point GetPoints()
     {
-        write "SHIT";
+        write "BASE";
     }
 
     public void Rotate()
     {
-        write "SHIT";
+        write "BASE";
     }
 
     public void RevertRotation()
     {
-        write "SHIT";
+        write "BASE";
+    }
+}
+
+class Triangle extends Shape
+{
+    public int state;
+
+    public Point state1;
+    public Point state2;
+    public Point state3;
+    public Point state4;
+
+    public void Init()
+    {   
+        offsetY := 0;
+        offsetX := 0;
+        state := 0;
+
+        Point newPoint;
+
+        state1 := new Point();
+        state1.Init(0, 0);
+
+        newPoint := new Point();
+        newPoint.Init(-1, 0);
+        state1.Add(newPoint);
+
+        newPoint := new Point();
+        newPoint.Init(1, 0);
+        state1.Add(newPoint);
+
+        newPoint := new Point();
+        newPoint.Init(0, 1);
+        state1.Add(newPoint);
+
+        ##
+
+        state2 := new Point();
+        state2.Init(0, 0);
+
+        newPoint := new Point();
+        newPoint.Init(-1, 0);
+        state2.Add(newPoint);
+
+        newPoint := new Point();
+        newPoint.Init(0, -1);
+        state2.Add(newPoint);
+
+        newPoint := new Point();
+        newPoint.Init(0, 1);
+        state2.Add(newPoint);
+
+        ##
+
+        state3 := new Point();
+        state3.Init(0, 0);
+
+        newPoint := new Point();
+        newPoint.Init(-1, 0);
+        state3.Add(newPoint);
+
+        newPoint := new Point();
+        newPoint.Init(0, -1);
+        state3.Add(newPoint);
+
+        newPoint := new Point();
+        newPoint.Init(1, 0);
+        state3.Add(newPoint);
+
+        ##
+        state4 := new Point();
+        state4.Init(0, 0);
+
+        newPoint := new Point();
+        newPoint.Init(0, 1);
+        state4.Add(newPoint);
+
+        newPoint := new Point();
+        newPoint.Init(0, -1);
+        state4.Add(newPoint);
+
+        newPoint := new Point();
+        newPoint.Init(1, 0);
+        state4.Add(newPoint);
+    }
+
+    public Point GetPoints()
+    {
+        if(state = 0)
+        {
+            return state1;
+        }
+        if(state = 1)
+        {
+            return state2;
+        }
+        if(state = 2)
+        {
+            return state3;
+        }
+        if(state = 3)
+        {
+            return state4;
+        }
+    }
+
+    public void Rotate()
+    {
+        if(state = 3)
+        {
+            state := 0;
+        }else
+        {
+            state := state + 1;
+        }
+    }
+
+    public void RevertRotation()
+    {
+        if(state = 0)
+        {
+            state := 3;
+        }else
+        {
+            state := state - 1;
+        }
     }
 }
 

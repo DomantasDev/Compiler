@@ -23,7 +23,7 @@
 <PARAMS> ::= [NodeList]@0 2 <PARAM> {*<COMMA> <PARAM>}
 <PARAM> ::= [Parameter]@0 @1 <TYPE> *<IDENT>
 
-<STMT> ::= <BREAK_STMT> *<SEMICOLON> | <RETURN_STMT> *<SEMICOLON> | <CONTINUE_STMT> *<SEMICOLON> | <ASSIGN_STMT> *<SEMICOLON> | <LOCAL_VARIABLE_DECL_STMT> *<SEMICOLON> | <EXPR_STMT> *<SEMICOLON> | <WRITE_STMT> *<SEMICOLON> | <READ_STMT> *<SEMICOLON> | <WHILE_STMT> | <IF_STMT> | <DELETE> *<SEMICOLON> | <SLEEP> *<SEMICOLON> | <CLEAR_CONSOLE> *<SEMICOLON>
+<STMT> ::= <BREAK_STMT> *<SEMICOLON> | <RETURN_STMT> *<SEMICOLON> | <CONTINUE_STMT> *<SEMICOLON> | <ASSIGN_STMT> *<SEMICOLON> | <LOCAL_VARIABLE_DECL_STMT> *<SEMICOLON> | <EXPR_STMT> *<SEMICOLON> | <WRITE_STMT> *<SEMICOLON> | <WHILE_STMT> | <IF_STMT> | <DELETE> *<SEMICOLON> | <SLEEP> *<SEMICOLON> | <CLEAR_CONSOLE> *<SEMICOLON>
 <EXPR_STMT> ::= [ExpressionStatement]@0 <EXPR>
 <RETURN_STMT> ::= [Return]@1 *<KW_RETURN> <EXPR> |[Return]@ *<KW_RETURN>
 <BREAK_STMT> ::= [LoopControl]@0 *<KW_BREAK>
@@ -39,7 +39,6 @@
 <CLEAR_CONSOLE> ::= [ClearConsole]@0 *<KW_CLEAR_CONSOLE>
 
 <WRITE_STMT> ::= [Write]@1 *<KW_WRITE> <ARGS>
-<READ_STMT> ::= [Read]@1 *<KW_READ> <VAR_LIST>
 <VAR_LIST> ::= [NodeList]@0 2 <VAR> {*<COMMA> <VAR>}
 
 <EXPR> ::= <OR>
@@ -50,7 +49,7 @@
 <ADD> ::= L[ArithExp]@0 @1 @2 <MULT> {*<ADD_OP> <MULT>}
 <MULT> ::= L[ArithExp]@0 @1 @2 <DOT> {*<MULT_OP> <DOT>} 
 <DOT> ::= L[MemberExp]@0 @1 @2 <PRIMARY> {*<DOT_OP> <MEMBER_ACCESS>}
-<PRIMARY> ::= <METHOD_CALL> | [VariableExp]@0 <VAR> | [LiteralExp]@0 <NUMBER> | [LiteralExp]@0 *<BOOL> | [LiteralExp]@0 *<STRING> | <PAREN> | <NEG> | <NOT> | <OBJ_CREATION> | <CAST> | [LiteralExp]@0 *<NULL> | [LiteralExp]@0 *<THIS> | [LiteralExp]@0 *<BASE> | <GET_KEY> | <RAND_INT>
+<PRIMARY> ::= <METHOD_CALL> | [VariableExp]@0 <VAR> | [LiteralExp]@0 <NUMBER> | [LiteralExp]@0 *<BOOL> | [LiteralExp]@0 *<STRING> | <PAREN> | <NEG> | <NOT> | <OBJ_CREATION> | <CAST> | [LiteralExp]@0 *<NULL> | [LiteralExp]@0 *<THIS> | [LiteralExp]@0 *<BASE> | <GET_KEY> | <RAND_INT> | <READ_EXPR>
 
 <MEMBER_ACCESS> ::= <METHOD_CALL> | [VariableExp]@0 *<IDENT>
 <PAREN> ::= @1 *<PAREN_O> <EXPR> *<PAREN_C>
@@ -66,3 +65,4 @@
 <GET_KEY> ::= [GetKey]@0 *<KW_GET_KEY>
 <RAND_INT> ::= [RandInt]@1 *<KW_RAND_INT> <EXPR>
 <VAR_EXPR> ::= [VariableExp]@0 <VAR>
+<READ_EXPR> ::= [ReadInt]@0 *<KW_READ>

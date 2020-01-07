@@ -1,0 +1,15 @@
+class Program
+{
+    public void Main()
+    {
+        Main();
+    }
+
+    public int X()
+    {
+        
+    }
+}
+
+class A{}
+class B extends A{}

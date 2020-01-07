@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Dynamic;
 using System.Globalization;
 using System.Linq;
@@ -11,9 +12,24 @@ namespace CodeExecution
 {
     public class VirtualMachine
     {
-        private readonly int[] _memory = new int[8192];
+        private const int StackStart = 3000;
+        private const int HeapStart = 5000;
+        private const int MemorySize = 9000;
+
+        private readonly int[] _memory = new int[MemorySize];
         private int IP;
-        private int SP;
+        public int SP
+        {
+            get => _SP;
+            set
+            {
+                if (value >= HeapStart || value < StackStart)
+                    throw new StackOverflowException();
+                _SP = value;
+            }
+        }
+
+        private int _SP;
         private int SFP;
         private int HFP;
         private int HP;
@@ -27,12 +43,12 @@ namespace CodeExecution
         {
             code.CopyTo(_memory,0);
             IP = 1;
-            SP = 2048;
-            SFP = 2048;
-            HP = 4096;
-            HFP = 4096;
+            SP = StackStart;
+            SFP = StackStart;
+            HP = HeapStart;
+            HFP = HeapStart;
             _running = true;
-            _allocator = new MemoryAllocator(_memory);
+            _allocator = new MemoryAllocator(_memory,HeapStart, MemorySize - HeapStart);
 
             _random = new Random(); 
         }
@@ -184,6 +200,9 @@ namespace CodeExecution
                 case Instr.I_WRITE:
                     Write(Read());
                     break;
+                case Instr.I_READ:
+                    ReadInt();
+                    break;
                 case Instr.I_SLEEP:
                     Thread.Sleep(Pop());
                     break;
@@ -224,6 +243,23 @@ namespace CodeExecution
             //    Console.WriteLine($"{_memory[2048 + i].ToString().PadLeft(10)}");
             //}
             //Console.WriteLine(new string('-', 30));
+        }
+
+        private void ReadInt()
+        {
+            var line = Read();
+
+            var stringValue = Console.ReadLine();
+            if (int.TryParse(stringValue, out var intValue))
+            {
+                Push(intValue);
+            }
+            else
+            {
+                "Read value is not int".RaiseError(line);
+                throw new ArgumentException("");
+            }
+
         }
 
         private void GetObjectField()
